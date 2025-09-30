@@ -1,0 +1,62 @@
+{
+  "name": "tauri-vue-template",
+  "version": "1.0.0",
+  "description": "🚀 Modern desktop app boilerplate with Tauri, Vue 3, TypeScript, and comprehensive configuration system",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview",
+    "tauri": "tauri",
+    "tauri:dev": "npm run sync:config && tauri dev",
+    "tauri:build": "npm run sync:config && tauri build",
+    "sync:config": "npx tsx scripts/sync-config.js",
+    "generate-icons": "npx tsx scripts/generate-icons.js",
+    "generate-tray-icon": "npx tsx scripts/generate-tray-icon.js",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix",
+    "format": "prettier --write \"src/**/*.{js,ts,vue,json,css,md}\"",
+    "type-check": "vue-tsc --noEmit",
+    "prepare": "husky"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "^2.8.0",
+    "@tauri-apps/plugin-os": "^2.3.1",
+    "@tauri-apps/plugin-shell": "^2.3.1",
+    "lucide-vue-next": "^0.544.0",
+    "pinia": "^3.0.3",
+    "vue": "^3.5.21"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.8.4",
+    "@typescript-eslint/eslint-plugin": "^8.45.0",
+    "@typescript-eslint/parser": "^8.45.0",
+    "@vitejs/plugin-vue": "^6.0.1",
+    "@vue/tsconfig": "^0.8.1",
+    "autoprefixer": "^10.4.21",
+    "eslint": "^9.36.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
+    "eslint-plugin-vue": "^10.5.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.3",
+    "png2icons": "^2.0.1",
+    "postcss": "^8.5.6",
+    "prettier": "^3.6.2",
+    "sharp": "^0.34.4",
+    "tailwindcss": "^3.4.17",
+    "to-ico": "^1.1.5",
+    "typescript": "~5.8.3",
+    "vite": "^7.1.7",
+    "vue-tsc": "^3.0.7"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,vue}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,css,md}": [
+      "prettier --write"
+    ]
+  }
+}

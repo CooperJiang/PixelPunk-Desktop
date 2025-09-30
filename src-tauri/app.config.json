@@ -1,0 +1,64 @@
+{
+  "name": "Tauri Vue Template",
+  "version": "1.0.0",
+  "author": "Your Name",
+  "description": "基于 Tauri + Vue 3 + TypeScript 的跨平台桌面应用开发模板",
+  "homepage": "https://github.com",
+  "repository": "https://github.com",
+  "copyright": "Copyright © 2025 Your Name. All rights reserved.",
+  "window": {
+    "width": 1200,
+    "height": 800,
+    "min_width": 800,
+    "min_height": 600,
+    "max_width": null,
+    "max_height": null,
+    "resizable": true,
+    "maximizable": true,
+    "minimizable": true,
+    "closable": true,
+    "always_on_top": false,
+    "center": true,
+    "skip_taskbar": false
+  },
+  "tray": {
+    "enabled": true,
+    "tooltip": "Tauri Vue Template",
+    "title": null,
+    "menus": [
+      {
+        "label": "应用",
+        "items": [
+          {
+            "id": "about",
+            "label": "关于",
+            "action": "about"
+          },
+          {
+            "id": "settings",
+            "label": "设置",
+            "action": "custom"
+          }
+        ]
+      },
+      {
+        "label": "窗口",
+        "items": [
+          {
+            "id": "show",
+            "label": "显示窗口",
+            "action": "show"
+          },
+          {
+            "id": "quit",
+            "label": "退出",
+            "action": "quit"
+          }
+        ]
+      }
+    ]
+  },
+  "dev": {
+    "open_dev_tools": false
+  }
+}

@@ -6,13 +6,20 @@ use tauri::{WebviewUrl, WebviewWindowBuilder};
 use image::GenericImageView;
 
 mod config;
+mod commands;
+mod macos;
 use config::AppConfigData;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
   tauri::Builder::default()
     .plugin(tauri_plugin_os::init())
-    .invoke_handler(tauri::generate_handler![config::get_app_config])
+    .invoke_handler(tauri::generate_handler![
+      config::get_app_config,
+      commands::toggle_float_ball,
+      commands::close_float_ball,
+      commands::is_float_ball_visible,
+    ])
     .setup(|app| {
       // 先初始化日志
       app.handle().plugin(
@@ -181,6 +188,9 @@ pub fn run() {
           Err(e) => log::error!("Failed to create system tray: {:?}", e),
         }
       }
+
+      // 默认不创建悬浮球，由用户通过 UI 控制
+      log::info!("Float ball feature available, use toggle_float_ball command to show/hide");
 
       Ok(())
     })

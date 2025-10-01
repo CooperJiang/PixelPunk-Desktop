@@ -1,6 +1,38 @@
 <script setup lang="ts">
+import { ref, onMounted } from "vue";
+import { invoke } from "@tauri-apps/api/core";
 import { appConfig } from "@/config";
-import { Code2, Settings, Palette, Package } from "lucide-vue-next";
+import { Code2, Settings, Palette, Package, Circle } from "lucide-vue-next";
+
+const floatBallVisible = ref(false);
+const loading = ref(false);
+
+// 检查悬浮球状态
+const checkFloatBallStatus = async () => {
+  try {
+    floatBallVisible.value = await invoke<boolean>("is_float_ball_visible");
+  } catch (error) {
+    console.error("Failed to check float ball status:", error);
+  }
+};
+
+// 切换悬浮球
+const toggleFloatBall = async () => {
+  loading.value = true;
+  try {
+    const newState = !floatBallVisible.value;
+    await invoke("toggle_float_ball", { show: newState });
+    floatBallVisible.value = newState;
+  } catch (error) {
+    console.error("Failed to toggle float ball:", error);
+  } finally {
+    loading.value = false;
+  }
+};
+
+onMounted(() => {
+  checkFloatBallStatus();
+});
 </script>
 
 <template>
@@ -24,6 +56,83 @@ import { Code2, Settings, Palette, Package } from "lucide-vue-next";
           >
           <span>•</span>
           <span>Tauri 2.0 + Vue 3 + TypeScript</span>
+        </div>
+      </div>
+
+      <!-- 悬浮球演示 -->
+      <div class="mb-12">
+        <div
+          class="rounded-xl border-2 border-indigo-200 bg-gradient-to-br from-indigo-50 to-purple-50 p-8"
+        >
+          <div class="mb-6 text-center">
+            <h2 class="mb-2 text-2xl font-bold text-gray-900">
+              🎯 悬浮球功能演示
+            </h2>
+            <p class="text-gray-600">
+              拖放文件上传、实时进度跟踪，完整的交互体验
+            </p>
+          </div>
+
+          <div class="mx-auto max-w-md">
+            <div class="rounded-xl bg-white p-6 shadow-lg">
+              <div class="mb-4 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <div
+                    class="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-purple-500"
+                  >
+                    <Circle :size="24" class="text-white" />
+                  </div>
+                  <div>
+                    <h3 class="font-semibold text-gray-900">悬浮球</h3>
+                    <p class="text-sm text-gray-500">
+                      {{ floatBallVisible ? "已显示" : "已隐藏" }}
+                    </p>
+                  </div>
+                </div>
+
+                <!-- 开关按钮 -->
+                <button
+                  :disabled="loading"
+                  class="relative inline-flex h-8 w-14 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                  :class="floatBallVisible ? 'bg-indigo-600' : 'bg-gray-300'"
+                  @click="toggleFloatBall"
+                >
+                  <span
+                    class="inline-block h-6 w-6 transform rounded-full bg-white shadow-lg transition-transform"
+                    :class="
+                      floatBallVisible ? 'translate-x-7' : 'translate-x-1'
+                    "
+                  ></span>
+                </button>
+              </div>
+
+              <div class="space-y-3 text-sm text-gray-600">
+                <div class="flex items-start gap-2">
+                  <span class="text-indigo-600">✓</span>
+                  <span>拖放文件到悬浮球即可上传</span>
+                </div>
+                <div class="flex items-start gap-2">
+                  <span class="text-indigo-600">✓</span>
+                  <span>实时显示上传进度和状态</span>
+                </div>
+                <div class="flex items-start gap-2">
+                  <span class="text-indigo-600">✓</span>
+                  <span>支持拖动悬浮球到任意位置</span>
+                </div>
+                <div class="flex items-start gap-2">
+                  <span class="text-indigo-600">✓</span>
+                  <span>始终置顶，不干扰其他应用</span>
+                </div>
+              </div>
+
+              <div
+                v-if="floatBallVisible"
+                class="mt-4 rounded-lg bg-indigo-50 p-3 text-xs text-indigo-700"
+              >
+                💡 悬浮球已在屏幕右下角显示，尝试拖放文件上传吧！
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 

@@ -27,6 +27,27 @@ export interface AppConfig {
 
   tray: TrayConfig; // 托盘配置
 
+  floatBall: {
+    enabled: boolean; // 是否启用悬浮球
+    width: number; // 悬浮球宽度
+    height: number; // 悬浮球高度
+    defaultX: number; // 默认 X 位置
+    defaultY: number; // 默认 Y 位置
+    alwaysOnTop: boolean; // 是否始终置顶
+    panel: {
+      width: number; // 展开面板宽度
+      height: number; // 展开面板高度
+      expandOnHover: boolean; // 鼠标悬停时展开
+      hoverDelay: number; // 悬停延迟（毫秒）
+    };
+    upload: {
+      apiUrl: string; // 上传接口地址
+      maxFileSize: number; // 最大文件大小（字节）
+      allowedTypes: string[]; // 允许的文件类型
+      concurrent: number; // 并发上传数量
+    };
+  };
+
   dev: {
     openDevTools: boolean; // 是否默认打开调试控制台
   };

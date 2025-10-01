@@ -44,6 +44,34 @@ pub struct DevConfig {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct FloatBallPanelConfig {
+    pub width: f64,
+    pub height: f64,
+    pub expand_on_hover: bool,
+    pub hover_delay: u64,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct FloatBallUploadConfig {
+    pub api_url: String,
+    pub max_file_size: u64,
+    pub allowed_types: Vec<String>,
+    pub concurrent: u32,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct FloatBallConfig {
+    pub enabled: bool,
+    pub width: f64,
+    pub height: f64,
+    pub default_x: f64,
+    pub default_y: f64,
+    pub always_on_top: bool,
+    pub panel: FloatBallPanelConfig,
+    pub upload: FloatBallUploadConfig,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AppConfigData {
     pub name: String,
     pub version: String,
@@ -54,6 +82,7 @@ pub struct AppConfigData {
     pub copyright: Option<String>,
     pub window: WindowConfig,
     pub tray: TrayConfig,
+    pub float_ball: FloatBallConfig,
     pub dev: DevConfig,
 }
 
@@ -114,6 +143,26 @@ impl Default for AppConfigData {
                         ],
                     },
                 ],
+            },
+            float_ball: FloatBallConfig {
+                enabled: true,
+                width: 60.0,
+                height: 60.0,
+                default_x: 0.0,
+                default_y: 0.0,
+                always_on_top: true,
+                panel: FloatBallPanelConfig {
+                    width: 320.0,
+                    height: 450.0,
+                    expand_on_hover: true,
+                    hover_delay: 300,
+                },
+                upload: FloatBallUploadConfig {
+                    api_url: "/api/upload".to_string(),
+                    max_file_size: 104857600, // 100MB
+                    allowed_types: vec![],
+                    concurrent: 3,
+                },
             },
             dev: DevConfig {
                 open_dev_tools: false,

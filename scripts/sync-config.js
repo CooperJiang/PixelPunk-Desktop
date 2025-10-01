@@ -49,6 +49,26 @@ async function syncConfig() {
           })),
         })),
       },
+      float_ball: {
+        enabled: config.floatBall.enabled,
+        width: config.floatBall.width,
+        height: config.floatBall.height,
+        default_x: config.floatBall.defaultX,
+        default_y: config.floatBall.defaultY,
+        always_on_top: config.floatBall.alwaysOnTop,
+        panel: {
+          width: config.floatBall.panel.width,
+          height: config.floatBall.panel.height,
+          expand_on_hover: config.floatBall.panel.expandOnHover,
+          hover_delay: config.floatBall.panel.hoverDelay,
+        },
+        upload: {
+          api_url: config.floatBall.upload.apiUrl,
+          max_file_size: config.floatBall.upload.maxFileSize,
+          allowed_types: config.floatBall.upload.allowedTypes,
+          concurrent: config.floatBall.upload.concurrent,
+        },
+      },
       dev: {
         open_dev_tools: config.dev.openDevTools,
       },

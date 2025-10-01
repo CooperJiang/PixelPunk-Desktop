@@ -45,6 +45,27 @@ export const appConfig: AppConfig = {
     ],
   },
 
+  floatBall: {
+    enabled: true, // 是否启用悬浮球
+    width: 70, // 窗口宽度（给悬浮球留边距）
+    height: 70, // 窗口高度（给悬浮球留边距）
+    defaultX: 0, // 默认 X 位置（0 表示自动右下角）
+    defaultY: 0, // 默认 Y 位置（0 表示自动右下角）
+    alwaysOnTop: true, // 是否始终置顶
+    panel: {
+      width: 320, // 展开面板宽度
+      height: 450, // 展开面板高度
+      expandOnHover: true, // 鼠标悬停时展开
+      hoverDelay: 300, // 悬停延迟（毫秒）
+    },
+    upload: {
+      apiUrl: "/api/upload", // 上传接口地址
+      maxFileSize: 100 * 1024 * 1024, // 最大文件大小（字节，默认 100MB）
+      allowedTypes: [], // 允许的文件类型（空数组表示不限制）
+      concurrent: 3, // 并发上传数量
+    },
+  },
+
   dev: {
     openDevTools: false, // 开发模式下是否自动打开开发者工具
   },

@@ -58,6 +58,26 @@
       }
     ]
   },
+  "float_ball": {
+    "enabled": true,
+    "width": 70,
+    "height": 70,
+    "default_x": 0,
+    "default_y": 0,
+    "always_on_top": true,
+    "panel": {
+      "width": 320,
+      "height": 450,
+      "expand_on_hover": true,
+      "hover_delay": 300
+    },
+    "upload": {
+      "api_url": "/api/upload",
+      "max_file_size": 104857600,
+      "allowed_types": [],
+      "concurrent": 3
+    }
+  },
   "dev": {
     "open_dev_tools": false
   }

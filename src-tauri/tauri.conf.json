@@ -31,7 +31,35 @@
     ],
     "withGlobalTauri": true,
     "security": {
-      "csp": null
+      "csp": null,
+      "capabilities": [
+        {
+          "identifier": "main-capability",
+          "windows": ["main"],
+          "permissions": [
+            "core:default",
+            "core:window:allow-start-dragging",
+            "core:window:allow-minimize",
+            "core:window:allow-toggle-maximize",
+            "core:window:allow-close",
+            "core:window:allow-set-fullscreen",
+            "core:window:allow-is-maximized",
+            "core:window:allow-is-fullscreen",
+            "core:event:allow-listen"
+          ]
+        },
+        {
+          "identifier": "float-ball-capability",
+          "windows": ["float-ball"],
+          "permissions": [
+            "core:default",
+            "core:window:allow-start-dragging",
+            "core:window:allow-set-position",
+            "core:window:allow-outer-position",
+            "core:event:allow-listen"
+          ]
+        }
+      ]
     },
     "trayIcon": {
       "iconPath": "icons/icon.png",

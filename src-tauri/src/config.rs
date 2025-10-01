@@ -67,6 +67,7 @@ pub struct FloatBallConfig {
     pub default_x: f64,
     pub default_y: f64,
     pub always_on_top: bool,
+    pub margin: f64,
     pub panel: FloatBallPanelConfig,
     pub upload: FloatBallUploadConfig,
 }
@@ -151,6 +152,7 @@ impl Default for AppConfigData {
                 default_x: 0.0,
                 default_y: 0.0,
                 always_on_top: true,
+                margin: 80.0,
                 panel: FloatBallPanelConfig {
                     width: 320.0,
                     height: 450.0,

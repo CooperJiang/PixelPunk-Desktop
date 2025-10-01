@@ -19,6 +19,7 @@ pub fn run() {
       commands::toggle_float_ball,
       commands::close_float_ball,
       commands::is_float_ball_visible,
+      commands::show_main_window,
     ])
     .setup(|app| {
       // 先初始化日志
@@ -28,11 +29,9 @@ pub fn run() {
           .build(),
       )?;
 
-      log::info!("Application setup starting...");
-
       // 加载配置
       let config = AppConfigData::load();
-      log::info!("Config loaded: {}", config.name);
+      log::info!("Application starting: {}", config.name);
 
       // 应用窗口配置
       if let Some(window) = app.get_webview_window("main") {
@@ -57,8 +56,6 @@ pub fn run() {
         if window_config.center {
           let _ = window.center();
         }
-
-        log::info!("Window config applied");
       }
 
       // 开发模式打开 DevTools
@@ -70,8 +67,6 @@ pub fn run() {
 
       // 创建托盘（如果启用）
       if config.tray.enabled {
-        log::info!("Starting tray icon setup...");
-
         // 存储所有菜单项，防止被销毁
         let mut all_items: Vec<MenuItem<tauri::Wry>> = Vec::new();
         let mut submenus: Vec<Submenu<tauri::Wry>> = Vec::new();
@@ -97,10 +92,6 @@ pub fn run() {
         let submenu_refs: Vec<&dyn tauri::menu::IsMenuItem<tauri::Wry>> =
           submenus.iter().map(|submenu| submenu as &dyn tauri::menu::IsMenuItem<tauri::Wry>).collect();
         let menu = Menu::with_items(app, &submenu_refs)?;
-        log::info!("Menu created with {} groups", config.tray.menus.len());
-
-        // 创建系统托盘
-        log::info!("Creating system tray...");
 
         // 加载并转换图标
         let icon_bytes = include_bytes!("../icons/32x32.png");
@@ -108,7 +99,6 @@ pub fn run() {
         let (width, height) = img.dimensions();
         let rgba = img.to_rgba8().into_raw();
         let icon_image = Image::new_owned(rgba, width, height);
-        log::info!("Icon loaded successfully: {}x{}", width, height);
 
         // 使用配置中的 tooltip 和 title
         let tooltip = config.tray.tooltip.as_deref().unwrap_or(&config.name);
@@ -122,10 +112,8 @@ pub fn run() {
           .menu(&menu)
           .show_menu_on_left_click(true) // 左键点击显示菜单
           .on_menu_event(|app, event| {
-            log::info!("Menu event triggered: {:?}", event.id);
             match event.id.as_ref() {
               "about" => {
-                log::info!("About menu clicked");
                 // 检查关于窗口是否已存在
                 if let Some(about_window) = app.get_webview_window("about") {
                   let _ = about_window.show();
@@ -148,11 +136,9 @@ pub fn run() {
                 }
               }
               "settings" => {
-                log::info!("Settings menu clicked");
                 // 设置功能待实现
               }
               "show" => {
-                log::info!("Show menu clicked");
                 // 显示并聚焦窗口
                 if let Some(window) = app.get_webview_window("main") {
                   let _ = window.show();
@@ -160,19 +146,14 @@ pub fn run() {
                 }
               }
               "quit" => {
-                log::info!("Quit menu clicked");
                 app.exit(0);
               }
-              _ => {
-                log::warn!("Unknown menu event: {:?}", event.id);
-              }
+              _ => {}
             }
           })
           .on_tray_icon_event(|tray, event| {
-            log::info!("Tray icon event: {:?}", event);
             match event {
-              TrayIconEvent::Click { button, .. } => {
-                log::info!("Tray clicked with button: {:?}", button);
+              TrayIconEvent::Click { .. } => {
                 if let Some(window) = tray.app_handle().get_webview_window("main") {
                   let _ = window.show();
                   let _ = window.set_focus();
@@ -184,13 +165,10 @@ pub fn run() {
           .build(app);
 
         match tray_result {
-          Ok(_) => log::info!("System tray created successfully!"),
+          Ok(_) => log::info!("System tray created"),
           Err(e) => log::error!("Failed to create system tray: {:?}", e),
         }
       }
-
-      // 默认不创建悬浮球，由用户通过 UI 控制
-      log::info!("Float ball feature available, use toggle_float_ball command to show/hide");
 
       Ok(())
     })

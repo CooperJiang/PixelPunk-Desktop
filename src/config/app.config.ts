@@ -47,11 +47,12 @@ export const appConfig: AppConfig = {
 
   floatBall: {
     enabled: true, // 是否启用悬浮球
-    width: 70, // 窗口宽度（给悬浮球留边距）
-    height: 70, // 窗口高度（给悬浮球留边距）
+    width: 400, // 窗口宽度（容纳悬浮球 + 面板）
+    height: 450, // 窗口高度（容纳面板）
     defaultX: 0, // 默认 X 位置（0 表示自动右下角）
     defaultY: 0, // 默认 Y 位置（0 表示自动右下角）
     alwaysOnTop: true, // 是否始终置顶
+    margin: 120, // 距离屏幕边缘的边距（像素）
     panel: {
       width: 320, // 展开面板宽度
       height: 450, // 展开面板高度

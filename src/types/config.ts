@@ -34,6 +34,7 @@ export interface AppConfig {
     defaultX: number; // 默认 X 位置
     defaultY: number; // 默认 Y 位置
     alwaysOnTop: boolean; // 是否始终置顶
+    margin: number; // 距离屏幕边缘的边距
     panel: {
       width: number; // 展开面板宽度
       height: number; // 展开面板高度

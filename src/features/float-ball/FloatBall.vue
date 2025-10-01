@@ -3,35 +3,12 @@
     <div
       data-tauri-drag-region
       class="float-ball-container"
-      :class="{ uploading: isUploading, 'drag-over': isDragOver }"
+      :class="{ 'drag-over': isDragOver }"
     >
       <div class="float-ball">
-        <!-- 上传进度环 -->
-        <svg v-if="isUploading" class="progress-ring" viewBox="0 0 56 56">
-          <circle
-            class="progress-ring-bg"
-            cx="28"
-            cy="28"
-            r="24"
-            fill="none"
-            stroke-width="3"
-          />
-          <circle
-            class="progress-ring-circle"
-            cx="28"
-            cy="28"
-            r="24"
-            fill="none"
-            stroke-width="3"
-            :stroke-dasharray="`${circumference} ${circumference}`"
-            :stroke-dashoffset="progressOffset"
-          />
-        </svg>
-
         <!-- 悬浮球图标 -->
         <div class="float-ball-icon">
-          <Upload v-if="!isUploading" :size="22" />
-          <div v-else class="upload-percent">{{ uploadPercent }}%</div>
+          <Upload :size="22" />
         </div>
 
         <!-- 拖放提示 -->
@@ -44,24 +21,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 import { Upload } from "lucide-vue-next";
-import { listen } from "@tauri-apps/api/event";
-import { useUploadStore } from "@/stores/upload";
-
-const uploadStore = useUploadStore();
+import { listen, emit } from "@tauri-apps/api/event";
+import { invoke } from "@tauri-apps/api/core";
 
 const isDragOver = ref(false);
-
-const isUploading = computed(() => uploadStore.isUploading);
-const uploadPercent = computed(() => Math.round(uploadStore.totalProgress));
-
-// 进度环计算
-const circumference = 2 * Math.PI * 24;
-const progressOffset = computed(() => {
-  const progress = uploadStore.totalProgress / 100;
-  return circumference - progress * circumference;
-});
 
 // 监听文件拖放事件
 let unlistenDrop: (() => void) | null = null;
@@ -75,19 +40,30 @@ onMounted(async () => {
   // eslint-disable-next-line no-undef
   document.documentElement.style.background = "transparent";
 
-  // 监听文件拖放
-  unlistenDrop = await listen<string[]>("tauri://file-drop", (event) => {
-    const files = event.payload;
+  // 监听文件拖放 (Tauri 2.0 事件)
+  unlistenDrop = await listen("tauri://drag-drop", async (event: any) => {
+    const files = event.payload.paths || event.payload;
     isDragOver.value = false;
-    console.log("Files dropped:", files);
-    uploadStore.addFiles(files);
+
+    // 显示主窗口
+    try {
+      await invoke("show_main_window");
+
+      // 延迟发送事件，确保主窗口已经完全显示
+      // eslint-disable-next-line no-undef
+      setTimeout(async () => {
+        await emit("files-dropped", { files });
+      }, 100);
+    } catch (error) {
+      console.error("Failed to show main window or emit event:", error);
+    }
   });
 
-  unlistenDragOver = await listen("tauri://file-drop-hover", () => {
+  unlistenDragOver = await listen("tauri://drag-over", () => {
     isDragOver.value = true;
   });
 
-  unlistenDragLeave = await listen("tauri://file-drop-cancelled", () => {
+  unlistenDragLeave = await listen("tauri://drag-leave", () => {
     isDragOver.value = false;
   });
 });
@@ -146,32 +122,11 @@ onUnmounted(() => {
   transform: scale(0.95);
 }
 
-/* 上传状态 */
-.float-ball-container.uploading .float-ball {
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-  animation: uploading-pulse 1.5s ease-in-out infinite;
-}
-
-.float-ball-container.uploading:hover .float-ball {
-  background: linear-gradient(135deg, #f5a5ff 0%, #ff6b7f 100%);
-}
-
 /* 拖拽悬停状态 */
 .float-ball-container.drag-over .float-ball {
   background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
   box-shadow: 0 6px 20px rgba(74, 222, 128, 0.6);
   transform: scale(1.05);
-}
-
-/* 上传脉动动画 */
-@keyframes uploading-pulse {
-  0%,
-  100% {
-    box-shadow: 0 4px 12px rgba(240, 147, 251, 0.4);
-  }
-  50% {
-    box-shadow: 0 6px 20px rgba(240, 147, 251, 0.6);
-  }
 }
 
 .float-ball-icon {
@@ -182,33 +137,6 @@ onUnmounted(() => {
   justify-content: center;
   pointer-events: none;
   filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
-}
-
-.upload-percent {
-  font-size: 11px;
-  font-weight: 600;
-  pointer-events: none;
-}
-
-/* 进度环 */
-.progress-ring {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  transform: rotate(-90deg);
-  pointer-events: none;
-}
-
-.progress-ring-bg {
-  stroke: rgba(255, 255, 255, 0.2);
-}
-
-.progress-ring-circle {
-  stroke: white;
-  stroke-linecap: round;
-  transition: stroke-dashoffset 0.3s ease;
 }
 
 /* 拖放提示 */

@@ -1,9 +1,20 @@
 use tauri::{AppHandle, Manager, WebviewUrl, WebviewWindowBuilder};
 
+/// 显示并聚焦主窗口
+#[tauri::command]
+pub fn show_main_window(app: AppHandle) -> Result<(), String> {
+    if let Some(window) = app.get_webview_window("main") {
+        window.show().map_err(|e| e.to_string())?;
+        window.set_focus().map_err(|e| e.to_string())?;
+        window.unminimize().map_err(|e| e.to_string())?;
+        Ok(())
+    } else {
+        Err("Main window not found".to_string())
+    }
+}
+
 #[tauri::command]
 pub fn toggle_float_ball(app: AppHandle, show: bool) -> Result<(), String> {
-    log::info!("Toggle float ball: {}", show);
-
     if let Some(window) = app.get_webview_window("float-ball") {
         if show {
             window.show().map_err(|e| e.to_string())?;
@@ -22,8 +33,6 @@ pub fn toggle_float_ball(app: AppHandle, show: bool) -> Result<(), String> {
 
 #[tauri::command]
 pub fn close_float_ball(app: AppHandle) -> Result<(), String> {
-    log::info!("Close float ball window");
-
     if let Some(window) = app.get_webview_window("float-ball") {
         window.close().map_err(|e| e.to_string())?;
     }
@@ -45,7 +54,7 @@ fn create_float_ball_window(app: AppHandle) -> Result<(), String> {
     let config = AppConfigData::load();
     let float_config = &config.float_ball;
 
-    // 计算悬浮球位置（屏幕中间，方便看到）
+    // 计算悬浮球位置（右下角）
     let (x, y) = if float_config.default_x == 0.0 && float_config.default_y == 0.0 {
         let monitor = app.primary_monitor().ok().flatten();
         if let Some(monitor) = monitor {
@@ -54,10 +63,8 @@ fn create_float_ball_window(app: AppHandle) -> Result<(), String> {
             // 转换为逻辑坐标（物理坐标 / scale factor）
             let screen_width = size.width as f64 / scale;
             let screen_height = size.height as f64 / scale;
-            let x = (screen_width - float_config.width) / 2.0;
-            let y = (screen_height - float_config.height) / 2.0;
-            log::info!("Monitor: {}x{} (physical), scale: {}, logical: {}x{}, position: ({}, {})",
-                size.width, size.height, scale, screen_width, screen_height, x, y);
+            let x = screen_width - float_config.width - float_config.margin;
+            let y = screen_height - float_config.height - float_config.margin;
             (x, y)
         } else {
             (100.0, 100.0)
@@ -90,6 +97,6 @@ fn create_float_ball_window(app: AppHandle) -> Result<(), String> {
 
     window.show().map_err(|e| e.to_string())?;
 
-    log::info!("Float ball window created at position ({}, {})", x, y);
+    log::info!("Float ball window created");
     Ok(())
 }

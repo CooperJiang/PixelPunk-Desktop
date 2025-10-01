@@ -1,11 +1,17 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 import { invoke } from "@tauri-apps/api/core";
+import { listen, type UnlistenFn } from "@tauri-apps/api/event";
 import { appConfig } from "@/config";
+import FileUploadDialog from "@/components/FileUploadDialog.vue";
+import type { FilesDroppedPayload } from "@/types/events";
 import { Code2, Settings, Palette, Package, Circle } from "lucide-vue-next";
 
 const floatBallVisible = ref(false);
 const loading = ref(false);
+const fileUploadDialog = ref<InstanceType<typeof FileUploadDialog>>();
+
+let unlistenFilesDropped: UnlistenFn | null = null;
 
 // 检查悬浮球状态
 const checkFloatBallStatus = async () => {
@@ -30,8 +36,22 @@ const toggleFloatBall = async () => {
   }
 };
 
-onMounted(() => {
+onMounted(async () => {
   checkFloatBallStatus();
+
+  // 监听文件拖放事件
+  unlistenFilesDropped = await listen<FilesDroppedPayload>(
+    "files-dropped",
+    (event) => {
+      fileUploadDialog.value?.show(event.payload.files);
+    },
+  );
+});
+
+onUnmounted(() => {
+  if (unlistenFilesDropped) {
+    unlistenFilesDropped();
+  }
 });
 </script>
 
@@ -462,5 +482,8 @@ onMounted(() => {
         </div>
       </div>
     </div>
+
+    <!-- 文件上传对话框 -->
+    <FileUploadDialog ref="fileUploadDialog" />
   </div>
 </template>

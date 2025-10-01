@@ -1,7 +1,7 @@
 #[allow(unexpected_cfgs)]
 #[cfg(target_os = "macos")]
 pub fn set_window_transparent(window: &tauri::WebviewWindow) {
-    use cocoa::base::{id, NO};
+    use cocoa::base::{id, NO, YES};
     use objc::{class, msg_send, sel, sel_impl};
 
     unsafe {
@@ -29,8 +29,6 @@ pub fn set_window_transparent(window: &tauri::WebviewWindow) {
                 let key = ns_string("drawsBackground");
                 let _: () = msg_send![webview, setValue: no_number forKey: key];
             }
-
-            log::info!("macOS window set to transparent");
         }
     }
 }

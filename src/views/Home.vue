@@ -5,7 +5,21 @@ import { listen, type UnlistenFn } from "@tauri-apps/api/event";
 import { appConfig } from "@/config";
 import FileUploadDialog from "@/components/FileUploadDialog.vue";
 import type { FilesDroppedPayload } from "@/types/events";
-import { Code2, Settings, Palette, Package, Circle } from "lucide-vue-next";
+import {
+  Code2,
+  Settings,
+  Palette,
+  Package,
+  Circle,
+  RefreshCw,
+  Database,
+  Keyboard,
+  Bell,
+  Zap,
+  FileText,
+  BookOpen,
+  Github,
+} from "lucide-vue-next";
 
 const floatBallVisible = ref(false);
 const loading = ref(false);
@@ -150,6 +164,338 @@ onUnmounted(() => {
                 class="mt-4 rounded-lg bg-indigo-50 p-3 text-xs text-indigo-700"
               >
                 💡 悬浮球已在屏幕右下角显示，尝试拖放文件上传吧！
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 核心功能模块 -->
+      <div class="mb-12">
+        <h2 class="mb-6 text-2xl font-bold text-gray-900">
+          <Zap :size="28" class="mb-1 mr-2 inline-block text-yellow-500" />
+          核心功能模块
+        </h2>
+        <p class="mb-6 text-gray-600">
+          本模板已预置四个核心功能模块，开箱即用，配置驱动，轻松集成到你的应用中
+        </p>
+
+        <div class="grid gap-6 md:grid-cols-2">
+          <!-- 自动更新器 -->
+          <div
+            class="rounded-xl border-2 border-blue-200 bg-gradient-to-br from-blue-50 to-cyan-50 p-6"
+          >
+            <div class="mb-4 flex items-center gap-3">
+              <div
+                class="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-600"
+              >
+                <RefreshCw :size="24" class="text-white" />
+              </div>
+              <div>
+                <h3 class="text-lg font-bold text-gray-900">🔄 自动更新器</h3>
+                <p class="text-xs text-gray-500">基于 Tauri 内置更新插件</p>
+              </div>
+            </div>
+
+            <div class="mb-4 space-y-2 text-sm text-gray-700">
+              <p class="font-medium text-gray-900">功能特性：</p>
+              <div class="space-y-1 text-xs">
+                <div class="flex items-start gap-2">
+                  <span class="text-blue-600">✓</span>
+                  <span>自动检查更新，支持启动时检查和定时检查</span>
+                </div>
+                <div class="flex items-start gap-2">
+                  <span class="text-blue-600">✓</span>
+                  <span>实时下载进度跟踪，支持进度回调</span>
+                </div>
+                <div class="flex items-start gap-2">
+                  <span class="text-blue-600">✓</span>
+                  <span>静默更新或弹窗提示，灵活配置</span>
+                </div>
+                <div class="flex items-start gap-2">
+                  <span class="text-blue-600">✓</span>
+                  <span>版本信息展示（版本号、更新日志）</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-3 rounded-lg bg-white p-3">
+              <p class="mb-2 text-xs font-semibold text-gray-700">
+                <FileText :size="14" class="mb-0.5 mr-1 inline-block" />
+                配置文件：
+              </p>
+              <code class="text-xs text-blue-600"
+                >src/config/updater.config.ts</code
+              >
+            </div>
+
+            <div class="rounded-lg bg-gray-900 p-3">
+              <p class="mb-2 text-xs font-semibold text-gray-300">使用示例：</p>
+              <pre
+                class="text-xs text-gray-100"
+              ><code>import { updater } from '@/utils/updater'
+
+// 检查更新
+const info = await updater.checkForUpdates()
+if (info.available) {
+  console.log('新版本:', info.version)
+  // 下载并安装
+  await updater.downloadAndInstall()
+}</code></pre>
+            </div>
+
+            <div class="mt-3 rounded-lg bg-amber-50 p-2 text-xs text-amber-800">
+              <BookOpen :size="12" class="mb-0.5 mr-1 inline-block" />
+              需要配置更新服务器，详见 README.md
+            </div>
+          </div>
+
+          <!-- 数据持久化 -->
+          <div
+            class="rounded-xl border-2 border-emerald-200 bg-gradient-to-br from-emerald-50 to-teal-50 p-6"
+          >
+            <div class="mb-4 flex items-center gap-3">
+              <div
+                class="flex h-12 w-12 items-center justify-center rounded-lg bg-emerald-600"
+              >
+                <Database :size="24" class="text-white" />
+              </div>
+              <div>
+                <h3 class="text-lg font-bold text-gray-900">💾 数据持久化</h3>
+                <p class="text-xs text-gray-500">本地 JSON 存储 + Vue 响应式</p>
+              </div>
+            </div>
+
+            <div class="mb-4 space-y-2 text-sm text-gray-700">
+              <p class="font-medium text-gray-900">功能特性：</p>
+              <div class="space-y-1 text-xs">
+                <div class="flex items-start gap-2">
+                  <span class="text-emerald-600">✓</span>
+                  <span>支持嵌套键访问（如 'user.settings.theme'）</span>
+                </div>
+                <div class="flex items-start gap-2">
+                  <span class="text-emerald-600">✓</span>
+                  <span>自动保存机制，可配置保存间隔</span>
+                </div>
+                <div class="flex items-start gap-2">
+                  <span class="text-emerald-600">✓</span>
+                  <span>Vue Composable 支持，自动响应式更新</span>
+                </div>
+                <div class="flex items-start gap-2">
+                  <span class="text-emerald-600">✓</span>
+                  <span>跨平台路径管理，数据安全可靠</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-3 rounded-lg bg-white p-3">
+              <p class="mb-2 text-xs font-semibold text-gray-700">
+                <FileText :size="14" class="mb-0.5 mr-1 inline-block" />
+                配置文件：
+              </p>
+              <code class="text-xs text-emerald-600"
+                >src/config/storage.config.ts</code
+              >
+            </div>
+
+            <div class="rounded-lg bg-gray-900 p-3">
+              <p class="mb-2 text-xs font-semibold text-gray-300">使用示例：</p>
+              <pre
+                class="text-xs text-gray-100"
+              ><code>import { storage } from '@/utils/storage'
+import { useStorage } from '@/composables/useStorage'
+
+// 直接使用
+await storage.init()
+storage.set('theme', 'dark')
+const theme = storage.get('theme')
+
+// Vue 响应式
+const theme = useStorage('theme', 'light')</code></pre>
+            </div>
+
+            <div
+              class="mt-3 rounded-lg bg-emerald-50 p-2 text-xs text-emerald-800"
+            >
+              <BookOpen :size="12" class="mb-0.5 mr-1 inline-block" />
+              存储路径：AppData/app-data.json
+            </div>
+          </div>
+
+          <!-- 键盘快捷键 -->
+          <div
+            class="rounded-xl border-2 border-purple-200 bg-gradient-to-br from-purple-50 to-violet-50 p-6"
+          >
+            <div class="mb-4 flex items-center gap-3">
+              <div
+                class="flex h-12 w-12 items-center justify-center rounded-lg bg-purple-600"
+              >
+                <Keyboard :size="24" class="text-white" />
+              </div>
+              <div>
+                <h3 class="text-lg font-bold text-gray-900">⌨️ 键盘快捷键</h3>
+                <p class="text-xs text-gray-500">全局 + 局部快捷键支持</p>
+              </div>
+            </div>
+
+            <div class="mb-4 space-y-2 text-sm text-gray-700">
+              <p class="font-medium text-gray-900">功能特性：</p>
+              <div class="space-y-1 text-xs">
+                <div class="flex items-start gap-2">
+                  <span class="text-purple-600">✓</span>
+                  <span>全局快捷键（应用最小化时也能触发）</span>
+                </div>
+                <div class="flex items-start gap-2">
+                  <span class="text-purple-600">✓</span>
+                  <span>应用内快捷键（仅在应用聚焦时触发）</span>
+                </div>
+                <div class="flex items-start gap-2">
+                  <span class="text-purple-600">✓</span>
+                  <span>配置驱动，支持动态注册和注销</span>
+                </div>
+                <div class="flex items-start gap-2">
+                  <span class="text-purple-600">✓</span>
+                  <span>跨平台键位映射（Cmd/Ctrl 自动适配）</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-3 rounded-lg bg-white p-3">
+              <p class="mb-2 text-xs font-semibold text-gray-700">
+                <FileText :size="14" class="mb-0.5 mr-1 inline-block" />
+                配置文件：
+              </p>
+              <code class="text-xs text-purple-600"
+                >src/config/shortcuts.config.ts</code
+              >
+            </div>
+
+            <div class="rounded-lg bg-gray-900 p-3">
+              <p class="mb-2 text-xs font-semibold text-gray-300">使用示例：</p>
+              <pre
+                class="text-xs text-gray-100"
+              ><code>import { shortcutManager } from '@/utils/shortcuts'
+
+// 注册处理函数
+shortcutManager.registerHandler('toggleFloatBall', () => {
+  console.log('切换悬浮球')
+})
+
+// 注册所有快捷键
+await shortcutManager.registerAll()</code></pre>
+            </div>
+
+            <div
+              class="mt-3 rounded-lg bg-purple-50 p-2 text-xs text-purple-800"
+            >
+              <BookOpen :size="12" class="mb-0.5 mr-1 inline-block" />
+              默认快捷键：Cmd/Ctrl+Shift+F 切换悬浮球
+            </div>
+          </div>
+
+          <!-- 系统通知 -->
+          <div
+            class="rounded-xl border-2 border-orange-200 bg-gradient-to-br from-orange-50 to-amber-50 p-6"
+          >
+            <div class="mb-4 flex items-center gap-3">
+              <div
+                class="flex h-12 w-12 items-center justify-center rounded-lg bg-orange-600"
+              >
+                <Bell :size="24" class="text-white" />
+              </div>
+              <div>
+                <h3 class="text-lg font-bold text-gray-900">🔔 系统通知</h3>
+                <p class="text-xs text-gray-500">原生 OS 通知集成</p>
+              </div>
+            </div>
+
+            <div class="mb-4 space-y-2 text-sm text-gray-700">
+              <p class="font-medium text-gray-900">功能特性：</p>
+              <div class="space-y-1 text-xs">
+                <div class="flex items-start gap-2">
+                  <span class="text-orange-600">✓</span>
+                  <span>自动请求通知权限，无需手动处理</span>
+                </div>
+                <div class="flex items-start gap-2">
+                  <span class="text-orange-600">✓</span>
+                  <span>预置方法：success、error、info、warning</span>
+                </div>
+                <div class="flex items-start gap-2">
+                  <span class="text-orange-600">✓</span>
+                  <span>支持自定义标题、内容、图标</span>
+                </div>
+                <div class="flex items-start gap-2">
+                  <span class="text-orange-600">✓</span>
+                  <span>Vue Composable 支持，在组件中快速调用</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-3 rounded-lg bg-white p-3">
+              <p class="mb-2 text-xs font-semibold text-gray-700">
+                <FileText :size="14" class="mb-0.5 mr-1 inline-block" />
+                工具模块：
+              </p>
+              <code class="text-xs text-orange-600"
+                >src/utils/notification.ts</code
+              >
+            </div>
+
+            <div class="rounded-lg bg-gray-900 p-3">
+              <p class="mb-2 text-xs font-semibold text-gray-300">使用示例：</p>
+              <pre
+                class="text-xs text-gray-100"
+              ><code>import { notification } from '@/utils/notification'
+import { useNotification } from '@/composables/useNotification'
+
+// 直接使用
+await notification.success('成功', '操作完成')
+await notification.error('错误', '操作失败')
+
+// Vue Composable
+const { success, error } = useNotification()
+await success('成功', '保存成功')</code></pre>
+            </div>
+
+            <div
+              class="mt-3 rounded-lg bg-orange-50 p-2 text-xs text-orange-800"
+            >
+              <BookOpen :size="12" class="mb-0.5 mr-1 inline-block" />
+              首次使用会自动请求通知权限
+            </div>
+          </div>
+        </div>
+
+        <!-- 文档链接 -->
+        <div class="mt-6 rounded-xl border border-indigo-200 bg-indigo-50 p-6">
+          <div class="flex items-start gap-4">
+            <div
+              class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-indigo-600"
+            >
+              <Github :size="20" class="text-white" />
+            </div>
+            <div class="flex-1">
+              <h3 class="mb-2 text-lg font-bold text-gray-900">📚 完整文档</h3>
+              <p class="mb-3 text-sm text-gray-700">
+                查看
+                <code class="rounded bg-white px-2 py-1 text-xs text-indigo-600"
+                  >README.md</code
+                >
+                获取详细的 API 文档、配置说明和最佳实践
+              </p>
+              <div class="flex flex-wrap gap-2 text-xs">
+                <span class="rounded bg-white px-3 py-1 text-gray-700"
+                  >📝 配置指南</span
+                >
+                <span class="rounded bg-white px-3 py-1 text-gray-700"
+                  >🔧 API 参考</span
+                >
+                <span class="rounded bg-white px-3 py-1 text-gray-700"
+                  >💡 使用示例</span
+                >
+                <span class="rounded bg-white px-3 py-1 text-gray-700"
+                  >🐛 故障排查</span
+                >
               </div>
             </div>
           </div>

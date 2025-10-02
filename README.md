@@ -1,419 +1,279 @@
-# Tauri Vue Template
+<h1 align="center">PixelPunk</h1>
 
 <p align="center">
-  基于 Tauri 2.0 + Vue 3 + TypeScript 的跨平台桌面应用开发模板
+  <strong>基于 Tauri 2.0 + Vue 3 + TypeScript 的现代化桌面应用开发模板</strong>
+</p>
+
+<p align="center">
+  开箱即用 · 配置驱动 · 功能完备
 </p>
 
 <p align="center">
   <a href="#特性">特性</a> •
   <a href="#快速开始">快速开始</a> •
-  <a href="#配置说明">配置说明</a> •
-  <a href="#托盘配置">托盘配置</a> •
-  <a href="#图标配置">图标配置</a>
+  <a href="#核心模块">核心模块</a> •
+  <a href="#配置指南">配置指南</a> •
+  <a href="#文档">文档</a>
 </p>
 
 ---
 
+## 预览
+
+<div align="center">
+  <img src="docs/image/preview-1.png" alt="PixelPunk Preview" width="800">
+</div>
+
 ## 特性
 
-- ⚡️ **现代技术栈** - Tauri 2.0 + Vue 3 + TypeScript + Vite + Tailwind CSS
-- 🎯 **悬浮球功能** - 支持文件拖放上传、实时进度显示、全局拖动定位
-- 🎨 **自定义标题栏** - macOS 风格标题栏，支持窗口控制
-- 🔔 **系统托盘** - 支持多级菜单分组，完全可配置
-- 📦 **轻量打包** - 基于 Rust，打包体积小，性能优异
-- 🛠️ **完全配置化** - 所有配置通过 TypeScript 统一管理，自动同步到 Rust
-- 🎯 **状态管理** - 集成 Pinia 状态管理
-- 💅 **代码规范** - ESLint + Prettier + Husky
+### 🎯 核心功能
+
+- **🔄 自动更新** - 内置更新器，支持版本检查、下载进度、自动安装
+- **💾 数据持久化** - 本地存储方案，支持嵌套访问、自动保存、Vue 响应式
+- **⌨️ 快捷键系统** - 全局/局部快捷键，配置驱动，跨平台支持
+- **🔔 系统通知** - 原生通知集成，自动权限管理，预置快捷方法
+- **🎯 悬浮球** - 文件拖放上传、实时进度、可拖动、始终置顶
+
+### ✨ 开发体验
+
+- **⚡️ 现代技术栈** - Tauri 2.0 + Vue 3 + TypeScript + Vite + Tailwind CSS
+- **🎨 自定义窗口** - macOS 风格标题栏，完美透明窗口支持
+- **🔔 系统托盘** - 多级菜单分组，完全可配置
+- **📦 轻量高效** - Rust 底层，体积小巧，性能卓越
+- **🛠️ 配置驱动** - TypeScript 配置自动同步到 Rust
+- **💅 代码规范** - ESLint + Prettier + Husky 开箱即用
 
 ## 技术栈
 
-| 技术         | 版本   | 说明         |
-| ------------ | ------ | ------------ |
-| Tauri        | 2.8.5  | 桌面应用框架 |
-| Vue          | 3.5.21 | 前端框架     |
-| TypeScript   | 5.8.3  | 类型支持     |
-| Vite         | 7.1.7  | 构建工具     |
-| Tailwind CSS | 3.4.17 | 样式框架     |
-| Pinia        | 3.0.3  | 状态管理     |
+```
+Frontend:  Vue 3.5 + TypeScript 5.8 + Vite 7.1 + Tailwind CSS 3.4
+Backend:   Tauri 2.8 + Rust 1.70+
+State:     Pinia 3.0
+```
 
 ## 快速开始
 
-### 环境要求
+### 环境准备
 
 - Node.js 20.19+ 或 22.12+
 - Rust 1.70+
-- 系统特定依赖（参考 [Tauri Prerequisites](https://tauri.app/v2/guides/prerequisites/)）
+- 系统依赖：参考 [Tauri Prerequisites](https://tauri.app/v2/guides/prerequisites/)
 
-### 安装依赖
+### 安装运行
 
 ```bash
+# 克隆项目
+git clone <your-repo-url>
+cd pixelpunk
+
+# 安装依赖
 npm install
-```
 
-### 开发模式
-
-```bash
+# 开发模式
 npm run tauri:dev
-```
 
-这个命令会：
-
-1. 自动同步配置（`src/config/app.config.ts` → `src-tauri/app.config.json`）
-2. 启动 Vite 开发服务器
-3. 启动 Tauri 应用
-
-### 构建应用
-
-```bash
+# 构建应用
 npm run tauri:build
 ```
 
-构建产物位于 `src-tauri/target/release/bundle/`
+## 核心模块
+
+本模板预置了四个企业级功能模块，开箱即用，全部基于配置驱动。
+
+### 🔄 自动更新器
+
+支持应用自动更新，内置下载进度跟踪、版本检查。
+
+```typescript
+import { updater } from "@/utils/updater";
+
+// 检查并安装更新
+const info = await updater.checkForUpdates();
+if (info.available) {
+  await updater.downloadAndInstall();
+}
+
+// 监听下载进度
+updater.onProgress((progress) => {
+  console.log(`${progress.percentage}%`);
+});
+```
+
+**配置文件**: `src/config/updater.config.ts`
+
+### 💾 数据持久化
+
+本地数据存储，支持嵌套访问、自动保存、Vue 响应式。
+
+```typescript
+import { storage } from "@/utils/storage";
+import { useStorage } from "@/composables/useStorage";
+
+// 直接使用
+await storage.init();
+storage.set("user.name", "Alice");
+const name = storage.get("user.name");
+
+// Vue 响应式（推荐）
+const theme = useStorage("theme", "light");
+theme.value = "dark"; // 自动保存
+```
+
+**配置文件**: `src/config/storage.config.ts`
+
+### ⌨️ 快捷键系统
+
+全局/局部快捷键，配置驱动，支持动态注册。
+
+```typescript
+import { shortcutManager } from "@/utils/shortcuts";
+
+// 注册处理函数
+shortcutManager.registerHandler("toggleFloatBall", async () => {
+  await invoke("toggle_float_ball", { show: true });
+});
+
+// 注册所有快捷键
+await shortcutManager.registerAll();
+```
+
+**配置文件**: `src/config/shortcuts.config.ts`
+
+### 🔔 系统通知
+
+原生系统通知，自动权限管理，预置快捷方法。
+
+```typescript
+import { notification } from "@/utils/notification";
+import { useNotification } from "@/composables/useNotification";
+
+// 直接使用
+await notification.success("成功", "操作完成");
+await notification.error("错误", "操作失败");
+
+// Vue Composable
+const { success, error } = useNotification();
+await success("保存成功", "数据已保存");
+```
+
+**工具模块**: `src/utils/notification.ts`
+
+## 配置指南
+
+### 应用配置
+
+所有配置集中在 `src/config/app.config.ts`，修改后自动同步到 Rust。
+
+```typescript
+export const appConfig = {
+  name: "你的应用名称",
+  version: "1.0.0",
+  author: "你的名字",
+  description: "应用描述",
+
+  window: {
+    width: 1200,
+    height: 800,
+    // ... 更多窗口配置
+  },
+
+  tray: {
+    enabled: true,
+    tooltip: "应用提示",
+    menus: [
+      {
+        label: "应用",
+        items: [
+          { id: "about", label: "关于", action: "about" },
+          { id: "quit", label: "退出", action: "quit" },
+        ],
+      },
+    ],
+  },
+};
+```
+
+### 配置工作流
+
+```
+1. 修改 src/config/app.config.ts
+         ↓
+2. 运行 npm run tauri:dev
+         ↓
+3. 配置自动同步并应用
+```
+
+### 手动同步配置
+
+```bash
+npm run sync:config
+```
 
 ## 项目结构
 
 ```
 pixelpunk/
-├── src/                          # Vue 前端代码
+├── src/                          # Vue 前端
 │   ├── config/                   # 📝 配置文件（主要修改位置）
-│   │   └── app.config.ts        # 应用配置
+│   │   ├── app.config.ts        # 应用配置
+│   │   ├── updater.config.ts    # 更新器配置
+│   │   ├── storage.config.ts    # 存储配置
+│   │   └── shortcuts.config.ts  # 快捷键配置
+│   ├── utils/                    # 工具模块
+│   ├── composables/              # Vue Composables
 │   ├── features/                 # 功能模块
-│   │   ├── float-ball/          # 悬浮球功能
-│   │   └── about/               # 关于页面
-│   ├── views/                    # 页面视图
-│   ├── components/               # 全局组件
-│   ├── types/                    # TypeScript 类型定义
-│   └── stores/                   # Pinia 状态管理
+│   └── views/                    # 页面视图
 │
-├── src-tauri/                    # Rust 后端代码
+├── src-tauri/                    # Rust 后端
 │   ├── src/
-│   │   ├── lib.rs               # 主入口（托盘、窗口管理）
-│   │   ├── commands.rs          # Tauri 命令定义
-│   │   ├── config.rs            # 配置加载逻辑
-│   │   └── macos.rs             # macOS 特定功能（窗口透明）
+│   │   ├── lib.rs               # 主入口
+│   │   ├── commands.rs          # Tauri 命令
+│   │   ├── config.rs            # 配置加载
+│   │   └── macos.rs             # macOS 特定功能
 │   ├── icons/                    # 🎨 应用图标
-│   │   ├── 32x32.png           # 托盘图标
-│   │   ├── icon.icns           # macOS 应用图标
-│   │   ├── icon.ico            # Windows 应用图标
-│   │   └── icon.png            # Linux 应用图标
-│   ├── app.config.json          # 自动生成（无需手动修改）
-│   └── tauri.conf.json          # Tauri 配置
+│   └── app.config.json          # 自动生成（勿手动修改）
 │
-├── scripts/
-│   └── sync-config.js            # 配置同步脚本
-└── public/                       # 静态资源
-```
-
-## 配置说明
-
-### 配置文件位置
-
-**唯一需要修改的配置文件**：`src/config/app.config.ts`
-
-所有配置都在这个文件中完成，包括：
-
-- 应用信息（名称、版本、作者等）
-- 窗口配置（尺寸、行为）
-- 托盘配置（菜单、图标）
-- 开发配置
-
-### 配置工作流程
-
-```
-1. 修改 src/config/app.config.ts
-         ↓
-2. 运行 npm run tauri:dev 或 npm run tauri:build
-         ↓
-3. 自动执行 sync-config.js 脚本
-         ↓
-4. 生成 src-tauri/app.config.json
-         ↓
-5. Rust 启动时读取配置并应用
-```
-
-### 基础配置示例
-
-```typescript
-// src/config/app.config.ts
-export const appConfig: AppConfig = {
-  // 应用信息
-  name: '你的应用名称',
-  version: '1.0.0',
-  author: '你的名字',
-  description: '应用描述',
-  homepage: 'https://your-website.com',
-  repository: 'https://github.com/your/repo',
-  copyright: 'Copyright © 2025 Your Name',
-
-  // 窗口配置
-  window: {
-    width: 1200,              // 窗口宽度
-    height: 800,              // 窗口高度
-    minWidth: 800,            // 最小宽度
-    minHeight: 600,           // 最小高度
-    resizable: true,          // 可调整大小
-    maximizable: true,        // 可最大化
-    minimizable: true,        // 可最小化
-    closable: true,           // 可关闭
-    alwaysOnTop: false,       // 是否置顶
-    center: true,             // 启动时居中
-    skipTaskbar: false,       // 是否跳过任务栏
-  },
-
-  // 托盘配置（见下文详细说明）
-  tray: { ... },
-
-  // 悬浮球配置
-  float_ball: {
-    enabled: true,            // 是否启用悬浮球
-    width: 56,                // 悬浮球宽度
-    height: 56,               // 悬浮球高度
-    default_x: 0,             // 默认 X 位置（0 表示居中）
-    default_y: 0,             // 默认 Y 位置（0 表示居中）
-    always_on_top: true,      // 是否始终置顶
-  },
-
-  // 开发配置
-  dev: {
-    openDevTools: false,      // 是否自动打开开发者工具
-  },
-};
+└── scripts/
+    └── sync-config.js            # 配置同步脚本
 ```
 
 ## 悬浮球功能
 
-### 功能说明
+悬浮球提供完整的文件拖放上传体验：
 
-悬浮球提供了完整的文件拖放上传体验，适合快速文件处理场景：
+- **文件拖放**: 拖动文件到悬浮球触发上传
+- **实时进度**: 显示上传进度和状态
+- **自由拖动**: 可拖动到屏幕任意位置
+- **始终置顶**: 不被其他窗口遮挡
+- **透明窗口**: macOS 原生透明支持
 
-- **文件拖放**：将文件拖到悬浮球上即可触发上传流程
-- **视觉反馈**：拖动时显示绿色高亮，上传时显示进度环和百分比
-- **自由拖动**：可以将悬浮球拖动到屏幕任意位置
-- **始终置顶**：悬浮球始终保持在最上层，不被其他窗口遮挡
-- **窗口透明**：完美的透明背景支持（macOS 原生实现）
-
-### 技术实现
-
-悬浮球基于以下技术实现：
-
-1. **Tauri 2.0 事件系统**
-   - `tauri://drag-drop`：接收拖放的文件路径
-   - `tauri://drag-over`：显示拖动悬停效果
-   - `tauri://drag-leave`：取消悬停效果
-
-2. **跨窗口通信**
-   - 悬浮球接收文件后，通过 `emit` 发送自定义事件
-   - 主窗口通过 `listen` 监听事件并显示上传对话框
-
-3. **macOS 原生透明窗口**
-   - 使用 Objective-C 接口实现真正的窗口透明
-   - 支持拖动而不影响文件拖放功能
-
-### 使用方法
-
-1. **启用悬浮球**
-
-在主界面点击悬浮球开关按钮，或通过代码控制：
+**使用示例**:
 
 ```typescript
 import { invoke } from "@tauri-apps/api/core";
 
-// 显示悬浮球
+// 显示/隐藏悬浮球
 await invoke("toggle_float_ball", { show: true });
 
-// 隐藏悬浮球
-await invoke("toggle_float_ball", { show: false });
-
-// 检查悬浮球状态
+// 检查状态
 const isVisible = await invoke<boolean>("is_float_ball_visible");
 ```
 
-2. **文件拖放流程**
-
-```
-用户拖动文件到悬浮球
-    ↓
-触发 tauri://drag-drop 事件
-    ↓
-悬浮球调用 show_main_window 命令
-    ↓
-发送 files-dropped 自定义事件
-    ↓
-主窗口监听事件并显示上传对话框
-    ↓
-在对话框中处理上传业务逻辑
-```
-
-3. **自定义上传逻辑**
-
-在 `src/components/FileUploadDialog.vue` 的 `handleConfirm` 方法中添加你的上传逻辑：
-
-```typescript
-const handleConfirm = () => {
-  // 在此处添加实际的上传逻辑
-  // 例如：调用上传 API、更新上传进度等
-  const filePaths = files.value;
-
-  // 你的上传代码...
-
-  hide();
-};
-```
-
-### 配置选项
-
-在 `src/config/app.config.ts` 中配置悬浮球：
-
-```typescript
-float_ball: {
-  enabled: true,            // 是否启用悬浮球
-  width: 56,                // 悬浮球宽度（像素）
-  height: 56,               // 悬浮球高度（像素）
-  default_x: 0,             // 默认 X 位置（0 表示屏幕居中）
-  default_y: 0,             // 默认 Y 位置（0 表示屏幕居中）
-  always_on_top: true,      // 是否始终置顶
-}
-```
-
-### 事件监听
-
-在你的组件中监听文件拖放事件：
-
-```typescript
-import { listen } from "@tauri-apps/api/event";
-import type { FilesDroppedPayload } from "@/types/events";
-
-const unlisten = await listen<FilesDroppedPayload>("files-dropped", (event) => {
-  const filePaths = event.payload.files;
-  console.log("接收到文件:", filePaths);
-  // 处理文件...
-});
-
-// 组件卸载时清理监听器
-onUnmounted(() => {
-  unlisten();
-});
-```
-
-### 样式自定义
-
-悬浮球样式在 `src/features/float-ball/FloatBall.vue` 中定义：
-
-- **默认状态**：紫色渐变背景
-- **悬停状态**：提亮颜色
-- **上传状态**：粉红色渐变 + 脉动动画
-- **拖放悬停**：绿色高亮 + 缩放效果
-
-你可以根据需要修改这些样式以匹配你的应用设计。
-
-## 托盘配置
-
-### 多级菜单配置
-
-```typescript
-tray: {
-  enabled: true,              // 是否启用托盘
-  tooltip: '应用提示文字',      // 鼠标悬停提示
-  title: '',                  // 托盘标题（macOS 显示，空字符串不显示）
-  menus: [                    // 多级菜单分组
-    {
-      label: '应用',          // 一级菜单标题
-      items: [                // 该分组下的菜单项
-        { id: 'about', label: '关于', action: 'about' },
-        { id: 'settings', label: '设置', action: 'custom' },
-      ],
-    },
-    {
-      label: '窗口',
-      items: [
-        { id: 'show', label: '显示窗口', action: 'show' },
-        { id: 'quit', label: '退出', action: 'quit' },
-      ],
-    },
-  ],
-}
-```
-
-### 菜单项配置说明
-
-每个菜单项包含三个字段：
-
-- **id**: 唯一标识符，用于事件处理
-- **label**: 显示的菜单文本
-- **action**: 预定义动作或自定义动作
-
-### 预定义动作
-
-| Action  | 说明     | 行为                     |
-| ------- | -------- | ------------------------ |
-| `about` | 关于窗口 | 打开关于页面（独立窗口） |
-| `show`  | 显示窗口 | 显示并聚焦主窗口         |
-| `quit`  | 退出应用 | 退出应用程序             |
-
-### 添加自定义菜单项
-
-#### 1. 在配置中添加菜单项
-
-```typescript
-{
-  label: '应用',
-  items: [
-    { id: 'settings', label: '设置', action: 'custom' },
-    { id: 'preferences', label: '偏好设置', action: 'custom' },
-  ],
-}
-```
-
-#### 2. 在 Rust 中处理事件
-
-编辑 `src-tauri/src/lib.rs`，在 `on_menu_event` 中添加处理逻辑：
-
-```rust
-.on_menu_event(|app, event| {
-  match event.id.as_ref() {
-    "settings" => {
-      log::info!("Settings menu clicked");
-      // 打开设置窗口或执行其他逻辑
-    }
-    "preferences" => {
-      log::info!("Preferences menu clicked");
-      // 你的自定义逻辑
-    }
-    // ... 其他预定义动作
-    _ => {
-      log::warn!("Unknown menu event: {:?}", event.id);
-    }
-  }
-})
-```
+**配置**: `src/config/app.config.ts` → `float_ball` 部分
 
 ## 图标配置
 
 ### 自动生成图标
 
-**只需一个 PNG 文件，自动生成所有平台应用图标！**
+准备一个 1024×1024 的 PNG 图标，命名为 `logo.png` 放在项目根目录：
 
-1. **准备源图片**
-   - 将你的 logo 命名为 `logo.png`，放在项目根目录
-   - 建议尺寸：1024×1024 或更大
-   - 格式：PNG（支持透明背景）
+```bash
+npm run generate-icons
+```
 
-2. **运行生成脚本**
+自动生成所有平台的应用图标（macOS icns、Windows ico、Linux png）。
 
-   ```bash
-   npm run generate-icons
-   ```
-
-3. **重新构建应用**
-   ```bash
-   npm run tauri:build
-   ```
-
-脚本会自动生成：macOS icns、Windows ico、Linux png 等应用图标。
-
-⚠️ **注意**：macOS 托盘图标（32x32.png）有特殊要求，建议手动设计。详见 [TRAY_ICON_GUIDE.md](./TRAY_ICON_GUIDE.md)
-
-📖 详细说明请查看 [ICON_GUIDE.md](./ICON_GUIDE.md)
+**详细说明**: 参考 [ICON_GUIDE.md](./ICON_GUIDE.md)
 
 ### 图标位置
 
@@ -424,34 +284,20 @@ tray: {
 | Windows 应用图标 | `src-tauri/icons/icon.ico`  | 多尺寸     |
 | Linux 应用图标   | `src-tauri/icons/icon.png`  | 512×512 px |
 
-### 手动替换图标
-
-如果不使用自动生成，也可以手动替换：
-
-1. 将新图标文件放到 `src-tauri/icons/` 目录
-2. 保持文件名不变
-3. 运行 `npm run tauri:build` 重新构建
-
-### 托盘图标设计建议
-
-- **macOS**：使用黑白透明图标（模板图标），会自动适应系统主题
-- **Windows**：可以使用彩色图标
-- **Linux**：支持透明背景的 PNG
-
 ## 常用命令
 
 ```bash
 # 开发
-npm run dev              # 仅启动 Vite 开发服务器
-npm run tauri:dev        # 启动完整开发环境（推荐）
+npm run tauri:dev        # 开发模式（推荐）
+npm run dev              # 仅前端开发服务器
 
 # 构建
-npm run build            # 构建前端
 npm run tauri:build      # 构建完整应用
+npm run build            # 仅构建前端
 
 # 配置
-npm run sync:config      # 手动同步配置
-npm run generate-icons   # 生成应用图标
+npm run sync:config      # 同步配置
+npm run generate-icons   # 生成图标
 
 # 代码质量
 npm run lint             # 代码检查
@@ -459,68 +305,77 @@ npm run format           # 代码格式化
 npm run type-check       # 类型检查
 ```
 
-## 更新配置
+## 文档
 
-### 方法 1：自动同步（推荐）
+- **完整功能文档**: 查看应用内 Home 页面
+- **插件安装指南**: [PLUGINS_SETUP.md](./PLUGINS_SETUP.md)
+- **图标配置指南**: [ICON_GUIDE.md](./ICON_GUIDE.md)
+- **托盘图标设计**: [TRAY_ICON_GUIDE.md](./TRAY_ICON_GUIDE.md)
 
-修改 `src/config/app.config.ts` 后，运行：
+## 常见问题
+
+<details>
+<summary><strong>配置不生效怎么办？</strong></summary>
+
+确保运行了配置同步：
 
 ```bash
+npm run sync:config
 npm run tauri:dev
 ```
 
-配置会自动同步并应用。
+</details>
 
-### 方法 2：手动同步
+<details>
+<summary><strong>如何添加自定义托盘菜单？</strong></summary>
 
-如果只想同步配置而不启动应用：
+1. 在 `src/config/app.config.ts` 中添加菜单项
+2. 在 `src-tauri/src/lib.rs` 的 `on_menu_event` 中处理事件
+</details>
+
+<details>
+<summary><strong>Node.js 版本警告</strong></summary>
+
+使用 nvm 升级到 Node.js 20.19+ 或 22.12+：
 
 ```bash
-npm run sync:config
+nvm install 22
+nvm use 22
+nvm alias default 22
 ```
+
+</details>
+
+<details>
+<summary><strong>更多问题？</strong></summary>
+
+查看 [Issues](../../issues) 或提交新问题。
+
+</details>
 
 ## 开发建议
 
-### 1. 配置修改流程
+### 添加新功能
 
-每次修改配置后：
-
-```bash
-npm run tauri:dev  # 会自动同步配置
-```
-
-或手动同步：
-
-```bash
-npm run sync:config
-```
-
-### 2. 添加新功能模块
-
-推荐使用 `features/` 目录组织功能：
+推荐使用 `features/` 目录组织功能模块：
 
 ```
 src/features/
 ├── about/               # 关于功能
-│   ├── About.vue
-│   └── index.ts
 └── your-feature/        # 你的新功能
     ├── YourFeature.vue
     └── index.ts
 ```
 
-### 3. 状态管理
+### 状态管理
 
 使用 Pinia 管理全局状态：
 
 ```typescript
-// src/stores/example.ts
 import { defineStore } from "pinia";
 
 export const useExampleStore = defineStore("example", {
-  state: () => ({
-    count: 0,
-  }),
+  state: () => ({ count: 0 }),
   actions: {
     increment() {
       this.count++;
@@ -529,120 +384,28 @@ export const useExampleStore = defineStore("example", {
 });
 ```
 
-### 4. 调试
+### 调试技巧
 
-- **前端调试**：浏览器开发者工具（自动打开）
-- **Rust 日志**：查看终端输出
-- **启用 DevTools**：在 `app.config.ts` 中设置 `dev.openDevTools: true`
+- **前端调试**: 浏览器开发者工具
+- **Rust 日志**: 查看终端输出
+- **启用 DevTools**: 在 `app.config.ts` 中设置 `dev.openDevTools: true`
 
-## 常见问题
+## 贡献
 
-### 1. 端口被占用
+欢迎提交 Issue 和 Pull Request！
 
-```bash
-Error: Port 5173 is already in use
-```
+在提交 PR 之前，请确保：
 
-**解决方案**：
-
-```bash
-# macOS/Linux
-lsof -ti:5173 | xargs kill -9
-
-# Windows
-netstat -ano | findstr :5173
-taskkill /PID <PID> /F
-```
-
-### 2. 配置不生效
-
-确保运行了配置同步：
-
-```bash
-npm run sync:config
-```
-
-然后重启应用：
-
-```bash
-npm run tauri:dev
-```
-
-### 3. Rust 编译错误
-
-清理并重新构建：
-
-```bash
-cd src-tauri
-cargo clean
-cd ..
-npm run tauri:dev
-```
-
-### 4. 托盘图标不显示
-
-- 检查 `app.config.ts` 中 `tray.enabled` 是否为 `true`
-- 确认图标文件存在：`src-tauri/icons/32x32.png`
-- macOS 系统：检查菜单栏是否有足够空间显示图标
-
-### 5. 悬浮球不响应文件拖放
-
-**确保使用 Tauri 2.0 的事件名称**：
-
-- ✅ `tauri://drag-drop`（Tauri 2.0）
-- ❌ `tauri://file-drop`（Tauri 1.x，已弃用）
-
-**检查权限配置**（`src-tauri/tauri.conf.json`）：
-
-```json
-{
-  "identifier": "float-ball-capability",
-  "windows": ["float-ball"],
-  "permissions": [
-    "core:window:allow-start-dragging",
-    "core:event:allow-listen",
-    "core:event:allow-emit"
-  ]
-}
-```
-
-### 6. Node.js 版本警告
-
-```
-You are using Node.js 20.18.3. Vite requires Node.js version 20.19+ or 22.12+
-```
-
-**解决方案**：使用 nvm 升级 Node.js
-
-```bash
-# 安装最新 LTS 版本
-nvm install 22
-nvm use 22
-nvm alias default 22
-```
-
-## 项目特点
-
-### 完全配置化
-
-所有应用配置集中在 `src/config/app.config.ts`，修改后自动同步到 Rust 后端，无需手动维护多份配置文件。
-
-### 类型安全
-
-TypeScript + Rust 双重类型保护，配置错误在编译时就能发现。
-
-### 开发体验
-
-- 热重载：前端代码修改实时生效
-- 自动同步：配置修改自动同步到后端
-- 统一管理：一处配置，全局生效
+- 代码通过 `npm run lint` 检查
+- 代码通过 `npm run type-check` 检查
+- 添加必要的测试和文档
 
 ## 许可证
 
-MIT License
+MIT License - 详见 [LICENSE](LICENSE) 文件
 
 ---
 
-**开发模板**: Tauri Vue Template
-**模板版本**: 1.0.0
-**更新日期**: 2025-10-01
+<p align="center">
+  <sub>基于 Tauri 2.0 + Vue 3 构建</sub>
+</p>

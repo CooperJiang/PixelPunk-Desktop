@@ -39,6 +39,7 @@ coverage
 *.njsproj
 *.sln
 *.sw?
+.claude
 
 # Tauri
 src-tauri/target

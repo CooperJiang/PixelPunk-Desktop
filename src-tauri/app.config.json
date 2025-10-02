@@ -60,12 +60,11 @@
   },
   "float_ball": {
     "enabled": true,
-    "width": 56,
-    "height": 56,
+    "width": 400,
+    "height": 450,
     "default_x": 0,
     "default_y": 0,
     "always_on_top": true,
-    "margin": 80,
     "panel": {
       "width": 320,
       "height": 450,

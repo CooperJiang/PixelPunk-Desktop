@@ -1,7 +1,7 @@
 #[allow(unexpected_cfgs)]
 #[cfg(target_os = "macos")]
 pub fn set_window_transparent(window: &tauri::WebviewWindow) {
-    use cocoa::base::{id, NO, YES};
+    use cocoa::base::{id, NO};
     use objc::{class, msg_send, sel, sel_impl};
 
     unsafe {

@@ -1,50 +1,54 @@
 <h1 align="center">PixelPunk</h1>
 
 <p align="center">
-  <strong>基于 Tauri 2.0 + Vue 3 + TypeScript 的现代化桌面应用开发模板</strong>
+  <strong>A Modern Desktop Application Development Template based on Tauri 2.0 + Vue 3 + TypeScript</strong>
 </p>
 
 <p align="center">
-  开箱即用 · 配置驱动 · 功能完备
+  Ready to Use · Configuration Driven · Feature Complete
 </p>
 
 <p align="center">
-  <a href="#特性">特性</a> •
-  <a href="#快速开始">快速开始</a> •
-  <a href="#核心模块">核心模块</a> •
-  <a href="#文档">文档</a>
+  English | <a href="./docs/README_CN.md">简体中文</a>
+</p>
+
+<p align="center">
+  <a href="#features">Features</a> •
+  <a href="#quick-start">Quick Start</a> •
+  <a href="#core-modules">Core Modules</a> •
+  <a href="#documentation">Documentation</a>
 </p>
 
 ---
 
-## 预览
+## Preview
 
 <div align="center">
   <img src="docs/image/preview-1.png" alt="PixelPunk Preview" width="100%">
-  <p><i>配置驱动 · 四大核心模块开箱即用</i></p>
+  <p><i>Configuration Driven · Four Core Modules Ready to Use</i></p>
 </div>
 
-## 特性
+## Features
 
-### 🎯 核心功能模块
+### 🎯 Core Modules
 
-本模板预置了四个企业级功能模块，全部基于配置驱动，开箱即用：
+This template includes four enterprise-grade functional modules, all configuration-driven and ready to use:
 
-- **🔄 自动更新器** - 版本检查、下载进度、自动安装
-- **💾 数据持久化** - 本地存储、嵌套访问、Vue 响应式
-- **⌨️ 快捷键系统** - 全局/局部快捷键、跨平台支持
-- **🔔 系统通知** - 原生通知、权限管理、快捷方法
+- **🔄 Auto Updater** - Version checking, download progress, auto-installation
+- **💾 Data Persistence** - Local storage, nested access, Vue reactivity
+- **⌨️ Shortcuts System** - Global/local shortcuts, cross-platform support
+- **🔔 System Notifications** - Native notifications, permission management, shortcut methods
 
-### ✨ 完整功能
+### ✨ Complete Features
 
-- **🎯 悬浮球** - 文件拖放上传、实时进度、可拖动、始终置顶
-- **🎨 自定义窗口** - macOS 风格标题栏、透明窗口支持
-- **🔔 系统托盘** - 多级菜单分组、完全可配置
-- **📦 轻量高效** - Rust 底层，体积小巧，性能卓越
-- **🛠️ 配置驱动** - TypeScript 配置自动同步到 Rust
-- **💅 代码规范** - ESLint + Prettier + Husky 开箱即用
+- **🎯 Floating Ball** - File drag & drop upload, real-time progress, draggable, always on top
+- **🎨 Custom Window** - macOS-style title bar, transparent window support
+- **🔔 System Tray** - Multi-level menu groups, fully configurable
+- **📦 Lightweight & Efficient** - Rust-based, small size, excellent performance
+- **🛠️ Configuration Driven** - TypeScript config auto-synced to Rust
+- **💅 Code Standards** - ESLint + Prettier + Husky out of the box
 
-## 技术栈
+## Tech Stack
 
 ```
 Frontend:  Vue 3.5 + TypeScript 5.8 + Vite 7.1 + Tailwind CSS 3.4
@@ -52,157 +56,157 @@ Backend:   Tauri 2.8 + Rust 1.70+
 State:     Pinia 3.0
 ```
 
-## 快速开始
+## Quick Start
 
-### 环境准备
+### Prerequisites
 
-- Node.js 20.19+ 或 22.12+
+- Node.js 20.19+ or 22.12+
 - Rust 1.70+
-- 系统依赖：参考 [Tauri Prerequisites](https://tauri.app/v2/guides/prerequisites/)
+- System dependencies: See [Tauri Prerequisites](https://tauri.app/v2/guides/prerequisites/)
 
-### 安装运行
+### Installation
 
 ```bash
-# 克隆项目
+# Clone the project
 git clone <your-repo-url>
 cd pixelpunk
 
-# 安装依赖
+# Install dependencies
 npm install
 
-# 开发模式
+# Development mode
 npm run tauri:dev
 
-# 构建应用
+# Build application
 npm run tauri:build
 ```
 
-## 核心模块
+## Core Modules
 
-本模板内置四个开箱即用的核心模块，详细使用方法请查看 **[开发文档](./DEVELOPMENT.md)**。
+This template includes four ready-to-use core modules. For detailed usage, see **[Development Guide](./docs/DEVELOPMENT.md)**.
 
-| 模块          | 功能                           | 配置文件                         |
-| ------------- | ------------------------------ | -------------------------------- |
-| 🔄 自动更新器 | 版本检查、下载进度、自动安装   | `src/config/updater.config.ts`   |
-| 💾 数据持久化 | 本地存储、嵌套访问、Vue 响应式 | `src/config/storage.config.ts`   |
-| ⌨️ 快捷键系统 | 全局/局部快捷键、配置驱动      | `src/config/shortcuts.config.ts` |
-| 🔔 系统通知   | 原生通知、权限管理、快捷方法   | `src/utils/notification.ts`      |
+| Module              | Features                                       | Config File                      |
+| ------------------- | ---------------------------------------------- | -------------------------------- |
+| 🔄 Auto Updater     | Version check, download progress, auto-install | `src/config/updater.config.ts`   |
+| 💾 Data Persistence | Local storage, nested access, Vue reactivity   | `src/config/storage.config.ts`   |
+| ⌨️ Shortcuts System | Global/local shortcuts, configuration-driven   | `src/config/shortcuts.config.ts` |
+| 🔔 Notifications    | Native notifications, permission management    | `src/utils/notification.ts`      |
 
-## 项目结构
+## Project Structure
 
 ```
 pixelpunk/
-├── src/                          # Vue 前端
-│   ├── config/                   # 配置文件（主要修改位置）
-│   ├── utils/                    # 工具模块
+├── src/                          # Vue frontend
+│   ├── config/                   # Config files (main modification point)
+│   ├── utils/                    # Utility modules
 │   ├── composables/              # Vue Composables
-│   ├── features/                 # 功能模块
-│   └── views/                    # 页面视图
+│   ├── features/                 # Feature modules
+│   └── views/                    # Page views
 │
-├── src-tauri/                    # Rust 后端
-│   ├── src/                      # Rust 源码
-│   ├── icons/                    # 应用图标
-│   └── app.config.json          # 自动生成（勿手动修改）
+├── src-tauri/                    # Rust backend
+│   ├── src/                      # Rust source code
+│   ├── icons/                    # App icons
+│   └── app.config.json          # Auto-generated (do not edit manually)
 │
-└── docs/                         # 文档
+└── docs/                         # Documentation
 ```
 
-## 配置说明
+## Configuration
 
-所有配置集中在 `src/config/app.config.ts`，修改后自动同步到 Rust：
+All configurations are centralized in `src/config/app.config.ts` and auto-synced to Rust:
 
 ```typescript
 export const appConfig = {
-  name: "你的应用名称",
+  name: "Your App Name",
   version: "1.0.0",
-  author: "你的名字",
-  description: "应用描述",
-  // ... 窗口、托盘、悬浮球等配置
+  author: "Your Name",
+  description: "App description",
+  // ... window, tray, float ball configs
 };
 ```
 
-**配置工作流**：修改 TypeScript 配置 → 运行 `npm run tauri:dev` → 自动同步并应用
+**Config Workflow**: Modify TypeScript config → Run `npm run tauri:dev` → Auto-sync and apply
 
-## 文档
+## Documentation
 
-### 📚 完整文档
+### 📚 Complete Documentation
 
-- **[开发文档 DEVELOPMENT.md](./DEVELOPMENT.md)** - 详细的使用指南、API 参考、最佳实践
-- **[插件安装 PLUGINS_SETUP.md](./PLUGINS_SETUP.md)** - Tauri 插件安装和配置
-- **[图标配置 ICON_GUIDE.md](./ICON_GUIDE.md)** - 应用图标配置指南
-- **[托盘图标 TRAY_ICON_GUIDE.md](./TRAY_ICON_GUIDE.md)** - 托盘图标设计规范
-- **[更新日志 CHANGELOG.md](./CHANGELOG.md)** - 版本更新记录
-- **[贡献指南 CONTRIBUTING.md](./CONTRIBUTING.md)** - 如何参与贡献
+- **[Development Guide](./docs/DEVELOPMENT.md)** - Detailed usage guide, API reference, best practices
+- **[Plugin Setup](./docs/PLUGINS_SETUP.md)** - Tauri plugin installation and configuration
+- **[Icon Guide](./docs/ICON_GUIDE.md)** - Application icon configuration guide
+- **[Tray Icon Guide](./docs/TRAY_ICON_GUIDE.md)** - Tray icon design specifications
+- **[Changelog](./docs/CHANGELOG.md)** - Version update records
+- **[Contributing](./docs/CONTRIBUTING.md)** - How to contribute
 
-### 🎯 快速链接
+### 🎯 Quick Links
 
-- **应用内文档** - 启动应用查看 Home 页面获取交互式文档
-- **在线示例** - 查看 `examples/` 目录获取代码示例
+- **In-App Documentation** - Launch the app and check the Home page for interactive docs
+- **Examples** - Check the `examples/` directory for code samples
 
-## 常用命令
+## Common Commands
 
 ```bash
-# 开发
-npm run tauri:dev        # 开发模式（推荐）
-npm run dev              # 仅前端开发服务器
+# Development
+npm run tauri:dev        # Development mode (recommended)
+npm run dev              # Frontend dev server only
 
-# 构建
-npm run tauri:build      # 构建完整应用
-npm run build            # 仅构建前端
+# Build
+npm run tauri:build      # Build complete application
+npm run build            # Build frontend only
 
-# 配置
-npm run sync:config      # 同步配置
-npm run generate-icons   # 生成图标
+# Configuration
+npm run sync:config      # Sync configuration
+npm run generate-icons   # Generate icons
 
-# 代码质量
-npm run lint             # 代码检查
-npm run format           # 代码格式化
-npm run type-check       # 类型检查
+# Code Quality
+npm run lint             # Code linting
+npm run format           # Code formatting
+npm run type-check       # Type checking
 ```
 
-## 常见问题
+## FAQ
 
 <details>
-<summary><strong>配置不生效怎么办？</strong></summary>
+<summary><strong>Configuration not working?</strong></summary>
 
-运行 `npm run sync:config` 后重启应用。
+Run `npm run sync:config` and restart the app.
 
 </details>
 
 <details>
-<summary><strong>如何自定义托盘菜单？</strong></summary>
+<summary><strong>How to customize tray menu?</strong></summary>
 
-1. 在 `src/config/app.config.ts` 中添加菜单项
-2. 在 `src-tauri/src/lib.rs` 的 `on_menu_event` 中处理事件
+1. Add menu items in `src/config/app.config.ts`
+2. Handle events in `src-tauri/src/lib.rs` `on_menu_event`
 
-详见 [开发文档](./DEVELOPMENT.md#托盘配置)。
-
-</details>
-
-<details>
-<summary><strong>如何使用核心功能模块？</strong></summary>
-
-查看 [开发文档](./DEVELOPMENT.md#核心模块详解) 获取每个模块的详细使用方法和示例代码。
+See [Development Guide](./docs/DEVELOPMENT.md#tray-configuration) for details.
 
 </details>
 
 <details>
-<summary><strong>更多问题？</strong></summary>
+<summary><strong>How to use core modules?</strong></summary>
 
-查看 [开发文档](./DEVELOPMENT.md) 或提交 [Issue](../../issues)。
+Check [Development Guide](./docs/DEVELOPMENT.md#core-modules) for detailed usage and code examples for each module.
 
 </details>
 
-## 贡献
+<details>
+<summary><strong>More questions?</strong></summary>
 
-欢迎提交 Issue 和 Pull Request！详见 [贡献指南](./CONTRIBUTING.md)。
+Check [Development Guide](./docs/DEVELOPMENT.md) or submit an [Issue](../../issues).
 
-## 许可证
+</details>
 
-MIT License - 详见 [LICENSE](LICENSE) 文件
+## Contributing
+
+Issues and Pull Requests are welcome! See [Contributing Guide](./docs/CONTRIBUTING.md).
+
+## License
+
+MIT License - See [LICENSE](LICENSE) file for details
 
 ---
 
 <p align="center">
-  <sub>基于 Tauri 2.0 + Vue 3 构建 · 开箱即用的桌面应用开发模板</sub>
+  <sub>Built with Tauri 2.0 + Vue 3 · Ready-to-Use Desktop Application Development Template</sub>
 </p>

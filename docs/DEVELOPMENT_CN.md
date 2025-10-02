@@ -1,5 +1,9 @@
 # PixelPunk 开发文档
 
+<p align="right">
+  <a href="./DEVELOPMENT.md">English</a> | 简体中文
+</p>
+
 本文档提供详细的使用指南、API 参考和最佳实践。
 
 ## 目录

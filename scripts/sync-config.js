@@ -24,6 +24,7 @@ async function syncConfig() {
       app: {
         single_instance: config.app.singleInstance,
         remember_window_state: config.app.rememberWindowState,
+        quit_on_close: config.app.quitOnClose,
       },
       window: {
         width: config.window.width,

@@ -12,6 +12,7 @@ export const appConfig: AppConfig = {
   app: {
     singleInstance: true, // 启用单实例模式，防止应用多开
     rememberWindowState: true, // 记住窗口位置和大小
+    quitOnClose: false, // 点击关闭按钮时不退出程序，最小化到托盘（设为 true 则点击关闭按钮退出程序）
   },
 
   window: {

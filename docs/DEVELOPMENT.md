@@ -557,6 +557,13 @@ export const appConfig: AppConfig = {
   repository: "https://github.com/your/repo",
   copyright: "Copyright © 2025 Your Name",
 
+  // App behavior
+  app: {
+    singleInstance: true, // Prevent multiple app instances
+    rememberWindowState: true, // Remember window position and size
+    quitOnClose: false, // false = hide to tray on close, true = quit app
+  },
+
   // Window config
   window: {
     width: 1200,

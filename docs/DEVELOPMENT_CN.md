@@ -557,6 +557,13 @@ export const appConfig: AppConfig = {
   repository: "https://github.com/your/repo",
   copyright: "Copyright © 2025 Your Name",
 
+  // 应用行为
+  app: {
+    singleInstance: true, // 防止应用多开
+    rememberWindowState: true, // 记住窗口位置和大小
+    quitOnClose: false, // false = 关闭时最小化到托盘，true = 退出应用
+  },
+
   // 窗口配置
   window: {
     width: 1200,

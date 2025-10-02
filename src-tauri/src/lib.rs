@@ -1,6 +1,6 @@
 use tauri::Manager;
 use tauri::menu::{Menu, MenuItem, Submenu};
-use tauri::tray::{TrayIconBuilder, TrayIconEvent};
+use tauri::tray::TrayIconBuilder;
 use tauri::image::Image;
 use tauri::{WebviewUrl, WebviewWindowBuilder};
 use image::GenericImageView;
@@ -87,6 +87,21 @@ pub fn run() {
         if window_config.center {
           let _ = window.center();
         }
+
+        // 处理窗口关闭事件
+        let quit_on_close = config.app.quit_on_close;
+        let window_clone = window.clone();
+        window.on_window_event(move |event| {
+          if let tauri::WindowEvent::CloseRequested { api, .. } = event {
+            if !quit_on_close {
+              // 不退出程序，最小化窗口到托盘（macOS 上 hide() 无法恢复，用 minimize()）
+              api.prevent_close();
+              let _ = window_clone.minimize();
+              log::info!("Window minimized to tray");
+            }
+            // 如果 quit_on_close 为 true，不调用 prevent_close()，窗口会正常关闭并退出程序
+          }
+        });
       }
 
       // 开发模式打开 DevTools
@@ -141,8 +156,9 @@ pub fn run() {
           .tooltip(tooltip)
           .title(title)
           .menu(&menu)
-          .show_menu_on_left_click(true) // 左键点击显示菜单
+          .show_menu_on_left_click(true) // macOS 上左键点击显示菜单
           .on_menu_event(|app, event| {
+            log::info!("Tray menu event: {}", event.id.as_ref());
             match event.id.as_ref() {
               "about" => {
                 // 检查关于窗口是否已存在
@@ -172,8 +188,14 @@ pub fn run() {
               "show" => {
                 // 显示并聚焦窗口
                 if let Some(window) = app.get_webview_window("main") {
+                  let is_visible = window.is_visible().unwrap_or(false);
+                  log::info!("Show menu clicked, window visible: {}", is_visible);
+
+                  let _ = window.unminimize();
                   let _ = window.show();
                   let _ = window.set_focus();
+
+                  log::info!("Window shown from tray menu");
                 }
               }
               "quit" => {
@@ -183,14 +205,25 @@ pub fn run() {
             }
           })
           .on_tray_icon_event(|tray, event| {
-            match event {
-              TrayIconEvent::Click { .. } => {
-                if let Some(window) = tray.app_handle().get_webview_window("main") {
-                  let _ = window.show();
-                  let _ = window.set_focus();
-                }
+            log::info!("Tray icon event: {:?}", event);
+
+            // 处理所有点击事件（Click, DoubleClick, Enter 等）
+            if let Some(window) = tray.app_handle().get_webview_window("main") {
+              // 检查窗口是否可见
+              let is_visible = window.is_visible().unwrap_or(false);
+              log::info!("Window visible: {}", is_visible);
+
+              if !is_visible {
+                // 窗口隐藏时，先取消最小化，再显示，最后聚焦
+                let _ = window.unminimize();
+                let _ = window.show();
+                let _ = window.set_focus();
+                log::info!("Window restored from tray");
+              } else {
+                // 窗口已可见时，只需要聚焦
+                let _ = window.set_focus();
+                log::info!("Window focused");
               }
-              _ => {}
             }
           })
           .build(app);

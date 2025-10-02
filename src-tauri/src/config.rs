@@ -4,6 +4,7 @@ use serde::{Deserialize, Serialize};
 pub struct AppSettings {
     pub single_instance: bool,
     pub remember_window_state: bool,
+    pub quit_on_close: bool,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -108,6 +109,7 @@ impl Default for AppConfigData {
             app: AppSettings {
                 single_instance: true,
                 remember_window_state: true,
+                quit_on_close: false,
             },
             window: WindowConfig {
                 width: 1200.0,

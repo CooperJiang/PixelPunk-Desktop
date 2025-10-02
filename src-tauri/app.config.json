@@ -8,7 +8,8 @@
   "copyright": "Copyright © 2025 Your Name. All rights reserved.",
   "app": {
     "single_instance": true,
-    "remember_window_state": true
+    "remember_window_state": true,
+    "quit_on_close": false
   },
   "window": {
     "width": 1200,

@@ -12,6 +12,7 @@ export interface AppConfig {
   app: {
     singleInstance: boolean; // 是否启用单实例模式（防止应用多开）
     rememberWindowState: boolean; // 是否记住窗口位置和大小
+    quitOnClose: boolean; // 点击关闭按钮是否退出程序（false=最小化到托盘，true=退出程序）
   };
 
   window: {

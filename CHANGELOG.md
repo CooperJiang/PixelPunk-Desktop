@@ -36,10 +36,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - 提供 `notification` 工具类和 `useNotification` Composable
 
 - 📚 **完善的文档体系**
-  - 优化 README.md，从 935 行精简到 406 行
-  - 添加项目预览图展示
+  - 重构 README.md（从 406 行精简到 205 行，精简 50%）
+  - 添加项目预览图展示，直观展示项目特性
+  - 创建独立的开发文档 DEVELOPMENT.md（详细的使用指南、API 参考）
+  - README 专注于核心内容，详细使用通过链接跳转
   - 应用内 Home 页面详细介绍四个核心模块
-  - 每个模块都有配置示例和使用示例
   - 添加折叠式常见问题解答
 
 - 🔌 **Tauri 插件集成**

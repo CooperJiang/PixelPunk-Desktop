@@ -1,12 +1,27 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import TitleBar from "./components/layout/TitleBar.vue";
+import { useWindowState } from "@/composables/useWindowState";
+import { useTheme } from "@/composables/useTheme";
+import { storage } from "@/utils/storage";
 
 const route = useRoute();
 
 // 悬浮球窗口不需要标题栏
 const showTitleBar = computed(() => route.name !== "float-ball");
+
+// 初始化基础设施
+// 必须在 onMounted 回调之前调用 composables（在任何 await 之前）
+if (route.name !== "float-ball") {
+  useWindowState();
+}
+useTheme();
+
+onMounted(async () => {
+  // 初始化存储
+  await storage.init();
+});
 </script>
 
 <template>

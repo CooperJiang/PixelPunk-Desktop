@@ -21,6 +21,10 @@ async function syncConfig() {
       homepage: config.homepage || null,
       repository: config.repository || null,
       copyright: config.copyright || null,
+      app: {
+        single_instance: config.app.singleInstance,
+        remember_window_state: config.app.rememberWindowState,
+      },
       window: {
         width: config.window.width,
         height: config.window.height,

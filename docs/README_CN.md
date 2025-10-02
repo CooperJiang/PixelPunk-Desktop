@@ -92,7 +92,9 @@ npm run tauri:build
 
 ## 核心模块
 
-本模板内置四个开箱即用的核心模块，详细使用方法请查看 **[开发文档](./DEVELOPMENT_CN.md)**。
+本模板内置开箱即用的核心模块，详细使用方法请查看 **[开发文档](./DEVELOPMENT_CN.md)**。
+
+**业务模块：**
 
 | 模块          | 功能                           | 配置文件                         |
 | ------------- | ------------------------------ | -------------------------------- |
@@ -100,6 +102,15 @@ npm run tauri:build
 | 💾 数据持久化 | 本地存储、嵌套访问、Vue 响应式 | `src/config/storage.config.ts`   |
 | ⌨️ 快捷键系统 | 全局/局部快捷键、配置驱动      | `src/config/shortcuts.config.ts` |
 | 🔔 系统通知   | 原生通知、权限管理、快捷方法   | `src/utils/notification.ts`      |
+
+**基础设施模块：**
+
+| 模块        | 功能                        | 位置                                |
+| ----------- | --------------------------- | ----------------------------------- |
+| 🪟 窗口状态 | 自动保存/恢复窗口位置和大小 | `src/composables/useWindowState.ts` |
+| 🔒 单实例锁 | 防止应用多开                | `src-tauri/src/single_instance.rs`  |
+| 🎨 主题系统 | 暗色/亮色模式、跟随系统     | `src/composables/useTheme.ts`       |
+| 📝 日志系统 | 结构化日志、持久化存储      | `src/utils/logger.ts`               |
 
 ## 项目结构
 

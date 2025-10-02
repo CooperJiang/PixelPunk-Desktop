@@ -8,7 +8,9 @@ use image::GenericImageView;
 mod config;
 mod commands;
 mod macos;
+mod single_instance;
 use config::AppConfigData;
+use single_instance::SingleInstance;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -19,6 +21,7 @@ pub fn run() {
     .plugin(tauri_plugin_notification::init())
     .plugin(tauri_plugin_global_shortcut::Builder::new().build())
     .plugin(tauri_plugin_process::init())
+    .plugin(tauri_plugin_dialog::init())
     .invoke_handler(tauri::generate_handler![
       config::get_app_config,
       commands::toggle_float_ball,
@@ -37,6 +40,29 @@ pub fn run() {
       // 加载配置
       let config = AppConfigData::load();
       log::info!("Application starting: {}", config.name);
+
+      // 单实例检查
+      if config.app.single_instance {
+        match SingleInstance::new(&config.name) {
+          Ok(_instance) => {
+            log::info!("Single instance lock acquired");
+            // 锁将在应用退出时自动释放
+          }
+          Err(e) => {
+            log::warn!("Another instance is already running: {}", e);
+            // 显示提示对话框
+            use tauri_plugin_dialog::{DialogExt, MessageDialogKind};
+            let _ = app.dialog()
+              .message("应用已在运行")
+              .title("提示")
+              .kind(MessageDialogKind::Info)
+              .blocking_show();
+
+            // 退出应用
+            std::process::exit(0);
+          }
+        }
+      }
 
       // 应用窗口配置
       if let Some(window) = app.get_webview_window("main") {

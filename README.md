@@ -92,7 +92,9 @@ npm run tauri:build
 
 ## Core Modules
 
-This template includes four ready-to-use core modules. For detailed usage, see **[Development Guide](./docs/DEVELOPMENT.md)**.
+This template includes ready-to-use core modules. For detailed usage, see **[Development Guide](./docs/DEVELOPMENT.md)**.
+
+**Business Modules:**
 
 | Module              | Features                                       | Config File                      |
 | ------------------- | ---------------------------------------------- | -------------------------------- |
@@ -100,6 +102,15 @@ This template includes four ready-to-use core modules. For detailed usage, see *
 | 💾 Data Persistence | Local storage, nested access, Vue reactivity   | `src/config/storage.config.ts`   |
 | ⌨️ Shortcuts System | Global/local shortcuts, configuration-driven   | `src/config/shortcuts.config.ts` |
 | 🔔 Notifications    | Native notifications, permission management    | `src/utils/notification.ts`      |
+
+**Infrastructure Modules:**
+
+| Module             | Features                                  | Location                            |
+| ------------------ | ----------------------------------------- | ----------------------------------- |
+| 🪟 Window State    | Auto-save/restore position and size       | `src/composables/useWindowState.ts` |
+| 🔒 Single Instance | Prevent multiple app instances            | `src-tauri/src/single_instance.rs`  |
+| 🎨 Theme System    | Dark/light mode, follow system preference | `src/composables/useTheme.ts`       |
+| 📝 Logger          | Structured logging with persistence       | `src/utils/logger.ts`               |
 
 ## Project Structure
 

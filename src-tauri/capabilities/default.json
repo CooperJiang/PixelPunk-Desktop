@@ -16,6 +16,22 @@
     "core:window:allow-is-fullscreen",
     "core:window:allow-show",
     "core:window:allow-set-focus",
-    "core:tray:default"
+    "core:window:allow-set-size",
+    "core:window:allow-set-position",
+    "core:window:allow-outer-size",
+    "core:window:allow-outer-position",
+    "core:tray:default",
+    "fs:default",
+    "fs:allow-app-read",
+    "fs:allow-app-write",
+    "fs:allow-app-read-recursive",
+    "fs:allow-app-write-recursive",
+    "log:default",
+    "dialog:default",
+    "notification:default",
+    "global-shortcut:default",
+    "updater:default",
+    "os:default",
+    "process:default"
   ]
 }

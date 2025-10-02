@@ -1,6 +1,12 @@
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct AppSettings {
+    pub single_instance: bool,
+    pub remember_window_state: bool,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct WindowConfig {
     pub width: f64,
     pub height: f64,
@@ -81,6 +87,7 @@ pub struct AppConfigData {
     pub homepage: Option<String>,
     pub repository: Option<String>,
     pub copyright: Option<String>,
+    pub app: AppSettings,
     pub window: WindowConfig,
     pub tray: TrayConfig,
     pub float_ball: FloatBallConfig,
@@ -98,6 +105,10 @@ impl Default for AppConfigData {
             homepage: Some("https://github.com".to_string()),
             repository: Some("https://github.com".to_string()),
             copyright: Some("Copyright © 2025 Your Name. All rights reserved.".to_string()),
+            app: AppSettings {
+                single_instance: true,
+                remember_window_state: true,
+            },
             window: WindowConfig {
                 width: 1200.0,
                 height: 800.0,

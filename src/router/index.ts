@@ -8,6 +8,11 @@ const routes: RouteRecordRaw[] = [
     component: () => import("@/views/Home.vue"),
   },
   {
+    path: "/test",
+    name: "test",
+    component: () => import("@/views/TestInfrastructure.vue"),
+  },
+  {
     path: "/float-ball",
     name: "float-ball",
     component: () => import("@/views/FloatBallView.vue"),

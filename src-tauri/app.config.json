@@ -6,6 +6,10 @@
   "homepage": "https://github.com",
   "repository": "https://github.com",
   "copyright": "Copyright © 2025 Your Name. All rights reserved.",
+  "app": {
+    "single_instance": true,
+    "remember_window_state": true
+  },
   "window": {
     "width": 1200,
     "height": 800,

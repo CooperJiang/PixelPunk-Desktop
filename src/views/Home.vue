@@ -19,7 +19,11 @@ import {
   FileText,
   BookOpen,
   Github,
+  TestTube,
 } from "lucide-vue-next";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 
 const floatBallVisible = ref(false);
 const loading = ref(false);
@@ -90,6 +94,17 @@ onUnmounted(() => {
           >
           <span>•</span>
           <span>Tauri 2.0 + Vue 3 + TypeScript</span>
+        </div>
+
+        <!-- 测试页面按钮 -->
+        <div class="mt-6">
+          <button
+            class="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-3 text-sm font-semibold text-white shadow-lg transition-all hover:shadow-xl hover:scale-105"
+            @click="router.push('/test')"
+          >
+            <TestTube :size="18" />
+            🧪 测试基础设施功能
+          </button>
         </div>
       </div>
 

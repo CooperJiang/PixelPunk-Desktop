@@ -520,6 +520,26 @@ await timer.end({ count: 100 });
 
 ---
 
+### 🧪 Testing Infrastructure
+
+A test page is included to verify all infrastructure modules work correctly.
+
+#### Access Test Page
+
+1. Run the application: `npm run tauri:dev`
+2. Click "🧪 测试基础设施功能" button on home page
+3. Or navigate to `/test` route
+
+#### What You Can Test
+
+- **Theme System**: Toggle dark/light/system modes, see visual changes
+- **Data Persistence**: Save key-value pairs, restart app to verify persistence
+- **Logger**: Test different log levels, check browser console (Cmd+Option+I)
+- **Window State**: Move/resize window, restart to verify it restores position
+- **Single Instance**: Try launching app again while running, should show dialog
+
+---
+
 ## Configuration Guide
 
 ### App Configuration

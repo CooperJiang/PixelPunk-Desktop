@@ -9,6 +9,11 @@ export interface AppConfig {
   repository?: string; // 仓库地址
   copyright?: string; // 版权信息
 
+  app: {
+    singleInstance: boolean; // 是否启用单实例模式（防止应用多开）
+    rememberWindowState: boolean; // 是否记住窗口位置和大小
+  };
+
   window: {
     width: number; // 默认宽度
     height: number; // 默认高度

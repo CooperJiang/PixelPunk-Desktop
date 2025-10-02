@@ -9,6 +9,11 @@ export const appConfig: AppConfig = {
   repository: "https://github.com", // 仓库地址（可选）
   copyright: `Copyright © ${new Date().getFullYear()} Your Name. All rights reserved.`, // 版权信息（可选）
 
+  app: {
+    singleInstance: true, // 启用单实例模式，防止应用多开
+    rememberWindowState: true, // 记住窗口位置和大小
+  },
+
   window: {
     width: 1200, // 窗口默认宽度（像素）
     height: 800, // 窗口默认高度（像素）

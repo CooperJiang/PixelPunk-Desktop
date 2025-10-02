@@ -32,12 +32,21 @@
 
 ### 🎯 Core Modules
 
-This template includes four enterprise-grade functional modules, all configuration-driven and ready to use:
+This template includes enterprise-grade functional modules, all configuration-driven and ready to use:
+
+**Business Modules:**
 
 - **🔄 Auto Updater** - Version checking, download progress, auto-installation
 - **💾 Data Persistence** - Local storage, nested access, Vue reactivity
 - **⌨️ Shortcuts System** - Global/local shortcuts, cross-platform support
-- **🔔 System Notifications** - Native notifications, permission management, shortcut methods
+- **🔔 System Notifications** - Native notifications, permission management
+
+**Infrastructure:**
+
+- **🪟 Window State** - Auto-save/restore window position and size
+- **🔒 Single Instance** - Prevent multiple app instances
+- **🎨 Theme System** - Dark/light mode, follow system preference
+- **📝 Logger** - Structured logging with persistence
 
 ### ✨ Complete Features
 

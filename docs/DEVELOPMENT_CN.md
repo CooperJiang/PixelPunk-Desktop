@@ -13,6 +13,11 @@
   - [数据持久化](#数据持久化)
   - [快捷键系统](#快捷键系统)
   - [系统通知](#系统通知)
+- [基础设施](#基础设施)
+  - [窗口状态](#窗口状态)
+  - [单实例锁](#单实例锁)
+  - [主题系统](#主题系统)
+  - [日志系统](#日志系统)
 - [配置指南](#配置指南)
   - [应用配置](#应用配置)
   - [托盘配置](#托盘配置)
@@ -354,6 +359,164 @@ const handleSave = async () => {
 | `info(title, body)`    | `string, string`      | `Promise<void>` | 信息通知         |
 | `warning(title, body)` | `string, string`      | `Promise<void>` | 警告通知         |
 | `isGranted()`          | -                     | `boolean`       | 检查权限状态     |
+
+---
+
+## 基础设施
+
+### 🪟 窗口状态
+
+自动保存和恢复窗口位置、大小。
+
+#### 使用方法
+
+```vue
+<script setup lang="ts">
+import { useWindowState } from "@/composables/useWindowState";
+
+// 在 App.vue 中
+onMounted(() => {
+  useWindowState(); // 自动保存窗口状态
+});
+</script>
+```
+
+#### 配置
+
+在 `src/config/app.config.ts` 中启用：
+
+```typescript
+app: {
+  rememberWindowState: true,
+}
+```
+
+#### 功能特性
+
+- 窗口移动时自动保存位置
+- 窗口调整大小时自动保存
+- 应用启动时恢复状态
+- 防抖保存（500ms）
+
+---
+
+### 🔒 单实例锁
+
+防止应用多开。
+
+#### 配置
+
+在 `src/config/app.config.ts` 中启用：
+
+```typescript
+app: {
+  singleInstance: true,
+}
+```
+
+#### 行为说明
+
+- **macOS/Linux**: 使用文件锁机制
+- **Windows**: 使用独占文件访问（基础实现）
+- 当第二个实例启动时，显示提示并退出
+
+---
+
+### 🎨 主题系统
+
+自动深色/浅色模式，支持系统主题检测。
+
+#### 使用方法
+
+```vue
+<script setup lang="ts">
+import { useTheme } from "@/composables/useTheme";
+
+const { theme, isDark, setTheme, toggleTheme } = useTheme();
+
+// 设置主题
+setTheme("dark"); // 强制深色
+setTheme("light"); // 强制浅色
+setTheme("system"); // 跟随系统
+
+// 切换主题
+toggleTheme();
+
+// 检查当前主题
+console.log(isDark.value); // true/false
+</script>
+```
+
+#### 功能特性
+
+- 自动检测系统主题偏好
+- 监听系统主题变化
+- 持久化保存用户偏好
+- 通过 `data-theme` 属性和 `dark` class 应用到 DOM
+- 兼容 TailwindCSS 暗色模式
+
+#### CSS 使用
+
+```css
+/* 使用 data-theme */
+[data-theme="dark"] {
+  background: #1a1a1a;
+}
+
+/* 使用 TailwindCSS */
+.dark:bg-gray-900 {
+  /* ... */
+}
+```
+
+---
+
+### 📝 日志系统
+
+结构化日志系统，支持持久化。
+
+#### 使用方法
+
+```typescript
+import { logger, createTimer } from "@/utils/logger";
+
+// 基础日志
+await logger.info("用户登录", { userId: 123 });
+await logger.error("保存失败", { error: err });
+await logger.debug("调试信息", { data });
+
+// 异常日志
+try {
+  // ...
+} catch (err) {
+  await logger.exception(err, { context: "save_user" });
+}
+
+// 性能追踪
+const timer = createTimer("data_load");
+// ... 执行操作
+await timer.end({ count: 100 });
+```
+
+#### API 参考
+
+| 方法                           | 参数                         | 说明             |
+| ------------------------------ | ---------------------------- | ---------------- |
+| `trace(msg, ctx?)`             | `string, LogContext`         | Trace 级别日志   |
+| `debug(msg, ctx?)`             | `string, LogContext`         | Debug 级别日志   |
+| `info(msg, ctx?)`              | `string, LogContext`         | Info 级别日志    |
+| `warn(msg, ctx?)`              | `string, LogContext`         | Warning 级别日志 |
+| `error(msg, ctx?)`             | `string, LogContext`         | Error 级别日志   |
+| `exception(err, ctx?)`         | `Error, LogContext`          | 记录异常和堆栈   |
+| `performance(label, ms, ctx?)` | `string, number, LogContext` | 记录性能指标     |
+
+#### 日志存储
+
+- **开发环境**: 仅控制台输出
+- **生产环境**: 通过 `tauri-plugin-log` 持久化到文件
+  - **Windows**: `%APPDATA%\{app}\logs\`
+  - **macOS**: `~/Library/Logs/{app}/`
+  - **Linux**: `~/.local/share/{app}/logs/`
 
 ---
 

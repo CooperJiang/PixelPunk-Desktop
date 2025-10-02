@@ -13,6 +13,11 @@ This document provides detailed usage guides, API references, and best practices
   - [Data Persistence](#data-persistence)
   - [Shortcuts System](#shortcuts-system)
   - [System Notifications](#system-notifications)
+- [Infrastructure](#infrastructure)
+  - [Window State](#window-state)
+  - [Single Instance](#single-instance)
+  - [Theme System](#theme-system)
+  - [Logger](#logger)
 - [Configuration Guide](#configuration-guide)
   - [App Configuration](#app-configuration)
   - [Tray Configuration](#tray-configuration)
@@ -354,6 +359,164 @@ const handleSave = async () => {
 | `info(title, body)`    | `string, string`      | `Promise<void>` | Info notification                 |
 | `warning(title, body)` | `string, string`      | `Promise<void>` | Warning notification              |
 | `isGranted()`          | -                     | `boolean`       | Check permission status           |
+
+---
+
+## Infrastructure
+
+### 🪟 Window State
+
+Automatically saves and restores window position and size.
+
+#### Usage
+
+```vue
+<script setup lang="ts">
+import { useWindowState } from "@/composables/useWindowState";
+
+// In App.vue
+onMounted(() => {
+  useWindowState(); // Auto-save window state
+});
+</script>
+```
+
+#### Configuration
+
+Enable in `src/config/app.config.ts`:
+
+```typescript
+app: {
+  rememberWindowState: true,
+}
+```
+
+#### Features
+
+- Auto-save window position on move
+- Auto-save window size on resize
+- Restore state on app launch
+- Debounced saves (500ms)
+
+---
+
+### 🔒 Single Instance
+
+Prevents multiple instances of the application from running.
+
+#### Configuration
+
+Enable in `src/config/app.config.ts`:
+
+```typescript
+app: {
+  singleInstance: true,
+}
+```
+
+#### Behavior
+
+- **macOS/Linux**: Uses file locking mechanism
+- **Windows**: Uses exclusive file access (basic)
+- When second instance is launched, shows message and exits
+
+---
+
+### 🎨 Theme System
+
+Automatic dark/light mode with system theme detection.
+
+#### Usage
+
+```vue
+<script setup lang="ts">
+import { useTheme } from "@/composables/useTheme";
+
+const { theme, isDark, setTheme, toggleTheme } = useTheme();
+
+// Set theme
+setTheme("dark"); // Force dark
+setTheme("light"); // Force light
+setTheme("system"); // Follow system
+
+// Toggle theme
+toggleTheme();
+
+// Check current theme
+console.log(isDark.value); // true/false
+</script>
+```
+
+#### Features
+
+- Auto-detect system theme preference
+- Listen to system theme changes
+- Persist user preference
+- Apply to DOM via `data-theme` attribute and `dark` class
+- Compatible with TailwindCSS dark mode
+
+#### CSS Usage
+
+```css
+/* Using data-theme */
+[data-theme="dark"] {
+  background: #1a1a1a;
+}
+
+/* Using TailwindCSS */
+.dark:bg-gray-900 {
+  /* ... */
+}
+```
+
+---
+
+### 📝 Logger
+
+Structured logging system with persistence.
+
+#### Usage
+
+```typescript
+import { logger, createTimer } from "@/utils/logger";
+
+// Basic logging
+await logger.info("User logged in", { userId: 123 });
+await logger.error("Failed to save", { error: err });
+await logger.debug("Debug info", { data });
+
+// Exception logging
+try {
+  // ...
+} catch (err) {
+  await logger.exception(err, { context: "save_user" });
+}
+
+// Performance tracking
+const timer = createTimer("data_load");
+// ... do work
+await timer.end({ count: 100 });
+```
+
+#### API Reference
+
+| Method                         | Parameters                   | Description              |
+| ------------------------------ | ---------------------------- | ------------------------ |
+| `trace(msg, ctx?)`             | `string, LogContext`         | Trace level logging      |
+| `debug(msg, ctx?)`             | `string, LogContext`         | Debug level logging      |
+| `info(msg, ctx?)`              | `string, LogContext`         | Info level logging       |
+| `warn(msg, ctx?)`              | `string, LogContext`         | Warning level logging    |
+| `error(msg, ctx?)`             | `string, LogContext`         | Error level logging      |
+| `exception(err, ctx?)`         | `Error, LogContext`          | Log exception with stack |
+| `performance(label, ms, ctx?)` | `string, number, LogContext` | Log performance metric   |
+
+#### Log Storage
+
+- **Development**: Console only
+- **Production**: Persisted to file via `tauri-plugin-log`
+  - **Windows**: `%APPDATA%\{app}\logs\`
+  - **macOS**: `~/Library/Logs/{app}/`
+  - **Linux**: `~/.local/share/{app}/logs/`
 
 ---
 

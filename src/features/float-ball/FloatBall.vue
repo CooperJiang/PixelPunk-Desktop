@@ -25,6 +25,7 @@ import { ref, onMounted, onUnmounted } from "vue";
 import { Upload } from "lucide-vue-next";
 import { listen, emit } from "@tauri-apps/api/event";
 import { invoke } from "@tauri-apps/api/core";
+import { logger } from "@/utils/logger";
 
 const isDragOver = ref(false);
 
@@ -35,9 +36,9 @@ let unlistenDragLeave: (() => void) | null = null;
 
 onMounted(async () => {
   // 设置 body 背景透明
-  // eslint-disable-next-line no-undef
+
   document.body.style.background = "transparent";
-  // eslint-disable-next-line no-undef
+
   document.documentElement.style.background = "transparent";
 
   // 监听文件拖放 (Tauri 2.0 事件)
@@ -50,12 +51,14 @@ onMounted(async () => {
       await invoke("show_main_window");
 
       // 延迟发送事件，确保主窗口已经完全显示
-      // eslint-disable-next-line no-undef
+
       setTimeout(async () => {
         await emit("files-dropped", { files });
       }, 100);
     } catch (error) {
-      console.error("Failed to show main window or emit event:", error);
+      await logger.error("Failed to show main window or emit event", {
+        error: String(error),
+      });
     }
   });
 

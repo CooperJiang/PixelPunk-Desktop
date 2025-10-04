@@ -7,6 +7,18 @@ pub fn show_main_window(app: AppHandle) -> Result<(), String> {
         window.show().map_err(|e| e.to_string())?;
         window.set_focus().map_err(|e| e.to_string())?;
         window.unminimize().map_err(|e| e.to_string())?;
+
+        // 开发模式下打开 DevTools
+        #[cfg(debug_assertions)]
+        {
+            use crate::config::AppConfigData;
+            let config = AppConfigData::load();
+            if config.dev.open_dev_tools {
+                window.open_devtools();
+                log::info!("DevTools opened for main window");
+            }
+        }
+
         // 如果登录窗口存在，则隐藏
         if let Some(login) = app.get_webview_window("login") {
             let _ = login.hide();
@@ -38,7 +50,7 @@ pub fn show_login_window(app: AppHandle) -> Result<(), String> {
 
         let login = WebviewWindowBuilder::new(&app, "login", WebviewUrl::App(login_url.into()))
             .title("PixelPunk - 登录")
-            .inner_size(400.0, 550.0)
+            .inner_size(900.0, 600.0)
             .resizable(false)
             .maximizable(false)
             .minimizable(true)

@@ -1,25 +1,34 @@
 <script setup lang="ts">
-import { Check as CheckIcon, Minus as MinusIcon } from 'lucide-vue-next';
-import type { CheckboxEmits, CheckboxProps } from './types';
+import { computed } from "vue";
+import { Check as CheckIcon, Minus as MinusIcon } from "lucide-vue-next";
+import type { CheckboxEmits, CheckboxProps } from "./types";
 
-defineOptions({
-  name: 'Checkbox',
-});
+defineOptions({ name: "Checkbox" });
 
 const props = withDefaults(defineProps<CheckboxProps>(), {
   modelValue: false,
   disabled: false,
   indeterminate: false,
-  size: 'medium',
+  size: "medium",
 });
 
 const emit = defineEmits<CheckboxEmits>();
 
-const handleChange = (e: Event) => {
-  const target = e.target as HTMLInputElement;
-  const value = target.checked;
-  emit('update:modelValue', value);
-  emit('change', value);
+const iconSize = computed(() => {
+  switch (props.size) {
+    case "small":
+      return 10;
+    case "large":
+      return 14;
+    default:
+      return 12;
+  }
+});
+
+const handleChange = (e: any) => {
+  const value = !!e?.target?.checked;
+  emit("update:modelValue", value);
+  emit("change", value);
 };
 </script>
 
@@ -61,25 +70,6 @@ const handleChange = (e: Event) => {
     </span>
   </label>
 </template>
-
-<script lang="ts">
-import { computed } from 'vue';
-
-export default {
-  computed: {
-    iconSize() {
-      switch (this.size) {
-        case 'small':
-          return 10;
-        case 'large':
-          return 14;
-        default:
-          return 12;
-      }
-    },
-  },
-};
-</script>
 
 <style scoped>
 .checkbox {
@@ -139,15 +129,8 @@ export default {
   justify-content: center;
   border-radius: var(--radius-sm, 4px);
   border: 2px solid var(--color-border);
-  background: linear-gradient(
-    135deg,
-    rgba(13, 17, 23, 0.9) 0%,
-    rgba(13, 17, 23, 0.7) 100%
-  );
+  background: var(--color-bg-elevated);
   transition: all var(--transition-slow, 0.3s) cubic-bezier(0.25, 0.8, 0.25, 1);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.1),
-    0 1px 3px rgba(13, 17, 23, 0.3);
 }
 
 .checkbox--small .checkbox__input {
@@ -187,32 +170,22 @@ export default {
 .checkbox--checked .checkbox__inner {
   background: linear-gradient(
     135deg,
-    rgba(0, 255, 255, 0.3) 0%,
-    rgba(0, 255, 255, 0.2) 100%
+    rgba(0, 255, 255, 0.2) 0%,
+    rgba(0, 255, 255, 0.1) 100%
   );
   border-color: var(--color-primary);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.2),
-    0 0 8px rgba(0, 255, 255, 0.3),
-    0 1px 2px rgba(13, 17, 23, 0.2);
+  box-shadow: 0 0 8px rgba(0, 255, 255, 0.3);
 }
 
 .checkbox--disabled .checkbox__inner {
-  background: linear-gradient(
-    135deg,
-    rgba(13, 17, 23, 0.5) 0%,
-    rgba(13, 17, 23, 0.4) 100%
-  );
-  border-color: rgba(0, 255, 255, 0.2);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.05),
-    0 1px 3px rgba(13, 17, 23, 0.2);
+  background: var(--color-bg-muted);
+  border-color: var(--color-border);
+  opacity: 0.5;
 }
 
 .checkbox__icon {
   color: var(--color-primary);
-  filter: drop-shadow(0 0 4px rgba(0, 255, 255, 0.8))
-    drop-shadow(0 0 2px rgba(255, 255, 255, 0.3));
+  filter: drop-shadow(0 0 2px rgba(0, 255, 255, 0.5));
 }
 
 .checkbox--disabled .checkbox__icon {
@@ -222,35 +195,10 @@ export default {
 
 .checkbox:hover:not(.checkbox--disabled) .checkbox__inner {
   border-color: var(--color-primary);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.15),
-    0 0 6px rgba(0, 255, 255, 0.2),
-    0 1px 2px rgba(13, 17, 23, 0.2);
+  box-shadow: 0 0 6px rgba(0, 255, 255, 0.2);
 }
 
-.checkbox__inner::before {
-  content: '';
-  position: absolute;
-  top: -1px;
-  left: -1px;
-  right: -1px;
-  bottom: -1px;
-  border-radius: 5px;
-  background: linear-gradient(
-    45deg,
-    transparent 30%,
-    rgba(0, 255, 255, 0.08) 50%,
-    transparent 70%
-  );
-  opacity: 0;
-  transition: opacity var(--transition-fast, 0.15s) ease;
-  pointer-events: none;
-  z-index: -1;
-}
-
-.checkbox:hover:not(.checkbox--disabled) .checkbox__inner::before {
-  opacity: 1;
-}
+/* Hover 高光效果已通过 box-shadow 实现 */
 
 .checkbox__label {
   display: inline-flex;
@@ -269,8 +217,7 @@ export default {
 
 /* 无障碍 - 减少动画 */
 @media (prefers-reduced-motion: reduce) {
-  .checkbox__inner,
-  .checkbox__inner::before {
+  .checkbox__inner {
     transition: none !important;
   }
 }

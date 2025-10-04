@@ -1,232 +1,75 @@
-<h1 align="center">PixelPunk</h1>
+<h1 align="center">PixelPunk Desktop</h1>
 
 <p align="center">
-  <strong>A Modern Desktop Application Development Template based on Tauri 2.0 + Vue 3 + TypeScript</strong>
+  Modern desktop template powered by Tauri 2 · Vue 3 · TypeScript
 </p>
 
-<p align="center">
-  Ready to Use · Configuration Driven · Feature Complete
-</p>
+## Overview
 
-<p align="center">
-  English | <a href="./docs/README_CN.md">简体中文</a>
-</p>
-
-<p align="center">
-  <a href="#features">Features</a> •
-  <a href="#quick-start">Quick Start</a> •
-  <a href="#core-modules">Core Modules</a> •
-  <a href="#documentation">Documentation</a>
-</p>
-
----
-
-## Preview
-
-<div align="center">
-  <img src="docs/image/preview-1.png" alt="PixelPunk Preview" width="100%">
-  <p><i>Configuration Driven · Four Core Modules Ready to Use</i></p>
-</div>
-
-## Features
-
-### 🎯 Core Modules
-
-This template includes enterprise-grade functional modules, all configuration-driven and ready to use:
-
-**Business Modules:**
-
-- **🔄 Auto Updater** - Version checking, download progress, auto-installation
-- **💾 Data Persistence** - Local storage, nested access, Vue reactivity
-- **⌨️ Shortcuts System** - Global/local shortcuts, cross-platform support
-- **🔔 System Notifications** - Native notifications, permission management
-
-**Infrastructure:**
-
-- **🪟 Window State** - Auto-save/restore window position and size
-- **🔒 Single Instance** - Prevent multiple app instances
-- **🎨 Theme System** - Dark/light mode, follow system preference
-- **📝 Logger** - Structured logging with persistence
-
-### ✨ Complete Features
-
-- **🎯 Floating Ball** - File drag & drop upload, real-time progress, draggable, always on top
-- **🎨 Custom Window** - macOS-style title bar, transparent window support
-- **🔔 System Tray** - Multi-level menu groups, fully configurable
-- **📦 Lightweight & Efficient** - Rust-based, small size, excellent performance
-- **🛠️ Configuration Driven** - TypeScript config auto-synced to Rust
-- **💅 Code Standards** - ESLint + Prettier + Husky out of the box
-
-## Tech Stack
-
-```
-Frontend:  Vue 3.5 + TypeScript 5.8 + Vite 7.1 + Tailwind CSS 3.4
-Backend:   Tauri 2.8 + Rust 1.70+
-State:     Pinia 3.0
-```
+PixelPunk Desktop 提供生产级的桌面应用脚手架：多窗口、自动更新、系统托盘、快捷键、主题系统、统一日志与配置同步。架构重点是多窗口一致性、稳定的鉴权流程和清晰的边界分工。
 
 ## Quick Start
 
 ### Prerequisites
 
-- Node.js 20.19+ or 22.12+
-- Rust 1.70+
-- System dependencies: See [Tauri Prerequisites](https://tauri.app/v2/guides/prerequisites/)
+- Node.js ≥ 20.19 / 22.12
+- Rust ≥ 1.70（参见 Tauri Prerequisites）
 
-### Installation
+### Install & Run
 
 ```bash
-# Clone the project
-git clone <your-repo-url>
-cd pixelpunk
-
-# Install dependencies
 npm install
+npm run tauri:dev        # 前后端一体开发（推荐）
 
-# Development mode
-npm run tauri:dev
-
-# Build application
-npm run tauri:build
+# 常用
+npm run dev              # 仅前端
+npm run build            # 仅前端构建
+npm run tauri:build      # 打包桌面应用
 ```
-
-## Core Modules
-
-This template includes ready-to-use core modules. For detailed usage, see **[Development Guide](./docs/DEVELOPMENT.md)**.
-
-**Business Modules:**
-
-| Module              | Features                                       | Config File                      |
-| ------------------- | ---------------------------------------------- | -------------------------------- |
-| 🔄 Auto Updater     | Version check, download progress, auto-install | `src/config/updater.config.ts`   |
-| 💾 Data Persistence | Local storage, nested access, Vue reactivity   | `src/config/storage.config.ts`   |
-| ⌨️ Shortcuts System | Global/local shortcuts, configuration-driven   | `src/config/shortcuts.config.ts` |
-| 🔔 Notifications    | Native notifications, permission management    | `src/utils/notification.ts`      |
-
-**Infrastructure Modules:**
-
-| Module             | Features                                  | Location                            |
-| ------------------ | ----------------------------------------- | ----------------------------------- |
-| 🪟 Window State    | Auto-save/restore position and size       | `src/composables/useWindowState.ts` |
-| 🔒 Single Instance | Prevent multiple app instances            | `src-tauri/src/single_instance.rs`  |
-| 🎨 Theme System    | Dark/light mode, follow system preference | `src/composables/useTheme.ts`       |
-| 📝 Logger          | Structured logging with persistence       | `src/utils/logger.ts`               |
-
-## Project Structure
-
-```
-pixelpunk/
-├── src/                          # Vue frontend
-│   ├── config/                   # Config files (main modification point)
-│   ├── utils/                    # Utility modules
-│   ├── composables/              # Vue Composables
-│   ├── features/                 # Feature modules
-│   └── views/                    # Page views
-│
-├── src-tauri/                    # Rust backend
-│   ├── src/                      # Rust source code
-│   ├── icons/                    # App icons
-│   └── app.config.json          # Auto-generated (do not edit manually)
-│
-└── docs/                         # Documentation
-```
-
-## Configuration
-
-All configurations are centralized in `src/config/app.config.ts` and auto-synced to Rust:
-
-```typescript
-export const appConfig = {
-  name: "Your App Name",
-  version: "1.0.0",
-  author: "Your Name",
-  description: "App description",
-  // ... window, tray, float ball configs
-};
-```
-
-**Config Workflow**: Modify TypeScript config → Run `npm run tauri:dev` → Auto-sync and apply
-
-## Documentation
-
-### 📚 Complete Documentation
-
-- **[Development Guide](./docs/DEVELOPMENT.md)** - Detailed usage guide, API reference, best practices
-- **[Plugin Setup](./docs/PLUGINS_SETUP.md)** - Tauri plugin installation and configuration
-- **[Icon Guide](./docs/ICON_GUIDE.md)** - Application icon configuration guide
-- **[Tray Icon Guide](./docs/TRAY_ICON_GUIDE.md)** - Tray icon design specifications
-- **[Changelog](./docs/CHANGELOG.md)** - Version update records
-- **[Contributing](./docs/CONTRIBUTING.md)** - How to contribute
-
-### 🎯 Quick Links
-
-- **In-App Documentation** - Launch the app and check the Home page for interactive docs
-- **Examples** - Check the `examples/` directory for code samples
 
 ## Common Commands
 
 ```bash
-# Development
-npm run tauri:dev        # Development mode (recommended)
-npm run dev              # Frontend dev server only
+# 配置同步（TS → Rust）
+npm run sync:config
 
-# Build
-npm run tauri:build      # Build complete application
-npm run build            # Build frontend only
+# 代码质量
+npm run lint
+npm run format
+npm run type-check
 
-# Configuration
-npm run sync:config      # Sync configuration
-npm run generate-icons   # Generate icons
-
-# Code Quality
-npm run lint             # Code linting
-npm run format           # Code formatting
-npm run type-check       # Type checking
+# 资源
+npm run generate-icons
 ```
 
-## FAQ
+## Project Structure
 
-<details>
-<summary><strong>Configuration not working?</strong></summary>
+```
+src/
+  components/     # UI 组件
+  views/          # 页面视图（Home/Login/...）
+  layouts/        # 布局（TitleBar 等）
+  composables/    # 可复用逻辑（useTheme/useWindowState）
+  utils/          # 工具（storage/logger/network/...）
+  router/         # 路由
+src-tauri/        # Rust 侧（窗口/托盘/命令/插件）
+```
 
-Run `npm run sync:config` and restart the app.
+## Configuration
 
-</details>
+- 应用配置：`src/config/app.config.ts`
+- 持久化存储：`src/config/storage.config.ts`
+- 日志开关：`.env`
+  - `VITE_LOG_LEVEL` = off | error | warn | info | debug | trace
+  - `VITE_LOG_CONSOLE_DEV` = true/false（开发环境是否镜像到控制台）
 
-<details>
-<summary><strong>How to customize tray menu?</strong></summary>
+## Documentation
 
-1. Add menu items in `src/config/app.config.ts`
-2. Handle events in `src-tauri/src/lib.rs` `on_menu_event`
-
-See [Development Guide](./docs/DEVELOPMENT.md#tray-configuration) for details.
-
-</details>
-
-<details>
-<summary><strong>How to use core modules?</strong></summary>
-
-Check [Development Guide](./docs/DEVELOPMENT.md#core-modules) for detailed usage and code examples for each module.
-
-</details>
-
-<details>
-<summary><strong>More questions?</strong></summary>
-
-Check [Development Guide](./docs/DEVELOPMENT.md) or submit an [Issue](../../issues).
-
-</details>
-
-## Contributing
-
-Issues and Pull Requests are welcome! See [Contributing Guide](./docs/CONTRIBUTING.md).
+- Architecture Overview → `docs/ARCHITECTURE.md`
+- IPC Events → `docs/IPC_EVENTS.md`
+- Development Guide → `docs/DEVELOPMENT.md`
+- Contributing → `docs/CONTRIBUTING.md`
 
 ## License
 
-MIT License - See [LICENSE](LICENSE) file for details
-
----
-
-<p align="center">
-  <sub>Built with Tauri 2.0 + Vue 3 · Ready-to-Use Desktop Application Development Template</sub>
-</p>
+MIT · 详见 `LICENSE`

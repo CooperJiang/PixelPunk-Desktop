@@ -1,13 +1,14 @@
-import { defineStore } from 'pinia';
-import { userApi } from '@/api';
+import { defineStore } from "pinia";
+import { userApi } from "@/api";
 import type {
   UserInfo,
   UserLoginRequest,
   UserRegisterRequest,
   SendCodeRequest,
-} from '@/api/types';
-import { storage } from '@/utils/storage';
-import { TOKEN_KEY, USER_INFO_KEY, TOKEN_EXPIRES } from '@/constants/api';
+} from "@/api/types";
+import { storage } from "@/utils/storage";
+import { logger } from "@/utils/logger";
+import { TOKEN_KEY, USER_INFO_KEY, TOKEN_EXPIRES } from "@/constants/api";
 
 interface AuthState {
   user: UserInfo | null;
@@ -17,16 +18,15 @@ interface AuthState {
   initialized: boolean;
 }
 
-export const useAuthStore = defineStore('auth', {
+export const useAuthStore = defineStore("auth", {
   state: (): AuthState => {
-    const storedUser = storage.get<UserInfo>(USER_INFO_KEY);
-    const storedToken = storage.get<string>(TOKEN_KEY);
-
+    // 不要在这里从 storage 读取数据，因为 storage 可能还没初始化
+    // 数据读取在 initAuth() -> checkAuth() 中进行
     return {
-      user: storedUser || null,
-      token: storedToken || null,
-      isAuthenticated: Boolean(storedToken && storedUser),
-      avatarUrl: storedUser?.avatarFullPath || storedUser?.avatar || null,
+      user: null,
+      token: null,
+      isAuthenticated: false,
+      avatarUrl: null,
       initialized: false,
     };
   },
@@ -36,7 +36,8 @@ export const useAuthStore = defineStore('auth', {
     isLoggedIn: (state) =>
       state.isAuthenticated && Boolean(state.token) && Boolean(state.user),
     userAvatar: (state) => state.avatarUrl,
-    isAdmin: (state) => (state.user?.role ? [1, 2].includes(state.user.role) : false),
+    isAdmin: (state) =>
+      state.user?.role ? [1, 2].includes(state.user.role) : false,
   },
 
   actions: {
@@ -57,14 +58,20 @@ export const useAuthStore = defineStore('auth', {
      */
     async login(loginData: UserLoginRequest) {
       const result = await userApi.login(loginData);
+
       if (result.success) {
         const { userInfo, token } = result.data;
+
         await this.setUserInfo(userInfo);
         await this.setToken(token);
+
         return result.data;
       }
+
       /* 抛出包含具体错误信息的错误 */
-      const errorMessage = result.message || '登录失败';
+      const errorMessage = result.message || "登录失败";
+      await logger.error("[Auth] 登录失败", { message: errorMessage });
+
       const error = new Error(errorMessage);
       /* 保留原始响应数据用于调试 */
       (error as any).response = { data: result };
@@ -80,7 +87,7 @@ export const useAuthStore = defineStore('auth', {
         return result.data;
       }
       /* 抛出错误让调用方知道注册失败 */
-      const errorMessage = result.message || '注册失败';
+      const errorMessage = result.message || "注册失败";
       throw new Error(errorMessage);
     },
 
@@ -92,7 +99,7 @@ export const useAuthStore = defineStore('auth', {
       if (result.success) {
         return result.data;
       }
-      const errorMessage = result.message || '发送验证码失败';
+      const errorMessage = result.message || "发送验证码失败";
       throw new Error(errorMessage);
     },
 
@@ -100,9 +107,11 @@ export const useAuthStore = defineStore('auth', {
      * 存储用户信息
      */
     async setUserInfo(user: UserInfo) {
+      await logger.debug("[Auth] 保存用户信息到状态");
       this.user = user;
       this.isAuthenticated = true;
       this.avatarUrl = user.avatarFullPath || user.avatar;
+
       storage.set(USER_INFO_KEY, user);
       // 立即保存到磁盘，确保数据持久化
       await storage.save();
@@ -157,6 +166,7 @@ export const useAuthStore = defineStore('auth', {
           storage.remove(USER_INFO_KEY);
         }
       }
+      // done
     },
 
     /**

@@ -35,6 +35,7 @@
 
 /* eslint-disable no-undef */
 import { register, unregister } from "@tauri-apps/plugin-global-shortcut";
+import { logger } from "@/utils/logger";
 import {
   shortcutsConfig,
   type ShortcutConfig,
@@ -61,7 +62,7 @@ export class ShortcutManager {
     for (const shortcut of shortcutsConfig) {
       await this.registerShortcut(shortcut);
     }
-    console.log(`Registered ${shortcutsConfig.length} shortcuts`);
+    logger.info(`Registered ${shortcutsConfig.length} shortcuts`);
   }
 
   /**
@@ -75,7 +76,7 @@ export class ShortcutManager {
           this.executeHandler(shortcut);
         });
         this.registered.add(shortcut.key);
-        console.log(`Registered global shortcut: ${shortcut.key}`);
+        logger.debug(`Registered global shortcut: ${shortcut.key}`);
       } else {
         // 应用内快捷键
         const listener = (e: KeyboardEvent) => {
@@ -86,10 +87,12 @@ export class ShortcutManager {
         };
         window.addEventListener("keydown", listener);
         this.localShortcuts.set(shortcut.key, listener);
-        console.log(`Registered local shortcut: ${shortcut.key}`);
+        logger.debug(`Registered local shortcut: ${shortcut.key}`);
       }
     } catch (error) {
-      console.error(`Failed to register shortcut ${shortcut.key}:`, error);
+      logger.error(`Failed to register shortcut ${shortcut.key}`, {
+        error: String(error),
+      });
     }
   }
 
@@ -109,9 +112,9 @@ export class ShortcutManager {
       try {
         await unregister(key);
         this.registered.delete(key);
-        console.log(`Unregistered global shortcut: ${key}`);
+        logger.debug(`Unregistered global shortcut: ${key}`);
       } catch (error) {
-        console.error(`Failed to unregister ${key}:`, error);
+        logger.error(`Failed to unregister ${key}`, { error: String(error) });
       }
     }
 
@@ -120,7 +123,7 @@ export class ShortcutManager {
       const listener = this.localShortcuts.get(key)!;
       window.removeEventListener("keydown", listener);
       this.localShortcuts.delete(key);
-      console.log(`Unregistered local shortcut: ${key}`);
+      logger.debug(`Unregistered local shortcut: ${key}`);
     }
   }
 
@@ -133,7 +136,7 @@ export class ShortcutManager {
       try {
         await unregister(key);
       } catch (error) {
-        console.error(`Failed to unregister ${key}:`, error);
+        logger.error(`Failed to unregister ${key}`, { error: String(error) });
       }
     }
     this.registered.clear();
@@ -144,7 +147,7 @@ export class ShortcutManager {
     }
     this.localShortcuts.clear();
 
-    console.log("All shortcuts unregistered");
+    logger.info("All shortcuts unregistered");
   }
 
   /**
@@ -155,7 +158,7 @@ export class ShortcutManager {
     if (handler) {
       handler();
     } else {
-      console.warn(
+      logger.warn(
         `Handler "${shortcut.handler}" not found for shortcut ${shortcut.key}`,
       );
     }

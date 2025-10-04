@@ -2,19 +2,16 @@
 import { ref, onMounted } from "vue";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { platform } from "@tauri-apps/plugin-os";
-import { X, Minus, Maximize2, LogOut } from "lucide-vue-next";
+import { X, Minus, Maximize2 } from "lucide-vue-next";
 import { appConfig } from "@/config";
 import ThemeSwitch from "@/components/ThemeSwitch/index.vue";
-import { useAuthStore } from "@/store";
-import message from "@/components/Message/message";
-import { invoke } from "@tauri-apps/api/core";
+import UserDropdown from "@/components/UserDropdown/index.vue";
 
 const currentPlatform = ref<string>("");
 const isMaximized = ref(false);
 const isFullscreen = ref(false);
 const appWindow = getCurrentWindow();
 const hoveredButton = ref<string>("");
-const authStore = useAuthStore();
 
 onMounted(async () => {
   currentPlatform.value = platform();
@@ -46,25 +43,6 @@ const toggleMaximize = async () => {
 const close = async () => {
   await appWindow.close();
 };
-
-const handleLogout = async () => {
-  try {
-    console.log('[TitleBar] Starting logout...');
-
-    // 1. 清除登录态
-    await authStore.logout();
-    console.log('[TitleBar] Auth store cleared');
-
-    // 2. 通过 Rust 命令切换到登录窗口（避免跨窗口权限/时序问题）
-    await invoke('show_login_window');
-    console.log('[TitleBar] Switched to login via backend');
-
-    message.success('已退出登录');
-  } catch (error) {
-    console.error('[TitleBar] Logout failed:', error);
-    message.error('退出登录失败');
-  }
-};
 </script>
 
 <template>
@@ -73,7 +51,7 @@ const handleLogout = async () => {
     class="relative flex h-12 items-center justify-center border-b backdrop-blur-sm"
     :style="{
       borderColor: 'var(--color-border)',
-      background: 'var(--color-bg-elevated)'
+      background: 'var(--color-bg-elevated)',
     }"
   >
     <!-- macOS 样式 -->
@@ -147,17 +125,12 @@ const handleLogout = async () => {
         {{ appConfig.name }}
       </div>
 
-      <!-- 右侧：主题切换 + 退出登录 -->
-      <div class="absolute right-4 top-1/2 flex -translate-y-1/2 items-center gap-2">
-        <button
-          class="flex h-8 w-8 items-center justify-center rounded-md transition-colors hover:bg-[var(--color-bg-hover)]"
-          :style="{ color: 'var(--color-text-primary)' }"
-          aria-label="Logout"
-          @click="handleLogout"
-        >
-          <LogOut :size="16" />
-        </button>
+      <!-- 右侧：主题切换 + 用户头像 -->
+      <div
+        class="absolute right-4 top-1/2 flex -translate-y-1/2 items-center gap-3"
+      >
         <ThemeSwitch />
+        <UserDropdown />
       </div>
     </template>
 
@@ -176,24 +149,17 @@ const handleLogout = async () => {
       <!-- 中间：可拖拽区域 -->
       <div class="flex-1" data-tauri-drag-region></div>
 
-      <!-- 右侧：主题切换 + 退出登录 + 窗口控制按钮 -->
+      <!-- 右侧：主题切换 + 用户头像 + 窗口控制按钮 -->
       <div class="flex items-center gap-2">
         <!-- 主题切换 -->
         <div class="mr-2">
           <ThemeSwitch />
         </div>
 
-        <!-- 退出登录 -->
-        <button
-          class="flex h-12 w-12 items-center justify-center transition-colors"
-          :style="{ color: 'var(--color-text-primary)' }"
-          aria-label="Logout"
-          @click="handleLogout"
-          @mouseenter="$event.currentTarget.style.background = 'var(--color-bg-hover)'"
-          @mouseleave="$event.currentTarget.style.background = 'transparent'"
-        >
-          <LogOut :size="16" />
-        </button>
+        <!-- 用户头像下拉 -->
+        <div class="mr-2">
+          <UserDropdown />
+        </div>
 
         <!-- 窗口控制按钮 -->
         <button
@@ -201,7 +167,9 @@ const handleLogout = async () => {
           :style="{ color: 'var(--color-text-primary)' }"
           aria-label="Minimize"
           @click="minimize"
-          @mouseenter="$event.currentTarget.style.background = 'var(--color-bg-hover)'"
+          @mouseenter="
+            $event.currentTarget.style.background = 'var(--color-bg-hover)'
+          "
           @mouseleave="$event.currentTarget.style.background = 'transparent'"
         >
           <Minus :size="16" />
@@ -211,7 +179,9 @@ const handleLogout = async () => {
           :style="{ color: 'var(--color-text-primary)' }"
           aria-label="Maximize"
           @click="toggleMaximize"
-          @mouseenter="$event.currentTarget.style.background = 'var(--color-bg-hover)'"
+          @mouseenter="
+            $event.currentTarget.style.background = 'var(--color-bg-hover)'
+          "
           @mouseleave="$event.currentTarget.style.background = 'transparent'"
         >
           <Maximize2 :size="14" />
@@ -221,7 +191,9 @@ const handleLogout = async () => {
           :style="{ color: 'var(--color-text-primary)' }"
           aria-label="Close"
           @click="close"
-          @mouseenter="$event.currentTarget.style.background = 'var(--color-error)'"
+          @mouseenter="
+            $event.currentTarget.style.background = 'var(--color-error)'
+          "
           @mouseleave="$event.currentTarget.style.background = 'transparent'"
         >
           <X :size="16" />

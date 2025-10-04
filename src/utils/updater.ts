@@ -14,7 +14,7 @@
  * // 手动检查更新
  * const result = await updater.checkForUpdates();
  * if (result.available) {
- *   console.log('新版本:', result.version);
+ *   // logger.info('新版本', { version: result.version });
  *   await updater.downloadAndInstall();
  * }
  *
@@ -29,6 +29,7 @@
 import { check } from "@tauri-apps/plugin-updater";
 import { relaunch } from "@tauri-apps/plugin-process";
 import { updaterConfig } from "@/config/updater.config";
+import { logger } from "@/utils/logger";
 
 export interface UpdateInfo {
   available: boolean;
@@ -52,7 +53,7 @@ export class Updater {
    */
   async checkForUpdates(): Promise<UpdateInfo> {
     if (!updaterConfig.enabled) {
-      console.warn("Updater is disabled in config");
+      logger.warn("Updater is disabled in config");
       return { available: false };
     }
 
@@ -68,7 +69,7 @@ export class Updater {
         };
       }
     } catch (error) {
-      console.error("Check update failed:", error);
+      logger.error("Check update failed", { error: String(error) });
     }
 
     return { available: false };
@@ -86,7 +87,7 @@ export class Updater {
     // 下载更新（带进度回调）
     await update.downloadAndInstall((event) => {
       if (event.event === "Started") {
-        console.log("Update download started");
+        logger.info("Update download started");
       } else if (event.event === "Progress") {
         const progress: UpdateProgress = {
           downloaded: event.data.downloaded,
@@ -107,7 +108,7 @@ export class Updater {
           new CustomEvent("update-progress", { detail: progress }),
         );
       } else if (event.event === "Finished") {
-        console.log("Update download finished");
+        logger.info("Update download finished");
       }
     });
 

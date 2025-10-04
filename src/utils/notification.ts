@@ -31,6 +31,7 @@ import {
   requestPermission,
   sendNotification,
 } from "@tauri-apps/plugin-notification";
+import { logger } from "@/utils/logger";
 
 export interface NotificationOptions {
   title: string; // 通知标题
@@ -53,9 +54,9 @@ export class NotificationManager {
       this.permissionGranted = permission === "granted";
 
       if (!this.permissionGranted) {
-        console.warn("Notification permission denied");
+        logger.warn("Notification permission denied");
       } else {
-        console.log("Notification permission granted");
+        logger.info("Notification permission granted");
       }
     }
   }
@@ -69,7 +70,7 @@ export class NotificationManager {
     }
 
     if (!this.permissionGranted) {
-      console.warn("Notification permission not granted");
+      logger.warn("Notification permission not granted");
       return;
     }
 
@@ -81,7 +82,7 @@ export class NotificationManager {
         sound: options.sound,
       });
     } catch (error) {
-      console.error("Failed to send notification:", error);
+      logger.error("Failed to send notification", { error: String(error) });
     }
   }
 

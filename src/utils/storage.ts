@@ -36,6 +36,7 @@ import {
   mkdir,
 } from "@tauri-apps/plugin-fs";
 import { storageConfig } from "@/config/storage.config";
+import { logger } from "@/utils/logger";
 
 export class Storage {
   private data: Record<string, any> = {};
@@ -67,7 +68,9 @@ export class Storage {
         await this.save();
       }
     } catch (error) {
-      console.warn("Failed to read storage file, using defaults:", error);
+      await logger.warn("Failed to read storage file, using defaults", {
+        error: String(error),
+      });
       this.data = { ...storageConfig.defaults };
       await this.save();
     }
@@ -78,7 +81,31 @@ export class Storage {
     }
 
     this.initialized = true;
-    // console.log("Storage initialized");
+    // logger.debug("Storage initialized");
+  }
+
+  /**
+   * 从磁盘强制重新加载（用于多窗口间同步）
+   */
+  async reload(): Promise<void> {
+    try {
+      const fileExists = await exists(storageConfig.file.filename, {
+        baseDir: BaseDirectory[storageConfig.file.dir],
+      });
+
+      if (fileExists) {
+        const content = await readTextFile(storageConfig.file.filename, {
+          baseDir: BaseDirectory[storageConfig.file.dir],
+        });
+        this.data = JSON.parse(content);
+      } else {
+        // 若文件不存在，回落到默认值
+        this.data = { ...storageConfig.defaults };
+        await this.save();
+      }
+    } catch (error) {
+      await logger.error("Storage reload failed", { error: String(error) });
+    }
   }
 
   /**
@@ -186,7 +213,7 @@ export class Storage {
       // 先确保目录存在
       const baseDir = BaseDirectory[storageConfig.file.dir];
       try {
-        await mkdir('', { baseDir, recursive: true });
+        await mkdir("", { baseDir, recursive: true });
       } catch {
         // 目录可能已存在，忽略错误
       }
@@ -197,9 +224,9 @@ export class Storage {
         { baseDir },
       );
       this.dirty = false;
-      // console.log("Storage saved"); // 移除频繁的日志
+      // await logger.debug("Storage saved");
     } catch (error) {
-      console.error("Save storage failed:", error);
+      await logger.error("Save storage failed", { error: String(error) });
     }
   }
 
@@ -210,7 +237,7 @@ export class Storage {
     this.data = { ...storageConfig.defaults };
     this.dirty = true;
     await this.save();
-    console.log("Storage cleared");
+    await logger.info("Storage cleared");
   }
 
   /**

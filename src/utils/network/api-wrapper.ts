@@ -1,13 +1,15 @@
 /**
  * API调用包装器 - 解决Result模式和异常模式混用的问题
  */
-import type { ApiResult } from './http-types';
+import type { ApiResult } from "./http-types";
 
 /**
  * 将Result模式转换为异常模式
  * 使用场景：需要try-catch处理的地方
  */
-export async function apiCall<T>(apiPromise: Promise<ApiResult<T>>): Promise<T> {
+export async function apiCall<T>(
+  apiPromise: Promise<ApiResult<T>>,
+): Promise<T> {
   const result = await apiPromise;
   if (result.success) {
     return result.data;
@@ -41,7 +43,7 @@ export async function safeApiCall<T>(
 
     return result;
   } catch (error: any) {
-    const errorMessage = error.message || '请求失败';
+    const errorMessage = error.message || "请求失败";
     if (options.onError) {
       options.onError(errorMessage);
     }
@@ -86,7 +88,7 @@ export async function apiCallWithLoading<T>(
     onError: (error: string) => {
       if (showToast) {
         // TODO: 集成Desktop通知系统
-        console.error('[API Error]', error);
+        // logger.error('[API Error]', { error });
       }
       if (options.onError) {
         options.onError(error);

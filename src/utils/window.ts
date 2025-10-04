@@ -1,8 +1,9 @@
 /**
  * 窗口管理工具
  */
-import { getCurrentWindow, Window } from '@tauri-apps/api/window';
-import { invoke } from '@tauri-apps/api/core';
+import { getCurrentWindow, Window } from "@tauri-apps/api/window";
+import { logger } from "@/utils/logger";
+import { invoke } from "@tauri-apps/api/core";
 
 /**
  * 获取指定标签的窗口
@@ -17,12 +18,14 @@ export function getWindowByLabel(label: string): Window {
  */
 export async function closeAndShowMain(): Promise<void> {
   try {
-    await invoke('show_main_window');
+    await invoke("show_main_window");
 
     const currentWindow = getCurrentWindow();
     await currentWindow.close();
   } catch (error) {
-    console.error('[Window] Failed to switch to main window:', error);
+    await logger.error("[Window] Failed to switch to main window", {
+      error: String(error),
+    });
     throw error;
   }
 }
@@ -32,12 +35,14 @@ export async function closeAndShowMain(): Promise<void> {
  */
 export async function closeAndShowLogin(): Promise<void> {
   try {
-    await invoke('show_login_window');
+    await invoke("show_login_window");
 
     const currentWindow = getCurrentWindow();
     await currentWindow.close();
   } catch (error) {
-    console.error('[Window] Failed to switch to login window:', error);
+    await logger.error("[Window] Failed to switch to login window", {
+      error: String(error),
+    });
     throw error;
   }
 }
@@ -47,12 +52,14 @@ export async function closeAndShowLogin(): Promise<void> {
  */
 export async function hideAndShowMain(): Promise<void> {
   try {
-    await invoke('show_main_window');
+    await invoke("show_main_window");
 
     const currentWindow = getCurrentWindow();
     await currentWindow.hide();
   } catch (error) {
-    console.error('[Window] Failed to hide and show main window:', error);
+    await logger.error("[Window] Failed to hide and show main window", {
+      error: String(error),
+    });
     throw error;
   }
 }

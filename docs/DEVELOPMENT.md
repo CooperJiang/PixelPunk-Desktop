@@ -1,9 +1,5 @@
 # PixelPunk Development Guide
 
-<p align="right">
-  English | <a href="./DEVELOPMENT_CN.md">简体中文</a>
-</p>
-
 This document provides detailed usage guides, API references, and best practices.
 
 ## Table of Contents
@@ -23,7 +19,6 @@ This document provides detailed usage guides, API references, and best practices
   - [Tray Configuration](#tray-configuration)
   - [Floating Ball Configuration](#floating-ball-configuration)
 - [Advanced Features](#advanced-features)
-  - [Icon Configuration](#icon-configuration)
   - [Custom Commands](#custom-commands)
   - [Cross-Window Communication](#cross-window-communication)
 - [Development Tips](#development-tips)
@@ -718,20 +713,6 @@ onUnmounted(() => {
 
 ## Advanced Features
 
-### Icon Configuration
-
-#### Auto-Generate Icons
-
-Prepare a 1024×1024 PNG icon named `logo.png` in the project root:
-
-```bash
-npm run generate-icons
-```
-
-Auto-generates icons for all platforms.
-
-See [ICON_GUIDE.md](./ICON_GUIDE.md) for details.
-
 ### Custom Commands
 
 #### Define Commands in Rust
@@ -760,10 +741,7 @@ In `src-tauri/src/lib.rs`:
 ```typescript
 import { invoke } from "@tauri-apps/api/core";
 
-const result = await invoke<string>("my_custom_command", {
-  param: "Hello from frontend",
-});
-console.log(result);
+const result = await invoke<string>("my_custom_command", { param: "Hello" });
 ```
 
 ### Cross-Window Communication

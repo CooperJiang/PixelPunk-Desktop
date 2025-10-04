@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useTheme, type ThemeMode } from "@/composables/useTheme";
-import { Sun, Moon, Monitor, Check } from "lucide-vue-next";
+import { Sun, Moon, Palette, Check } from "lucide-vue-next";
 
-const { themeMode, isDark, setThemeMode } = useTheme();
+const { themeMode, setThemeMode } = useTheme();
 
 const showThemeMenu = ref(false);
 
@@ -11,7 +11,7 @@ const showThemeMenu = ref(false);
 const themeOptions: Array<{ mode: ThemeMode; icon: any; label: string }> = [
   { mode: "light", icon: Sun, label: "明亮模式" },
   { mode: "dark", icon: Moon, label: "暗黑模式" },
-  { mode: "system", icon: Monitor, label: "跟随系统" },
+  { mode: "system", icon: Palette, label: "跟随系统" },
 ];
 
 const handleThemeChange = (mode: ThemeMode) => {
@@ -21,7 +21,7 @@ const handleThemeChange = (mode: ThemeMode) => {
 
 // 获取当前图标
 const getCurrentIcon = () => {
-  if (themeMode.value === "system") return Monitor;
+  if (themeMode.value === "system") return Palette;
   if (themeMode.value === "dark") return Moon;
   return Sun;
 };
@@ -36,7 +36,7 @@ const getCurrentIcon = () => {
         'hover:bg-[var(--color-bg-hover)]',
       ]"
       :style="{ color: 'var(--color-primary)' }"
-      :title="themeOptions.find(t => t.mode === themeMode)?.label"
+      :title="themeOptions.find((t) => t.mode === themeMode)?.label"
       @click="showThemeMenu = !showThemeMenu"
     >
       <component :is="getCurrentIcon()" :size="20" :stroke-width="2" />
@@ -75,8 +75,15 @@ const getCurrentIcon = () => {
                   : 'var(--color-text-secondary)',
             }"
             @click="handleThemeChange(option.mode)"
-            @mouseenter="$event.currentTarget.style.background = 'var(--color-bg-hover)'"
-            @mouseleave="$event.currentTarget.style.background = themeMode === option.mode ? 'var(--color-bg-active)' : 'transparent'"
+            @mouseenter="
+              $event.currentTarget.style.background = 'var(--color-bg-hover)'
+            "
+            @mouseleave="
+              $event.currentTarget.style.background =
+                themeMode === option.mode
+                  ? 'var(--color-bg-active)'
+                  : 'transparent'
+            "
           >
             <div class="flex items-center gap-3">
               <!-- 主题图标 -->

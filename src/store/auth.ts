@@ -4,11 +4,10 @@ import type {
   UserInfo,
   UserLoginRequest,
   UserRegisterRequest,
-  SendCodeRequest,
 } from "@/api/types";
 import { storage } from "@/utils/storage";
 import { logger } from "@/utils/logger";
-import { TOKEN_KEY, USER_INFO_KEY, TOKEN_EXPIRES } from "@/constants/api";
+import { TOKEN_KEY, USER_INFO_KEY } from "@/constants/api";
 
 interface AuthState {
   user: UserInfo | null;

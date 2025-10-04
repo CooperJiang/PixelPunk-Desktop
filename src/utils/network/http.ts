@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { fetch } from "@tauri-apps/plugin-http";
 import { storage } from "@/utils/storage";
 import { invoke } from "@tauri-apps/api/core";

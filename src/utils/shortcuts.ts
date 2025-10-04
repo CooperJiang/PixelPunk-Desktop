@@ -142,7 +142,7 @@ export class ShortcutManager {
     this.registered.clear();
 
     // 注销本地快捷键
-    for (const [key, listener] of this.localShortcuts.entries()) {
+    for (const [, listener] of this.localShortcuts.entries()) {
       window.removeEventListener("keydown", listener);
     }
     this.localShortcuts.clear();

@@ -7,9 +7,53 @@ pub fn show_main_window(app: AppHandle) -> Result<(), String> {
         window.show().map_err(|e| e.to_string())?;
         window.set_focus().map_err(|e| e.to_string())?;
         window.unminimize().map_err(|e| e.to_string())?;
+        // 如果登录窗口存在，则隐藏
+        if let Some(login) = app.get_webview_window("login") {
+            let _ = login.hide();
+        }
         Ok(())
     } else {
         Err("Main window not found".to_string())
+    }
+}
+
+/// 显示并聚焦登录窗口，同时隐藏主窗口（如存在）
+#[tauri::command]
+pub fn show_login_window(app: AppHandle) -> Result<(), String> {
+    if let Some(login) = app.get_webview_window("login") {
+        login.show().map_err(|e| e.to_string())?;
+        login.set_focus().map_err(|e| e.to_string())?;
+
+        if let Some(main) = app.get_webview_window("main") {
+            let _ = main.hide();
+        }
+        Ok(())
+    } else {
+        // 如果登录窗口不存在，则创建一个
+        let login_url = if cfg!(debug_assertions) {
+            "http://localhost:5173/#/login"
+        } else {
+            "index.html#/login"
+        };
+
+        let login = WebviewWindowBuilder::new(&app, "login", WebviewUrl::App(login_url.into()))
+            .title("PixelPunk - 登录")
+            .inner_size(400.0, 550.0)
+            .resizable(false)
+            .maximizable(false)
+            .minimizable(true)
+            .decorations(false)
+            .center()
+            .build()
+            .map_err(|e| e.to_string())?;
+
+        login.show().map_err(|e| e.to_string())?;
+        login.set_focus().map_err(|e| e.to_string())?;
+
+        if let Some(main) = app.get_webview_window("main") {
+            let _ = main.hide();
+        }
+        Ok(())
     }
 }
 

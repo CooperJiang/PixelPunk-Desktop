@@ -30,6 +30,7 @@ tauri-plugin-notification = "2"
 tauri-plugin-global-shortcut = "2"
 tauri-plugin-process = "2"
 tauri-plugin-dialog = "2"
+tauri-plugin-http = "2"
 image = "0.25"
 
 [target.'cfg(unix)'.dependencies]

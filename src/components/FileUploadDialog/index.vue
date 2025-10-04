@@ -94,39 +94,41 @@ defineExpose({
 .dialog-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.6);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 9999;
+  z-index: var(--z-index-modal, 2000);
   backdrop-filter: blur(4px);
 }
 
 .dialog-container {
-  background: white;
-  border-radius: 16px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg, 12px);
+  box-shadow: var(--shadow-xl, 0 20px 25px -5px rgba(0, 0, 0, 0.1));
   width: 90%;
   max-width: 600px;
   max-height: 80vh;
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  backdrop-filter: blur(10px);
 }
 
 .dialog-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20px 24px;
-  border-bottom: 1px solid #e5e7eb;
+  padding: var(--spacing-lg, 24px);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .dialog-title {
   margin: 0;
-  font-size: 18px;
-  font-weight: 600;
-  color: #1f2937;
+  font-size: var(--font-size-lg, 18px);
+  font-weight: var(--font-weight-semibold, 600);
+  color: var(--color-text-primary);
 }
 
 .close-btn {
@@ -137,50 +139,50 @@ defineExpose({
   height: 32px;
   border: none;
   background: none;
-  border-radius: 8px;
-  color: #6b7280;
+  border-radius: var(--radius-md, 8px);
+  color: var(--color-text-muted);
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all var(--transition-base, 0.2s) var(--transition-ease, ease-in-out);
 }
 
 .close-btn:hover {
-  background: #f3f4f6;
-  color: #374151;
+  background: var(--color-bg-hover);
+  color: var(--color-text-primary);
 }
 
 .dialog-body {
   flex: 1;
-  padding: 24px;
+  padding: var(--spacing-lg, 24px);
   overflow-y: auto;
 }
 
 .dialog-description {
-  margin: 0 0 20px 0;
-  color: #6b7280;
-  font-size: 14px;
-  line-height: 1.6;
+  margin: 0 0 var(--spacing-lg, 20px) 0;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm, 14px);
+  line-height: var(--line-height-normal, 1.6);
 }
 
 .file-list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--spacing-md, 12px);
 }
 
 .file-item {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px;
-  background: #f9fafb;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  transition: all 0.2s;
+  gap: var(--spacing-md, 12px);
+  padding: var(--spacing-md, 12px);
+  background: var(--color-bg-base);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md, 8px);
+  transition: all var(--transition-base, 0.2s) var(--transition-ease, ease-in-out);
 }
 
 .file-item:hover {
-  background: #f3f4f6;
-  border-color: #d1d5db;
+  background: var(--color-bg-hover);
+  border-color: var(--color-border-hover);
 }
 
 .file-icon {
@@ -190,9 +192,9 @@ defineExpose({
   display: flex;
   align-items: center;
   justify-content: center;
-  background: white;
-  border-radius: 8px;
-  color: #667eea;
+  background: var(--color-bg-elevated);
+  border-radius: var(--radius-md, 8px);
+  color: var(--color-primary);
 }
 
 .file-info {
@@ -201,15 +203,15 @@ defineExpose({
 }
 
 .file-name {
-  font-size: 14px;
-  font-weight: 500;
-  color: #1f2937;
+  font-size: var(--font-size-sm, 14px);
+  font-weight: var(--font-weight-medium, 500);
+  color: var(--color-text-primary);
   margin-bottom: 4px;
 }
 
 .file-path {
-  font-size: 12px;
-  color: #9ca3af;
+  font-size: var(--font-size-xs, 12px);
+  color: var(--color-text-muted);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -219,50 +221,53 @@ defineExpose({
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 12px;
-  padding: 16px 24px;
-  border-top: 1px solid #e5e7eb;
+  gap: var(--spacing-md, 12px);
+  padding: var(--spacing-md, 16px) var(--spacing-lg, 24px);
+  border-top: 1px solid var(--color-border);
 }
 
 .btn {
-  padding: 8px 16px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 500;
+  padding: var(--spacing-sm, 8px) var(--spacing-md, 16px);
+  border-radius: var(--radius-md, 8px);
+  font-size: var(--font-size-sm, 14px);
+  font-weight: var(--font-weight-medium, 500);
   border: none;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all var(--transition-base, 0.2s) var(--transition-ease, ease-in-out);
+  height: var(--size-button-md, 40px);
 }
 
 .btn-secondary {
-  background: #f3f4f6;
-  color: #374151;
+  background: var(--color-bg-base);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border);
 }
 
 .btn-secondary:hover {
-  background: #e5e7eb;
+  background: var(--color-bg-hover);
+  border-color: var(--color-border-hover);
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: var(--color-primary);
+  color: var(--color-text-inverse);
 }
 
 .btn-primary:hover {
-  opacity: 0.9;
+  background: var(--color-primary-hover);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 4px 12px var(--color-shadow);
 }
 
 /* 对话框动画 */
 .dialog-enter-active,
 .dialog-leave-active {
-  transition: opacity 0.3s ease;
+  transition: opacity var(--transition-slow, 0.3s) var(--transition-ease, ease-in-out);
 }
 
 .dialog-enter-active .dialog-container,
 .dialog-leave-active .dialog-container {
-  transition: all 0.3s ease;
+  transition: all var(--transition-slow, 0.3s) var(--transition-ease, ease-in-out);
 }
 
 .dialog-enter-from,
@@ -271,10 +276,10 @@ defineExpose({
 }
 
 .dialog-enter-from .dialog-container {
-  transform: scale(0.9) translateY(-20px);
+  transform: scale(0.95) translateY(-20px);
 }
 
 .dialog-leave-to .dialog-container {
-  transform: scale(0.9) translateY(-20px);
+  transform: scale(0.95) translateY(-20px);
 }
 </style>

@@ -12,7 +12,8 @@
   "app": {
     "windows": [
       {
-        "title": "Tauri Vue Template",
+        "label": "main",
+        "title": "PixelPunk Desktop",
         "width": 1200,
         "height": 800,
         "minWidth": 800,
@@ -24,9 +25,35 @@
         "fullscreen": false,
         "decorations": false,
         "transparent": false,
+        "backgroundColor": "#0d1117",
         "alwaysOnTop": false,
         "center": true,
-        "skipTaskbar": false
+        "skipTaskbar": false,
+        "visible": false,
+        "focus": false
+      },
+      {
+        "label": "login",
+        "title": "PixelPunk - 登录",
+        "url": "/#/login",
+        "width": 400,
+        "height": 550,
+        "minWidth": 400,
+        "minHeight": 550,
+        "maxWidth": 400,
+        "maxHeight": 550,
+        "resizable": false,
+        "maximizable": false,
+        "minimizable": true,
+        "closable": true,
+        "fullscreen": false,
+        "decorations": false,
+        "transparent": false,
+        "backgroundColor": "#0d1117",
+        "alwaysOnTop": false,
+        "center": true,
+        "skipTaskbar": false,
+        "visible": false
       }
     ],
     "withGlobalTauri": true,
@@ -44,6 +71,7 @@
             "core:window:allow-toggle-maximize",
             "core:window:allow-close",
             "core:window:allow-show",
+            "core:window:allow-hide",
             "core:window:allow-set-focus",
             "core:window:allow-set-fullscreen",
             "core:window:allow-is-maximized",
@@ -69,7 +97,50 @@
             "global-shortcut:default",
             "process:default",
             "updater:default",
-            "os:default"
+            "os:default",
+            {
+              "identifier": "http:default",
+              "allow": [
+                {
+                  "url": "http://localhost:9520/*"
+                },
+                {
+                  "url": "https://your-production-api.com/*"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "identifier": "login-capability",
+          "windows": ["login"],
+          "permissions": [
+            "core:default",
+            "core:window:allow-start-dragging",
+            "core:window:allow-close",
+            "core:window:allow-show",
+            "core:window:allow-hide",
+            "core:window:allow-minimize",
+            "core:window:allow-set-focus",
+            "core:event:allow-listen",
+            "core:event:allow-emit",
+            "fs:allow-read-text-file",
+            "fs:allow-write-text-file",
+            "fs:allow-exists",
+            "fs:allow-app-read",
+            "fs:allow-app-write",
+            "notification:default",
+            {
+              "identifier": "http:default",
+              "allow": [
+                {
+                  "url": "http://localhost:9520/*"
+                },
+                {
+                  "url": "https://your-production-api.com/*"
+                }
+              ]
+            }
           ]
         },
         {

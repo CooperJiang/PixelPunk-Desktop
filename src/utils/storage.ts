@@ -33,6 +33,7 @@ import {
   writeTextFile,
   readTextFile,
   exists,
+  mkdir,
 } from "@tauri-apps/plugin-fs";
 import { storageConfig } from "@/config/storage.config";
 
@@ -77,7 +78,7 @@ export class Storage {
     }
 
     this.initialized = true;
-    console.log("Storage initialized");
+    // console.log("Storage initialized");
   }
 
   /**
@@ -182,13 +183,21 @@ export class Storage {
     if (!this.dirty) return;
 
     try {
+      // 先确保目录存在
+      const baseDir = BaseDirectory[storageConfig.file.dir];
+      try {
+        await mkdir('', { baseDir, recursive: true });
+      } catch {
+        // 目录可能已存在，忽略错误
+      }
+
       await writeTextFile(
         storageConfig.file.filename,
         JSON.stringify(this.data, null, 2),
-        { baseDir: BaseDirectory[storageConfig.file.dir] },
+        { baseDir },
       );
       this.dirty = false;
-      console.log("Storage saved");
+      // console.log("Storage saved"); // 移除频繁的日志
     } catch (error) {
       console.error("Save storage failed:", error);
     }

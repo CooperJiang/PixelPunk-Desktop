@@ -19,8 +19,8 @@
 
 /* eslint-disable no-undef */
 import { getCurrentWindow } from "@tauri-apps/api/window";
+import { PhysicalPosition, PhysicalSize } from "@tauri-apps/api/dpi";
 import { storage } from "@/utils/storage";
-import { onMounted, onUnmounted } from "vue";
 
 interface WindowState {
   x: number;
@@ -53,6 +53,30 @@ export function useWindowState(windowLabel = "main") {
         const size = await window.outerSize();
         const maximized = await window.isMaximized();
 
+        // 验证数据有效性
+        if (
+          typeof position?.x !== 'number' ||
+          typeof position?.y !== 'number' ||
+          typeof size?.width !== 'number' ||
+          typeof size?.height !== 'number' ||
+          isNaN(position.x) ||
+          isNaN(position.y) ||
+          isNaN(size.width) ||
+          isNaN(size.height) ||
+          !isFinite(position.x) ||
+          !isFinite(position.y) ||
+          !isFinite(size.width) ||
+          !isFinite(size.height) ||
+          size.width <= 0 ||
+          size.height <= 0
+        ) {
+          console.warn(`[WindowState] Invalid data for ${windowLabel}, skipping save:`, {
+            position,
+            size,
+          });
+          return;
+        }
+
         const state: WindowState = {
           x: position.x,
           y: position.y,
@@ -62,9 +86,10 @@ export function useWindowState(windowLabel = "main") {
         };
 
         storage.set(`${STORAGE_KEY}.${windowLabel}`, state);
-        console.log("Window state saved:", state);
+        // 移除频繁日志，仅在需要调试时打开
+        // console.log(`[WindowState] Saved state for ${windowLabel}:`, state);
       } catch (error) {
-        console.error("Failed to save window state:", error);
+        console.error(`[WindowState] Failed to save state for ${windowLabel}:`, error);
       }
     }, SAVE_DELAY);
   };
@@ -77,24 +102,80 @@ export function useWindowState(windowLabel = "main") {
       const state = storage.get<WindowState>(`${STORAGE_KEY}.${windowLabel}`);
 
       if (!state) {
-        console.log("No saved window state found");
+        console.log(`[WindowState] No saved state found for window: ${windowLabel}`);
+        return;
+      }
+
+      console.log(`[WindowState] Loaded state for ${windowLabel}:`, state);
+
+      // 严格验证数据有效性
+      const isValid = (
+        state &&
+        typeof state === 'object' &&
+        typeof state.x === 'number' &&
+        typeof state.y === 'number' &&
+        typeof state.width === 'number' &&
+        typeof state.height === 'number' &&
+        !isNaN(state.x) &&
+        !isNaN(state.y) &&
+        !isNaN(state.width) &&
+        !isNaN(state.height) &&
+        isFinite(state.x) &&
+        isFinite(state.y) &&
+        isFinite(state.width) &&
+        isFinite(state.height) &&
+        state.width > 0 &&
+        state.height > 0
+      );
+
+      if (!isValid) {
+        console.warn(`[WindowState] Invalid state data for ${windowLabel}, clearing:`, state);
+        storage.remove(`${STORAGE_KEY}.${windowLabel}`);
+        await storage.save();
         return;
       }
 
       const window = getCurrentWindow();
 
-      // 恢复位置和大小
-      await window.setPosition({ x: state.x, y: state.y });
-      await window.setSize({ width: state.width, height: state.height });
+      // 计算并验证最终值
+      const x = Math.round(state.x);
+      const y = Math.round(state.y);
+      const width = Math.round(state.width);
+      const height = Math.round(state.height);
+
+      console.log(`[WindowState] Restoring ${windowLabel} to:`, { x, y, width, height });
+
+      // 再次验证计算后的值
+      if (
+        isNaN(x) || isNaN(y) || isNaN(width) || isNaN(height) ||
+        !isFinite(x) || !isFinite(y) || !isFinite(width) || !isFinite(height) ||
+        width <= 0 || height <= 0
+      ) {
+        console.warn(`[WindowState] Invalid calculated values for ${windowLabel}, clearing`);
+        storage.remove(`${STORAGE_KEY}.${windowLabel}`);
+        await storage.save();
+        return;
+      }
+
+      // 恢复位置和大小（使用 Physical 类型，避免类型不匹配）
+      await window.setPosition(new PhysicalPosition(x, y));
+      await window.setSize(new PhysicalSize(width, height));
 
       // 恢复最大化状态
       if (state.maximized) {
         await window.maximize();
       }
 
-      console.log("Window state restored:", state);
+      console.log(`[WindowState] Successfully restored state for ${windowLabel}`);
     } catch (error) {
-      console.error("Failed to restore window state:", error);
+      console.error(`[WindowState] Failed to restore state for ${windowLabel}:`, error);
+      // 发生错误时清除可能损坏的数据
+      try {
+        storage.remove(`${STORAGE_KEY}.${windowLabel}`);
+        await storage.save();
+      } catch (e) {
+        console.error('[WindowState] Failed to clear corrupted data:', e);
+      }
     }
   };
 
@@ -115,7 +196,7 @@ export function useWindowState(windowLabel = "main") {
         saveWindowState();
       });
 
-      console.log("Window state listener started");
+      // console.log("Window state listener started");
     } catch (error) {
       console.error("Failed to start window state listener:", error);
     }
@@ -137,23 +218,55 @@ export function useWindowState(windowLabel = "main") {
       clearTimeout(saveTimer);
       saveTimer = null;
     }
-    console.log("Window state listener stopped");
+    // console.log("Window state listener stopped");
   };
 
-  // Vue 生命周期集成
-  onMounted(async () => {
-    await restoreWindowState();
-    await startListening();
-  });
+  // 启动时清除可能损坏的窗口状态数据
+  const clearCorruptedData = () => {
+    try {
+      const state = storage.get<WindowState>(`${STORAGE_KEY}.${windowLabel}`);
+      if (state) {
+        // 检查数据是否有效
+        const hasInvalidData = (
+          state.x === undefined ||
+          state.y === undefined ||
+          state.width === undefined ||
+          state.height === undefined ||
+          typeof state.x !== 'number' ||
+          typeof state.y !== 'number' ||
+          typeof state.width !== 'number' ||
+          typeof state.height !== 'number' ||
+          isNaN(state.x) ||
+          isNaN(state.y) ||
+          isNaN(state.width) ||
+          isNaN(state.height)
+        );
 
-  onUnmounted(() => {
-    stopListening();
-    // 组件卸载时立即保存
-    saveWindowState();
+        if (hasInvalidData) {
+          console.warn(`[WindowState] Clearing corrupted data for ${windowLabel}`);
+          storage.remove(`${STORAGE_KEY}.${windowLabel}`);
+          storage.save();
+        }
+      }
+    } catch (error) {
+      console.error('[WindowState] Error checking corrupted data:', error);
+      // 出错时清除数据
+      storage.remove(`${STORAGE_KEY}.${windowLabel}`);
+      storage.save();
+    }
+  };
+
+  // 先清除损坏数据，再恢复窗口状态
+  clearCorruptedData();
+
+  // 立即初始化（不使用 onMounted 避免在 async setup 中的警告）
+  restoreWindowState().then(() => {
+    startListening();
   });
 
   return {
     saveWindowState,
     restoreWindowState,
+    cleanup: stopListening,
   };
 }

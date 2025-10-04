@@ -84,6 +84,6 @@
     }
   },
   "dev": {
-    "open_dev_tools": false
+    "open_dev_tools": true
   }
 }

@@ -22,8 +22,10 @@ pub fn run() {
     .plugin(tauri_plugin_global_shortcut::Builder::new().build())
     .plugin(tauri_plugin_process::init())
     .plugin(tauri_plugin_dialog::init())
+    .plugin(tauri_plugin_http::init())
     .invoke_handler(tauri::generate_handler![
       config::get_app_config,
+      commands::show_login_window,
       commands::toggle_float_ball,
       commands::close_float_ball,
       commands::is_float_ball_visible,
@@ -107,6 +109,9 @@ pub fn run() {
       // 开发模式打开 DevTools
       if cfg!(debug_assertions) && config.dev.open_dev_tools {
         if let Some(window) = app.get_webview_window("main") {
+          window.open_devtools();
+        }
+        if let Some(window) = app.get_webview_window("login") {
           window.open_devtools();
         }
       }

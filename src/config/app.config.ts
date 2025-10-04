@@ -74,7 +74,7 @@ export const appConfig: AppConfig = {
   },
 
   dev: {
-    openDevTools: false, // 开发模式下是否自动打开开发者工具
+    openDevTools: true, // 开发模式下是否自动打开开发者工具
   },
 };
 

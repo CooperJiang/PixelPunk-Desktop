@@ -2,10 +2,135 @@
 @tailwind components;
 @tailwind utilities;
 
+/* 主题 CSS 变量（由 useTheme 动态设置） */
+/* 默认使用暗色主题的配色，避免白色闪烁 */
+:root {
+  /* ========== 颜色系统 ========== */
+
+  /* 主色调 */
+  --color-primary: #a78bfa;
+  --color-primary-hover: #8b5cf6;
+  --color-primary-active: #7c3aed;
+
+  /* 次要色 */
+  --color-secondary: #34d399;
+  --color-secondary-hover: #10b981;
+
+  /* 强调色 */
+  --color-accent: #c084fc;
+  --color-accent-glow: rgba(192, 132, 252, 0.3);
+
+  /* 背景色 */
+  --color-bg-base: #0f0f23;
+  --color-bg-elevated: rgba(15, 15, 35, 0.5);
+  --color-bg-hover: rgba(167, 139, 250, 0.1);
+  --color-bg-active: rgba(167, 139, 250, 0.2);
+
+  /* 文字颜色 */
+  --color-text-primary: #f3f4f6;
+  --color-text-secondary: #d1d5db;
+  --color-text-muted: #9ca3af;
+  --color-text-inverse: #0f0f23;
+
+  /* 边框 */
+  --color-border: rgba(167, 139, 250, 0.2);
+  --color-border-hover: rgba(167, 139, 250, 0.4);
+
+  /* 状态色 */
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-error: #f87171;
+  --color-info: #60a5fa;
+
+  /* 特殊效果 */
+  --color-glow: rgba(167, 139, 250, 0.5);
+  --color-shadow: rgba(167, 139, 250, 0.3);
+
+  /* ========== 设计系统变量 ========== */
+
+  /* 间距 */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-2xl: 48px;
+  --spacing-3xl: 64px;
+
+  /* 圆角 */
+  --radius-none: 0;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 9999px;
+
+  /* 字体大小 */
+  --font-size-xs: 12px;
+  --font-size-sm: 14px;
+  --font-size-base: 16px;
+  --font-size-lg: 18px;
+  --font-size-xl: 20px;
+  --font-size-2xl: 24px;
+  --font-size-3xl: 30px;
+  --font-size-4xl: 36px;
+
+  /* 字重 */
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* 行高 */
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.75;
+
+  /* 图标尺寸 */
+  --size-icon-sm: 16px;
+  --size-icon-md: 20px;
+  --size-icon-lg: 24px;
+  --size-icon-xl: 32px;
+
+  /* 按钮尺寸 */
+  --size-button-sm: 32px;
+  --size-button-md: 40px;
+  --size-button-lg: 48px;
+
+  /* 输入框尺寸 */
+  --size-input-sm: 32px;
+  --size-input-md: 40px;
+  --size-input-lg: 48px;
+
+  /* 阴影 */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+
+  /* z-index 层级 */
+  --z-index-base: 0;
+  --z-index-dropdown: 1000;
+  --z-index-modal: 2000;
+  --z-index-popover: 3000;
+  --z-index-toast: 4000;
+  --z-index-tooltip: 5000;
+
+  /* 过渡动画 */
+  --transition-fast: 150ms;
+  --transition-base: 200ms;
+  --transition-slow: 300ms;
+  --transition-ease: ease-in-out;
+}
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+html {
+  background-color: var(--color-bg-base);
 }
 
 body {
@@ -18,4 +143,47 @@ body {
     "Helvetica Neue",
     Arial,
     sans-serif;
+  background-color: var(--color-bg-base);
+  color: var(--color-text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#app {
+  background-color: var(--color-bg-base);
+  min-height: 100vh;
+}
+
+/* 自定义 Tailwind 工具类使用主题变量 */
+@layer utilities {
+  .text-theme-primary {
+    color: var(--color-text-primary);
+  }
+
+  .text-theme-secondary {
+    color: var(--color-text-secondary);
+  }
+
+  .text-theme-muted {
+    color: var(--color-text-muted);
+  }
+
+  .bg-theme-base {
+    background-color: var(--color-bg-base);
+  }
+
+  .bg-theme-elevated {
+    background-color: var(--color-bg-elevated);
+  }
+
+  .bg-theme-hover {
+    background-color: var(--color-bg-hover);
+  }
+
+  .border-theme {
+    border-color: var(--color-border);
+  }
+
+  .border-theme-hover {
+    border-color: var(--color-border-hover);
+  }
 }

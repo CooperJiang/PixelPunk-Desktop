@@ -1,16 +1,21 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import IconSidebar from "./IconSidebar.vue";
 import SubMenu from "./SubMenu.vue";
 
 // 当前选中的主菜单
-const activeMainMenu = ref("home");
-// 子菜单是否展开
-const isSubMenuOpen = ref(true);
+const activeMainMenu = ref("dashboard");
+
+// 没有二级菜单的主菜单列表
+const menusWithoutSubMenu = ["dashboard"];
+
+// 是否显示二级菜单
+const showSubMenu = computed(() => {
+  return !menusWithoutSubMenu.includes(activeMainMenu.value);
+});
 
 const handleMenuChange = (menuId: string) => {
   activeMainMenu.value = menuId;
-  isSubMenuOpen.value = true;
 };
 </script>
 
@@ -22,8 +27,8 @@ const handleMenuChange = (menuId: string) => {
       @menu-change="handleMenuChange"
     />
 
-    <!-- 中间：子菜单 -->
-    <SubMenu v-show="isSubMenuOpen" :active-main-menu="activeMainMenu" />
+    <!-- 中间：子菜单（仅在有子菜单时显示） -->
+    <SubMenu v-if="showSubMenu" :active-main-menu="activeMainMenu" />
 
     <!-- 右侧：主内容区域 -->
     <div class="flex-1 overflow-auto">

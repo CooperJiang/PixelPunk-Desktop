@@ -1,5 +1,4 @@
 <script setup lang="ts">
-/* eslint-disable no-undef */
 import { ref } from "vue";
 import { useTheme } from "@/composables/useTheme";
 import { logger, createTimer } from "@/utils/logger";

@@ -6,56 +6,56 @@
 export const API_ENDPOINTS = {
   /* 认证相关 */
   AUTH: {
-    LOGIN: '/auth/login',
-    LOGOUT: '/auth/logout',
-    REGISTER: '/auth/register',
-    REFRESH: '/auth/refresh',
-    RESET_PASSWORD: '/auth/reset-password',
-    CHANGE_PASSWORD: '/auth/change-password',
+    LOGIN: "/auth/login",
+    LOGOUT: "/auth/logout",
+    REGISTER: "/auth/register",
+    REFRESH: "/auth/refresh",
+    RESET_PASSWORD: "/auth/reset-password",
+    CHANGE_PASSWORD: "/auth/change-password",
   },
 
   /* 用户相关 */
   USER: {
-    PROFILE: '/user/profile',
-    UPDATE_PROFILE: '/user/profile',
-    AVATAR: '/user/avatar',
-    SETTINGS: '/user/settings',
+    PROFILE: "/user/profile",
+    UPDATE_PROFILE: "/user/profile",
+    AVATAR: "/user/avatar",
+    SETTINGS: "/user/settings",
   },
 
   /* 文件相关 */
   FILE: {
-    LIST: '/files',
-    UPLOAD: '/files/upload',
-    DELETE: '/files',
-    BATCH_DELETE: '/files/batch',
-    UPDATE: '/files',
-    SEARCH: '/files/search',
+    LIST: "/files",
+    UPLOAD: "/files/upload",
+    DELETE: "/files",
+    BATCH_DELETE: "/files/batch",
+    UPDATE: "/files",
+    SEARCH: "/files/search",
   },
 
   /* 文件夹相关 */
   FOLDER: {
-    LIST: '/folders',
-    CREATE: '/folders',
-    UPDATE: '/folders',
-    DELETE: '/folders',
-    MOVE: '/folders/move',
+    LIST: "/folders",
+    CREATE: "/folders",
+    UPDATE: "/folders",
+    DELETE: "/folders",
+    MOVE: "/folders/move",
   },
 
   /* 分享相关 */
   SHARE: {
-    CREATE: '/shares',
-    LIST: '/shares',
-    DELETE: '/shares',
+    CREATE: "/shares",
+    LIST: "/shares",
+    DELETE: "/shares",
   },
 } as const;
 
 /* ===== HTTP方法常量 ===== */
 export const HTTP_METHODS = {
-  GET: 'GET',
-  POST: 'POST',
-  PUT: 'PUT',
-  DELETE: 'DELETE',
-  PATCH: 'PATCH',
+  GET: "GET",
+  POST: "POST",
+  PUT: "PUT",
+  DELETE: "DELETE",
+  PATCH: "PATCH",
 } as const;
 
 /* ===== HTTP状态码常量 ===== */
@@ -85,19 +85,19 @@ export const HTTP_STATUS = {
 
 /* ===== 错误码映射 ===== */
 export const ERROR_CODE_MESSAGES = {
-  [HTTP_STATUS.BAD_REQUEST]: '请求参数错误',
-  [HTTP_STATUS.UNAUTHORIZED]: '未授权访问',
-  [HTTP_STATUS.FORBIDDEN]: '权限不足',
-  [HTTP_STATUS.NOT_FOUND]: '资源不存在',
-  [HTTP_STATUS.METHOD_NOT_ALLOWED]: '请求方法不允许',
-  [HTTP_STATUS.CONFLICT]: '资源冲突',
-  [HTTP_STATUS.PAYLOAD_TOO_LARGE]: '请求体过大',
-  [HTTP_STATUS.UNPROCESSABLE_ENTITY]: '数据验证失败',
-  [HTTP_STATUS.TOO_MANY_REQUESTS]: '请求过于频繁',
-  [HTTP_STATUS.INTERNAL_SERVER_ERROR]: '服务器内部错误',
-  [HTTP_STATUS.BAD_GATEWAY]: '网关错误',
-  [HTTP_STATUS.SERVICE_UNAVAILABLE]: '服务不可用',
-  [HTTP_STATUS.GATEWAY_TIMEOUT]: '网关超时',
+  [HTTP_STATUS.BAD_REQUEST]: "请求参数错误",
+  [HTTP_STATUS.UNAUTHORIZED]: "未授权访问",
+  [HTTP_STATUS.FORBIDDEN]: "权限不足",
+  [HTTP_STATUS.NOT_FOUND]: "资源不存在",
+  [HTTP_STATUS.METHOD_NOT_ALLOWED]: "请求方法不允许",
+  [HTTP_STATUS.CONFLICT]: "资源冲突",
+  [HTTP_STATUS.PAYLOAD_TOO_LARGE]: "请求体过大",
+  [HTTP_STATUS.UNPROCESSABLE_ENTITY]: "数据验证失败",
+  [HTTP_STATUS.TOO_MANY_REQUESTS]: "请求过于频繁",
+  [HTTP_STATUS.INTERNAL_SERVER_ERROR]: "服务器内部错误",
+  [HTTP_STATUS.BAD_GATEWAY]: "网关错误",
+  [HTTP_STATUS.SERVICE_UNAVAILABLE]: "服务不可用",
+  [HTTP_STATUS.GATEWAY_TIMEOUT]: "网关超时",
 } as const;
 
 /* ===== 请求超时配置 ===== */
@@ -109,22 +109,22 @@ export const REQUEST_TIMEOUT = {
 
 /* ===== 内容类型常量 ===== */
 export const CONTENT_TYPES = {
-  JSON: 'application/json',
-  FORM_DATA: 'multipart/form-data',
-  URL_ENCODED: 'application/x-www-form-urlencoded',
-  TEXT_PLAIN: 'text/plain',
-  OCTET_STREAM: 'application/octet-stream',
+  JSON: "application/json",
+  FORM_DATA: "multipart/form-data",
+  URL_ENCODED: "application/x-www-form-urlencoded",
+  TEXT_PLAIN: "text/plain",
+  OCTET_STREAM: "application/octet-stream",
 } as const;
 
 /* ===== 缓存配置 ===== */
 export const CACHE_CONFIG = {
   /* 缓存键前缀 */
   PREFIX: {
-    USER: 'user:',
-    FILE: 'file:',
-    FOLDER: 'folder:',
-    SHARE: 'share:',
-    SETTINGS: 'settings:',
+    USER: "user:",
+    FILE: "file:",
+    FOLDER: "folder:",
+    SHARE: "share:",
+    SETTINGS: "settings:",
   },
 
   /* 缓存过期时间 (秒) */
@@ -145,6 +145,6 @@ export const PAGINATION_CONFIG = {
 } as const;
 
 /* ===== Token存储键 ===== */
-export const TOKEN_KEY = 'token';
-export const USER_INFO_KEY = 'userInfo';
+export const TOKEN_KEY = "token";
+export const USER_INFO_KEY = "userInfo";
 export const TOKEN_EXPIRES = 24 * 7; // 7天（小时）

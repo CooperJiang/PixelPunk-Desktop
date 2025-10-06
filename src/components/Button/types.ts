@@ -1,18 +1,18 @@
-import type { Component } from 'vue';
+import type { Component } from "vue";
 
 export type ButtonType =
-  | 'primary'
-  | 'secondary'
-  | 'outlined'
-  | 'text'
-  | 'danger'
-  | 'success'
-  | 'warning'
-  | 'info';
+  | "primary"
+  | "secondary"
+  | "outlined"
+  | "text"
+  | "danger"
+  | "success"
+  | "warning"
+  | "info";
 
-export type ButtonSize = 'small' | 'medium' | 'large';
+export type ButtonSize = "small" | "medium" | "large";
 
-export type LoadingMode = 'inline' | 'replace';
+export type LoadingMode = "inline" | "replace";
 
 export interface ButtonProps {
   /** 按钮类型 */
@@ -36,7 +36,7 @@ export interface ButtonProps {
 }
 
 export interface ButtonEmits {
-  (e: 'click', event: MouseEvent): void;
-  (e: 'mouseover', event: MouseEvent): void;
-  (e: 'mouseleave', event: MouseEvent): void;
+  (e: "click", event: MouseEvent): void;
+  (e: "mouseover", event: MouseEvent): void;
+  (e: "mouseleave", event: MouseEvent): void;
 }

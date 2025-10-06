@@ -453,22 +453,86 @@ export async function upload<T = any>(
       }
     }
 
-    // 移除Content-Type，让浏览器自动设置（包含boundary）
-    delete headers["Content-Type"];
-
     const timeout = config?.timeout || REQUEST_TIMEOUT.UPLOAD;
     const fullUrl = buildUrl(finalUrl, config?.params);
 
-    // 发送请求
-    const response = await fetch(fullUrl, {
-      method: "POST",
-      headers,
-      body: formData as any,
-      connectTimeout: timeout,
-    });
+    // 使用XMLHttpRequest支持进度
+    return new Promise<ApiResult<T>>((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
 
-    // 响应拦截
-    return await responseInterceptor<T>(response, config || {});
+      // 设置超时
+      xhr.timeout = timeout;
+
+      // 监听进度
+      if (onProgress) {
+        xhr.upload.addEventListener("progress", (e) => {
+          if (e.lengthComputable) {
+            const percentComplete = Math.round((e.loaded / e.total) * 100);
+            onProgress(percentComplete);
+          }
+        });
+      }
+
+      // 监听完成
+      xhr.addEventListener("load", async () => {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          try {
+            const responseData = JSON.parse(xhr.responseText);
+            const mockResponse = new Response(xhr.responseText, {
+              status: xhr.status,
+              statusText: xhr.statusText,
+              headers: new Headers(),
+            });
+            const result = await responseInterceptor<T>(
+              mockResponse,
+              config || {},
+            );
+            resolve(result);
+          } catch (error) {
+            const errorResult = await handleError(error, config || {});
+            reject(errorResult);
+          }
+        } else {
+          const errorResult = await handleError(
+            new Error(`Upload failed with status ${xhr.status}`),
+            config || {},
+          );
+          reject(errorResult);
+        }
+      });
+
+      // 监听错误
+      xhr.addEventListener("error", async () => {
+        const errorResult = await handleError(
+          new Error("Network error during upload"),
+          config || {},
+        );
+        reject(errorResult);
+      });
+
+      // 监听超时
+      xhr.addEventListener("timeout", async () => {
+        const errorResult = await handleError(
+          new Error("Upload timeout"),
+          config || {},
+        );
+        reject(errorResult);
+      });
+
+      // 打开请求
+      xhr.open("POST", fullUrl);
+
+      // 设置请求头（必须在open之后）
+      for (const [key, value] of Object.entries(headers)) {
+        if (key !== "Content-Type") {
+          // FormData会自动设置Content-Type
+          xhr.setRequestHeader(key, value);
+        }
+      }
+
+      // 发送请求
+      xhr.send(formData as any);
+    });
   } catch (error) {
     return await handleError(error, config || {});
   }

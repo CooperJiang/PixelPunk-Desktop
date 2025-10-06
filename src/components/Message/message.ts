@@ -1,9 +1,9 @@
-import { createApp } from 'vue';
-import MessageComponent, { type MessageProps } from './index.vue';
+import { createApp } from "vue";
+import MessageComponent, { type MessageProps } from "./index.vue";
 
 export interface MessageOptions {
   content: string;
-  type?: 'success' | 'error' | 'warning' | 'info';
+  type?: "success" | "error" | "warning" | "info";
   duration?: number;
   onClose?: () => void;
 }
@@ -11,7 +11,7 @@ export interface MessageOptions {
 const instances: any[] = [];
 
 function createMessage(options: MessageOptions) {
-  const container = document.createElement('div');
+  const container = document.createElement("div");
   document.body.appendChild(container);
 
   const instance = createApp(MessageComponent, {
@@ -42,16 +42,16 @@ function createMessage(options: MessageOptions) {
 
 export const message = {
   success: (content: string, duration?: number) => {
-    return createMessage({ content, type: 'success', duration });
+    return createMessage({ content, type: "success", duration });
   },
   error: (content: string, duration?: number) => {
-    return createMessage({ content, type: 'error', duration });
+    return createMessage({ content, type: "error", duration });
   },
   warning: (content: string, duration?: number) => {
-    return createMessage({ content, type: 'warning', duration });
+    return createMessage({ content, type: "warning", duration });
   },
   info: (content: string, duration?: number) => {
-    return createMessage({ content, type: 'info', duration });
+    return createMessage({ content, type: "info", duration });
   },
 };
 

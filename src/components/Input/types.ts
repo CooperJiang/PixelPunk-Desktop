@@ -1,8 +1,15 @@
-import type { Component } from 'vue';
+import type { Component } from "vue";
 
-export type InputType = 'text' | 'password' | 'email' | 'number' | 'tel' | 'url' | 'textarea';
+export type InputType =
+  | "text"
+  | "password"
+  | "email"
+  | "number"
+  | "tel"
+  | "url"
+  | "textarea";
 
-export type InputSize = 'small' | 'medium' | 'large';
+export type InputSize = "small" | "medium" | "large";
 
 export interface InputProps {
   /** 输入框值 */
@@ -46,13 +53,13 @@ export interface InputProps {
 }
 
 export interface InputEmits {
-  (e: 'update:modelValue', value: string | number): void;
-  (e: 'input', event: Event): void;
-  (e: 'change', event: Event): void;
-  (e: 'focus', event: FocusEvent): void;
-  (e: 'blur', event: FocusEvent): void;
-  (e: 'keyup', event: KeyboardEvent): void;
-  (e: 'keydown', event: KeyboardEvent): void;
-  (e: 'enter', event: KeyboardEvent): void;
-  (e: 'clear'): void;
+  (e: "update:modelValue", value: string | number): void;
+  (e: "input", event: Event): void;
+  (e: "change", event: Event): void;
+  (e: "focus", event: FocusEvent): void;
+  (e: "blur", event: FocusEvent): void;
+  (e: "keyup", event: KeyboardEvent): void;
+  (e: "keydown", event: KeyboardEvent): void;
+  (e: "enter", event: KeyboardEvent): void;
+  (e: "clear"): void;
 }

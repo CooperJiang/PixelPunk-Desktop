@@ -119,30 +119,34 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, useAttrs, useSlots } from 'vue';
-import { Eye as EyeIcon, EyeOff as EyeOffIcon, X as XIcon } from 'lucide-vue-next';
-import type { InputEmits, InputProps } from './types';
+import { computed, onMounted, ref, useAttrs, useSlots } from "vue";
+import {
+  Eye as EyeIcon,
+  EyeOff as EyeOffIcon,
+  X as XIcon,
+} from "lucide-vue-next";
+import type { InputEmits, InputProps } from "./types";
 
 defineOptions({
-  name: 'Input',
+  name: "Input",
   inheritAttrs: false,
 });
 
 const props = withDefaults(defineProps<InputProps>(), {
-  modelValue: '',
-  type: 'text',
-  size: 'medium',
-  placeholder: '',
+  modelValue: "",
+  type: "text",
+  size: "medium",
+  placeholder: "",
   disabled: false,
   readonly: false,
   clearable: false,
   autofocus: false,
-  autocomplete: 'off',
-  name: '',
+  autocomplete: "off",
+  name: "",
   rows: 3,
   error: false,
-  errorMessage: '',
-  inputId: '',
+  errorMessage: "",
+  inputId: "",
   width: undefined,
   height: undefined,
 });
@@ -165,7 +169,9 @@ const filteredAttrs = computed(() => {
 
 const showSuffix = computed(() =>
   Boolean(
-    slots.suffix || props.suffixIcon || (props.clearable && props.modelValue && !props.disabled),
+    slots.suffix ||
+      props.suffixIcon ||
+      (props.clearable && props.modelValue && !props.disabled),
   ),
 );
 
@@ -182,17 +188,17 @@ const wrapperStyle = computed(() => {
 });
 
 const inputType = computed(() => {
-  if (props.type === 'password') {
-    return showPassword.value ? 'text' : 'password';
+  if (props.type === "password") {
+    return showPassword.value ? "text" : "password";
   }
-  return props.type === 'textarea' ? 'text' : props.type;
+  return props.type === "textarea" ? "text" : props.type;
 });
 
 const iconSize = computed(() => {
   switch (props.size) {
-    case 'small':
+    case "small":
       return 14;
-    case 'large':
+    case "large":
       return 18;
     default:
       return 16;
@@ -207,50 +213,50 @@ const onInput = (e: Event) => {
   const target = e.target as HTMLInputElement | HTMLTextAreaElement;
   const { value } = target;
 
-  if (props.type === 'number') {
-    if (value === '') {
-      emit('update:modelValue', '');
+  if (props.type === "number") {
+    if (value === "") {
+      emit("update:modelValue", "");
     } else {
       const numberValue = parseFloat(value);
       if (!isNaN(numberValue)) {
-        emit('update:modelValue', numberValue);
+        emit("update:modelValue", numberValue);
       }
     }
   } else {
-    emit('update:modelValue', value);
+    emit("update:modelValue", value);
   }
 
-  emit('input', e);
+  emit("input", e);
 };
 
 const onChange = (e: Event) => {
-  emit('change', e);
+  emit("change", e);
 };
 
 const onFocus = (e: FocusEvent) => {
   focused.value = true;
-  emit('focus', e);
+  emit("focus", e);
 };
 
 const onBlur = (e: FocusEvent) => {
   focused.value = false;
-  emit('blur', e);
+  emit("blur", e);
 };
 
 const onKeyup = (e: KeyboardEvent) => {
-  if (e.key === 'Enter') {
-    emit('enter', e);
+  if (e.key === "Enter") {
+    emit("enter", e);
   }
-  emit('keyup', e);
+  emit("keyup", e);
 };
 
 const onKeydown = (e: KeyboardEvent) => {
-  emit('keydown', e);
+  emit("keydown", e);
 };
 
 const onClear = () => {
-  emit('update:modelValue', '');
-  emit('clear');
+  emit("update:modelValue", "");
+  emit("clear");
   inputRef.value?.focus();
 };
 
@@ -363,13 +369,13 @@ textarea.input::placeholder {
 }
 
 /* 移除number类型的spinner */
-.input[type='number']::-webkit-inner-spin-button,
-.input[type='number']::-webkit-outer-spin-button {
+.input[type="number"]::-webkit-inner-spin-button,
+.input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
 
-.input[type='number'] {
+.input[type="number"] {
   -moz-appearance: textfield;
 }
 
@@ -432,7 +438,9 @@ textarea.input::placeholder {
 }
 
 /* 状态样式 */
-.input-wrapper:hover:not(.input-wrapper--disabled):not(.input-wrapper--focused) {
+.input-wrapper:hover:not(.input-wrapper--disabled):not(
+    .input-wrapper--focused
+  ) {
   border-color: var(--color-border-hover);
 }
 

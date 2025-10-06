@@ -33,7 +33,6 @@
  * ```
  */
 
-/* eslint-disable no-undef */
 import { register, unregister } from "@tauri-apps/plugin-global-shortcut";
 import { logger } from "@/utils/logger";
 import {

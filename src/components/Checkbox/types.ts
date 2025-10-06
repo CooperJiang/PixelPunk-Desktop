@@ -1,4 +1,4 @@
-export type CheckboxSize = 'small' | 'medium' | 'large';
+export type CheckboxSize = "small" | "medium" | "large";
 
 export interface CheckboxProps {
   /** 选中状态 */
@@ -14,6 +14,6 @@ export interface CheckboxProps {
 }
 
 export interface CheckboxEmits {
-  (e: 'update:modelValue', value: boolean): void;
-  (e: 'change', value: boolean): void;
+  (e: "update:modelValue", value: boolean): void;
+  (e: "change", value: boolean): void;
 }

@@ -1,14 +1,14 @@
 export type TooltipPlacement =
-  | 'top'
-  | 'bottom'
-  | 'left'
-  | 'right'
-  | 'top-start'
-  | 'top-end'
-  | 'bottom-start'
-  | 'bottom-end';
+  | "top"
+  | "bottom"
+  | "left"
+  | "right"
+  | "top-start"
+  | "top-end"
+  | "bottom-start"
+  | "bottom-end";
 
-export type TooltipTrigger = 'hover' | 'click' | 'manual';
+export type TooltipTrigger = "hover" | "click" | "manual";
 
 export interface TooltipProps {
   /** 提示内容 */

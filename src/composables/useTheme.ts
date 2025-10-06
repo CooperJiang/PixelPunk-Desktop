@@ -23,10 +23,14 @@
  * ```
  */
 
-/* eslint-disable no-undef */
 import { ref, computed } from "vue";
 import { storage } from "@/utils/storage";
-import { themes, getThemeById, getDefaultTheme, type Theme } from "@/config/themes";
+import {
+  themes,
+  getThemeById,
+  getDefaultTheme,
+  type Theme,
+} from "@/config/themes";
 
 export type ThemeMode = "light" | "dark" | "system";
 
@@ -35,8 +39,8 @@ const THEME_ID_KEY = "app.theme.id";
 const HTML_ATTR = "data-theme";
 
 export function useTheme() {
-  const themeMode = ref<ThemeMode>("system");
-  const systemTheme = ref<"light" | "dark">("dark");
+  const themeMode = ref<ThemeMode>("light");
+  const systemTheme = ref<"light" | "dark">("light");
   let mediaQuery: MediaQueryList | null = null;
 
   /**
@@ -154,7 +158,10 @@ export function useTheme() {
     // 字重
     html.style.setProperty("--font-weight-normal", tokens.fontWeight.normal);
     html.style.setProperty("--font-weight-medium", tokens.fontWeight.medium);
-    html.style.setProperty("--font-weight-semibold", tokens.fontWeight.semibold);
+    html.style.setProperty(
+      "--font-weight-semibold",
+      tokens.fontWeight.semibold,
+    );
     html.style.setProperty("--font-weight-bold", tokens.fontWeight.bold);
 
     // 行高
@@ -262,7 +269,7 @@ export function useTheme() {
     systemTheme.value = detectSystemTheme();
 
     // 读取保存的主题模式
-    const savedMode = storage.get<ThemeMode>(STORAGE_KEY, "system");
+    const savedMode = storage.get<ThemeMode>(STORAGE_KEY, "light");
     themeMode.value = savedMode;
 
     // 应用主题

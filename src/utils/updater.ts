@@ -25,7 +25,6 @@
  * ```
  */
 
-/* eslint-disable no-undef */
 import { check } from "@tauri-apps/plugin-updater";
 import { relaunch } from "@tauri-apps/plugin-process";
 import { updaterConfig } from "@/config/updater.config";

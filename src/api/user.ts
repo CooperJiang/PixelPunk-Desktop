@@ -1,5 +1,5 @@
-import { get, post } from '@/utils/network/http';
-import type { ApiResult } from '@/utils/network/http-types';
+import { get, post } from "@/utils/network/http";
+import type { ApiResult } from "@/utils/network/http-types";
 import type {
   LoginResponse,
   SendCodeRequest,
@@ -7,7 +7,7 @@ import type {
   UserInfo,
   UserLoginRequest,
   UserRegisterRequest,
-} from './types';
+} from "./types";
 
 /**
  * 用户注册
@@ -15,7 +15,7 @@ import type {
 export function register(
   data: UserRegisterRequest,
 ): Promise<ApiResult<UserInfo>> {
-  return post<UserInfo>('/user/register', data);
+  return post<UserInfo>("/user/register", data);
 }
 
 /**
@@ -24,7 +24,7 @@ export function register(
 export function login(
   data: UserLoginRequest,
 ): Promise<ApiResult<LoginResponse>> {
-  return post<LoginResponse>('/user/login', data, {
+  return post<LoginResponse>("/user/login", data, {
     autoShowError: false, // 禁用自动错误提示，由前端组件手动处理
     useResultMode: true, // 使用Result模式兼容现有的auth.ts逻辑
   });
@@ -36,14 +36,14 @@ export function login(
 export function sendRegistrationCode(
   data: SendCodeRequest,
 ): Promise<ApiResult<SendCodeResponse>> {
-  return post<SendCodeResponse>('/user/send-registration-code', data);
+  return post<SendCodeResponse>("/user/send-registration-code", data);
 }
 
 /**
  * 获取用户信息
  */
 export function getUserProfile(): Promise<ApiResult<UserInfo>> {
-  return get<UserInfo>('/user/personal/profile');
+  return get<UserInfo>("/user/personal/profile");
 }
 
 /**
@@ -52,7 +52,7 @@ export function getUserProfile(): Promise<ApiResult<UserInfo>> {
 export function updateUserProfile(
   data: UserInfo,
 ): Promise<ApiResult<UserInfo>> {
-  return post<UserInfo>('/user/personal/profile', data);
+  return post<UserInfo>("/user/personal/profile", data);
 }
 
 export default {

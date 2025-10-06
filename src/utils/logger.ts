@@ -17,7 +17,6 @@
  * ```
  */
 
-/* eslint-disable no-undef */
 import { trace, debug, info, warn, error } from "@tauri-apps/plugin-log";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { loggerConfig } from "@/config/logging.config";

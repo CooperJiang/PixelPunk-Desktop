@@ -1,19 +1,19 @@
 <script setup lang="ts">
-import { nextTick, onBeforeUnmount, ref } from 'vue';
-import type { TooltipProps } from './types';
+import { nextTick, onBeforeUnmount, ref } from "vue";
+import type { TooltipProps } from "./types";
 
 defineOptions({
-  name: 'Tooltip',
+  name: "Tooltip",
 });
 
 const props = withDefaults(defineProps<TooltipProps>(), {
-  placement: 'top',
-  trigger: 'hover',
+  placement: "top",
+  trigger: "hover",
   disabled: false,
   offset: 8,
   showDelay: 0,
   hideDelay: 200,
-  maxWidth: '300px',
+  maxWidth: "300px",
 });
 
 const visible = ref(false);
@@ -56,19 +56,19 @@ const hide = () => {
 };
 
 const handleMouseEnter = () => {
-  if (props.trigger === 'hover') {
+  if (props.trigger === "hover") {
     show();
   }
 };
 
 const handleMouseLeave = () => {
-  if (props.trigger === 'hover') {
+  if (props.trigger === "hover") {
     hide();
   }
 };
 
 const handleClick = () => {
-  if (props.trigger === 'click') {
+  if (props.trigger === "click") {
     visible.value = !visible.value;
     if (visible.value) {
       nextTick(() => {
@@ -85,11 +85,11 @@ const updatePosition = () => {
   const tooltipEl = tooltip.value;
 
   const tempStyle = {
-    position: 'fixed',
-    visibility: 'hidden',
-    display: 'block',
-    top: '0px',
-    left: '0px',
+    position: "fixed",
+    visibility: "hidden",
+    display: "block",
+    top: "0px",
+    left: "0px",
     maxWidth: props.maxWidth,
   };
 
@@ -104,38 +104,38 @@ const updatePosition = () => {
 
   // 计算位置
   switch (placement) {
-    case 'top':
-    case 'top-start':
-    case 'top-end':
+    case "top":
+    case "top-start":
+    case "top-end":
       top = triggerRect.top - tooltipHeight - offset;
-      if (placement === 'top-start') {
+      if (placement === "top-start") {
         left = triggerRect.left;
-      } else if (placement === 'top-end') {
+      } else if (placement === "top-end") {
         left = triggerRect.right - tooltipWidth;
       } else {
         left = triggerRect.left + triggerRect.width / 2 - tooltipWidth / 2;
       }
       break;
 
-    case 'bottom':
-    case 'bottom-start':
-    case 'bottom-end':
+    case "bottom":
+    case "bottom-start":
+    case "bottom-end":
       top = triggerRect.bottom + offset;
-      if (placement === 'bottom-start') {
+      if (placement === "bottom-start") {
         left = triggerRect.left;
-      } else if (placement === 'bottom-end') {
+      } else if (placement === "bottom-end") {
         left = triggerRect.right - tooltipWidth;
       } else {
         left = triggerRect.left + triggerRect.width / 2 - tooltipWidth / 2;
       }
       break;
 
-    case 'left':
+    case "left":
       left = triggerRect.left - tooltipWidth - offset;
       top = triggerRect.top + triggerRect.height / 2 - tooltipHeight / 2;
       break;
 
-    case 'right':
+    case "right":
       left = triggerRect.right + offset;
       top = triggerRect.top + triggerRect.height / 2 - tooltipHeight / 2;
       break;
@@ -158,18 +158,18 @@ const updatePosition = () => {
   }
 
   tooltipStyle.value = {
-    position: 'fixed',
+    position: "fixed",
     left: `${left}px`,
     top: `${top}px`,
     maxWidth: props.maxWidth,
-    zIndex: 'var(--z-index-tooltip, 5000)',
-    visibility: 'visible',
-    display: 'block',
+    zIndex: "var(--z-index-tooltip, 9999)",
+    visibility: "visible",
+    display: "block",
   };
 
   // 计算箭头位置
   arrowStyle.value = {};
-  if (placement === 'top' || placement === 'bottom') {
+  if (placement === "top" || placement === "bottom") {
     const triggerCenter = triggerRect.left + triggerRect.width / 2;
     const tooltipStart = left;
     const arrowLeft = triggerCenter - tooltipStart - 4;
@@ -181,7 +181,7 @@ const updatePosition = () => {
     arrowStyle.value = {
       left: `${clampedLeft}px`,
     };
-  } else if (placement === 'left' || placement === 'right') {
+  } else if (placement === "left" || placement === "right") {
     const triggerCenter = triggerRect.top + triggerRect.height / 2;
     const tooltipStart = top;
     const arrowTop = triggerCenter - tooltipStart - 4;
@@ -209,7 +209,7 @@ const handleScroll = () => {
 };
 
 const handleClickOutside = (event: Event) => {
-  if (props.trigger === 'click' && visible.value) {
+  if (props.trigger === "click" && visible.value) {
     const target = event.target as Node;
     if (!trigger.value?.contains(target) && !tooltip.value?.contains(target)) {
       visible.value = false;
@@ -219,14 +219,14 @@ const handleClickOutside = (event: Event) => {
 
 onBeforeUnmount(() => {
   clearTimers();
-  window.removeEventListener('resize', handleResize);
-  window.removeEventListener('scroll', handleScroll, true);
-  document.removeEventListener('click', handleClickOutside, true);
+  window.removeEventListener("resize", handleResize);
+  window.removeEventListener("scroll", handleScroll, true);
+  document.removeEventListener("click", handleClickOutside, true);
 });
 
-window.addEventListener('resize', handleResize);
-window.addEventListener('scroll', handleScroll, true);
-document.addEventListener('click', handleClickOutside, true);
+window.addEventListener("resize", handleResize);
+window.addEventListener("scroll", handleScroll, true);
+document.addEventListener("click", handleClickOutside, true);
 
 defineExpose({
   show,
@@ -280,7 +280,7 @@ defineExpose({
   border-radius: var(--radius-md, 8px);
   box-shadow: var(--shadow-lg, 0 10px 15px -3px rgba(0, 0, 0, 0.1));
   backdrop-filter: blur(8px);
-  z-index: var(--z-index-tooltip, 5000);
+  z-index: var(--z-index-tooltip, 9999);
   pointer-events: none;
   user-select: none;
   white-space: normal;
@@ -354,7 +354,8 @@ defineExpose({
 }
 
 .tooltip-fade-leave-active {
-  transition: opacity var(--transition-fast, 0.15s) var(--transition-ease, ease-in-out);
+  transition: opacity var(--transition-fast, 0.15s)
+    var(--transition-ease, ease-in-out);
 }
 
 .tooltip-fade-enter-from {

@@ -29,11 +29,11 @@ export interface ApiError extends ApiResult<null> {
 
 /* 错误分类 */
 export enum ErrorCategory {
-  NETWORK = 'network', // 网络错误 (连接失败、超时等)
-  BUSINESS = 'business', // 业务逻辑错误 (验证失败、资源不存在等)
-  AUTH = 'auth', // 认证错误 (未登录、token过期)
-  PERMISSION = 'permission', // 权限错误 (无权限访问)
-  SYSTEM = 'system', // 系统错误 (服务器内部错误)
+  NETWORK = "network", // 网络错误 (连接失败、超时等)
+  BUSINESS = "business", // 业务逻辑错误 (验证失败、资源不存在等)
+  AUTH = "auth", // 认证错误 (未登录、token过期)
+  PERMISSION = "permission", // 权限错误 (无权限访问)
+  SYSTEM = "system", // 系统错误 (服务器内部错误)
 }
 
 /* 具体的错误类型 */

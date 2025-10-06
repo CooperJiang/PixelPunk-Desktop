@@ -23,15 +23,17 @@
         class="icon-wrap left-icon"
       >
         <slot name="icon">
-          <component :is="icon" v-if="icon" :size="iconSize" :stroke-width="2" />
+          <component
+            :is="icon"
+            v-if="icon"
+            :size="iconSize"
+            :stroke-width="2"
+          />
         </slot>
       </span>
 
       <!-- 按钮内容 -->
-      <span
-        v-if="loadingMode === 'replace' || !loading"
-        class="button-content"
-      >
+      <span v-if="loadingMode === 'replace' || !loading" class="button-content">
         <slot />
       </span>
 
@@ -56,44 +58,44 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
-import type { ButtonProps, ButtonEmits } from './types';
+import { computed } from "vue";
+import type { ButtonProps, ButtonEmits } from "./types";
 
 defineOptions({
-  name: 'Button',
+  name: "Button",
 });
 
 const props = withDefaults(defineProps<ButtonProps>(), {
-  type: 'primary',
-  size: 'medium',
+  type: "primary",
+  size: "medium",
   loading: false,
-  loadingMode: 'inline',
+  loadingMode: "inline",
   disabled: false,
   block: false,
-  customClass: '',
+  customClass: "",
 });
 
 const emit = defineEmits<ButtonEmits>();
 
 const buttonClasses = computed(() => [
-  'btn',
+  "btn",
   `btn--${props.type}`,
   `btn--${props.size}`,
   {
-    'btn--loading': props.loading,
-    'btn--disabled': props.disabled,
-    'btn--block': props.block,
-    'btn--has-icon': props.icon || props.rightIcon,
-    'btn--replace-mode': props.loading && props.loadingMode === 'replace',
+    "btn--loading": props.loading,
+    "btn--disabled": props.disabled,
+    "btn--block": props.block,
+    "btn--has-icon": props.icon || props.rightIcon,
+    "btn--replace-mode": props.loading && props.loadingMode === "replace",
   },
   props.customClass,
 ]);
 
 const iconSize = computed(() => {
   switch (props.size) {
-    case 'small':
+    case "small":
       return 14;
-    case 'large':
+    case "large":
       return 18;
     default:
       return 16;
@@ -102,15 +104,15 @@ const iconSize = computed(() => {
 
 const handleClick = (event: MouseEvent) => {
   if (props.loading || props.disabled) return;
-  emit('click', event);
+  emit("click", event);
 };
 
 const onMouseover = (event: MouseEvent) => {
-  emit('mouseover', event);
+  emit("mouseover", event);
 };
 
 const onMouseleave = (event: MouseEvent) => {
-  emit('mouseleave', event);
+  emit("mouseleave", event);
 };
 </script>
 
@@ -164,7 +166,7 @@ const onMouseleave = (event: MouseEvent) => {
 }
 
 .btn--primary::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: -100%;
@@ -200,7 +202,7 @@ const onMouseleave = (event: MouseEvent) => {
 }
 
 .btn--secondary::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: -100%;
@@ -236,7 +238,7 @@ const onMouseleave = (event: MouseEvent) => {
 }
 
 .btn--outlined::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -270,7 +272,7 @@ const onMouseleave = (event: MouseEvent) => {
 }
 
 .btn--text::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -302,7 +304,7 @@ const onMouseleave = (event: MouseEvent) => {
 }
 
 .btn--danger::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: -100%;
@@ -318,8 +320,8 @@ const onMouseleave = (event: MouseEvent) => {
 }
 
 .btn--danger:hover:not(.btn--disabled):not(.btn--loading) {
-  background: #FF003D;
-  border-color: #FF003D;
+  background: #ff003d;
+  border-color: #ff003d;
   box-shadow: 0 0 15px rgba(255, 23, 68, 0.4);
   transform: translateY(-1px);
 }
@@ -338,7 +340,7 @@ const onMouseleave = (event: MouseEvent) => {
 }
 
 .btn--success::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: -100%;
@@ -354,8 +356,8 @@ const onMouseleave = (event: MouseEvent) => {
 }
 
 .btn--success:hover:not(.btn--disabled):not(.btn--loading) {
-  background: #00C853;
-  border-color: #00C853;
+  background: #00c853;
+  border-color: #00c853;
   box-shadow: 0 0 15px rgba(0, 230, 118, 0.3);
   transform: translateY(-1px);
 }
@@ -374,7 +376,7 @@ const onMouseleave = (event: MouseEvent) => {
 }
 
 .btn--warning::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: -100%;
@@ -390,8 +392,8 @@ const onMouseleave = (event: MouseEvent) => {
 }
 
 .btn--warning:hover:not(.btn--disabled):not(.btn--loading) {
-  background: #FFC400;
-  border-color: #FFC400;
+  background: #ffc400;
+  border-color: #ffc400;
   box-shadow: 0 0 15px rgba(255, 214, 0, 0.3);
   transform: translateY(-1px);
 }
@@ -410,7 +412,7 @@ const onMouseleave = (event: MouseEvent) => {
 }
 
 .btn--info::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: -100%;

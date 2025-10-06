@@ -1,7 +1,7 @@
 /**
  * 用户相关类型定义
  */
-import type { BaseUserInfo, TimeStamps } from './common';
+import type { BaseUserInfo, TimeStamps } from "./common";
 
 /* ==================== 用户信息类型 ==================== */
 export interface UserInfo extends BaseUserInfo, TimeStamps {

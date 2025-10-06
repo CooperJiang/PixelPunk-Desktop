@@ -17,7 +17,6 @@
  * ```
  */
 
-/* eslint-disable no-undef */
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { logger } from "@/utils/logger";
 import { PhysicalPosition, PhysicalSize } from "@tauri-apps/api/dpi";

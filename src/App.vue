@@ -2,6 +2,7 @@
 import { computed, onBeforeMount, ref } from "vue";
 import { useRoute } from "vue-router";
 import TitleBar from "./layouts/TitleBar.vue";
+import MainLayout from "./layouts/MainLayout.vue";
 import CyberpunkBackground from "./components/CyberpunkBackground/index.vue";
 import { useWindowState } from "@/composables/useWindowState";
 import { useTheme } from "@/composables/useTheme";
@@ -38,6 +39,10 @@ const showBackground = computed(
     currentWindowLabel.value !== "float-ball" &&
     currentWindowLabel.value !== "login" &&
     themeInstance.value?.isDark.value,
+);
+// 只在主窗口显示侧边栏
+const showSidebar = computed(
+  () => currentWindowLabel.value === "main" && appInitialized.value,
 );
 
 // 初始化基础设施 - 必须在 storage.init 之后
@@ -207,10 +212,19 @@ async function initializeAuthAndWindow() {
 
     <!-- 主内容区域 -->
     <div
-      :class="showTitleBar ? 'flex-1 overflow-auto' : 'h-full bg-transparent'"
+      :class="
+        showTitleBar ? 'flex-1 overflow-hidden flex' : 'h-full bg-transparent'
+      "
     >
-      <!-- 初始化完成后才渲染路由 -->
-      <router-view v-if="appInitialized" />
+      <!-- 主窗口使用完整布局（IconSidebar + SubMenu + 内容区） -->
+      <MainLayout v-if="showSidebar">
+        <router-view v-if="appInitialized" />
+      </MainLayout>
+
+      <!-- 其他窗口直接显示路由视图 -->
+      <div v-else class="flex-1 overflow-auto">
+        <router-view v-if="appInitialized" />
+      </div>
     </div>
   </div>
 </template>

@@ -1,66 +1,89 @@
 <script setup lang="ts">
-import { X } from "lucide-vue-next";
+import { computed } from "vue";
 
 interface Props {
+  modelValue: boolean;
   title?: string;
-  message: string;
   confirmText?: string;
   cancelText?: string;
   type?: "warning" | "danger" | "info";
+  loading?: boolean;
 }
 
-withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<Props>(), {
   title: "确认",
   confirmText: "确定",
   cancelText: "取消",
   type: "warning",
+  loading: false,
 });
 
 const emit = defineEmits<{
+  "update:modelValue": [value: boolean];
   confirm: [];
   cancel: [];
 }>();
+
+const visible = computed({
+  get: () => props.modelValue,
+  set: (value: boolean) => emit("update:modelValue", value),
+});
 
 const handleConfirm = () => {
   emit("confirm");
 };
 
 const handleCancel = () => {
+  visible.value = false;
   emit("cancel");
 };
 </script>
 
 <template>
-  <div class="confirm-overlay" @click.self="handleCancel">
-    <div class="confirm-dialog">
-      <!-- 标题栏 -->
-      <div class="dialog-header">
-        <h3 class="dialog-title">{{ title }}</h3>
-        <button class="close-btn" aria-label="Close" @click="handleCancel">
-          <X :size="16" />
-        </button>
-      </div>
+  <Teleport to="body">
+    <Transition name="confirm-dialog">
+      <div v-if="visible" class="confirm-overlay" @click.self="handleCancel">
+        <div class="confirm-dialog">
+          <!-- 标题栏 -->
+          <div class="dialog-header">
+            <h3 class="dialog-title">{{ title }}</h3>
+            <button class="close-btn" aria-label="Close" @click="handleCancel">
+              <i class="fas fa-times" />
+            </button>
+          </div>
 
-      <!-- 内容区 -->
-      <div class="dialog-body">
-        <p class="dialog-message">{{ message }}</p>
-      </div>
+          <!-- 内容区 -->
+          <div class="dialog-body">
+            <slot />
+          </div>
 
-      <!-- 按钮区 -->
-      <div class="dialog-footer">
-        <button class="btn btn-cancel" @click="handleCancel">
-          {{ cancelText }}
-        </button>
-        <button
-          class="btn btn-confirm"
-          :class="`btn-${type}`"
-          @click="handleConfirm"
-        >
-          {{ confirmText }}
-        </button>
+          <!-- 按钮区 -->
+          <div class="dialog-footer">
+            <button
+              class="btn btn-cancel"
+              :disabled="loading"
+              @click="handleCancel"
+            >
+              {{ cancelText }}
+            </button>
+            <button
+              class="btn btn-confirm"
+              :class="`btn-${type}`"
+              :disabled="loading"
+              @click="handleConfirm"
+            >
+              <i
+                v-if="loading"
+                class="fas fa-spinner fa-spin"
+                style="margin-right: 6px"
+              />
+              {{ confirmText }}
+            </button>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
+    </Transition>
+  </Teleport>
 </template>
 
 <style scoped>
@@ -71,7 +94,7 @@ const handleCancel = () => {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.7);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -79,14 +102,57 @@ const handleCancel = () => {
   backdrop-filter: blur(4px);
 }
 
+/* 动画 */
+.confirm-dialog-enter-active,
+.confirm-dialog-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.confirm-dialog-enter-from,
+.confirm-dialog-leave-to {
+  opacity: 0;
+}
+
+.confirm-dialog-enter-active .confirm-dialog {
+  animation: dialogBounceIn 0.3s ease;
+}
+
+.confirm-dialog-leave-active .confirm-dialog {
+  animation: dialogBounceOut 0.2s ease;
+}
+
+@keyframes dialogBounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.9) translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes dialogBounceOut {
+  0% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+}
+
 /* 对话框 */
 .confirm-dialog {
   min-width: 360px;
   max-width: 480px;
-  background: var(--color-bg-elevated);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-primary);
+  border-radius: 8px;
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.3),
+    0 0 20px rgba(var(--color-primary-rgb, 5, 217, 232), 0.2);
   overflow: hidden;
 }
 
@@ -159,13 +225,18 @@ const handleCancel = () => {
 }
 
 .btn-cancel {
-  background: var(--color-bg-elevated);
-  color: var(--color-text-primary);
-  border: 1px solid var(--color-border);
+  background: transparent;
+  color: var(--color-text);
+  border: 1px solid var(--color-primary);
 }
 
-.btn-cancel:hover {
-  background: var(--color-bg-hover);
+.btn-cancel:hover:not(:disabled) {
+  background: rgba(var(--color-primary-rgb, 5, 217, 232), 0.1);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .btn-confirm {

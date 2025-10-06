@@ -7,10 +7,10 @@
       @click="close"
     >
       <div class="message-icon">
-        <CheckCircle v-if="type === 'success'" :size="20" />
-        <XCircle v-if="type === 'error'" :size="20" />
-        <AlertCircle v-if="type === 'warning'" :size="20" />
-        <Info v-if="type === 'info'" :size="20" />
+        <i v-if="type === 'success'" class="fas fa-check-circle" />
+        <i v-if="type === 'error'" class="fas fa-times-circle" />
+        <i v-if="type === 'warning'" class="fas fa-exclamation-triangle" />
+        <i v-if="type === 'info'" class="fas fa-info-circle" />
       </div>
       <div class="message-content">{{ content }}</div>
     </div>
@@ -18,18 +18,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import { CheckCircle, XCircle, AlertCircle, Info } from 'lucide-vue-next';
+import { ref, onMounted } from "vue";
 
 export interface MessageProps {
   content: string;
-  type?: 'success' | 'error' | 'warning' | 'info';
+  type?: "success" | "error" | "warning" | "info";
   duration?: number;
   onClose?: () => void;
 }
 
 const props = withDefaults(defineProps<MessageProps>(), {
-  type: 'info',
+  type: "info",
   duration: 3000,
 });
 
@@ -81,6 +80,7 @@ onMounted(() => {
   display: flex;
   align-items: center;
   flex-shrink: 0;
+  font-size: 20px;
 }
 
 .message-content {

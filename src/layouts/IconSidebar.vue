@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {
   Home,
+  Upload,
   FolderOpen,
   Share2,
   Tags,
@@ -19,12 +20,14 @@ const emit = defineEmits<{
 
 // 主菜单配置
 const mainMenus = [
-  { id: "home", icon: Home, label: "首页" },
-  { id: "files", icon: FolderOpen, label: "文件" },
-  { id: "share", icon: Share2, label: "分享" },
-  { id: "tags", icon: Tags, label: "标签" },
-  { id: "ai", icon: Bot, label: "AI" },
+  { id: "dashboard", icon: Home, label: "首页" },
+  { id: "upload", icon: Upload, label: "上传" },
+  { id: "files", icon: FolderOpen, label: "我的文件" },
+  { id: "shares", icon: Share2, label: "分享管理" },
+  { id: "tools", icon: Bot, label: "工具箱" },
   { id: "settings", icon: Settings, label: "设置" },
+  { id: "profile", icon: Tags, label: "个人中心" },
+  { id: "admin", icon: Settings, label: "管理中心" },
 ];
 </script>
 
@@ -46,15 +49,28 @@ const mainMenus = [
       <button
         class="group relative flex h-10 w-10 items-center justify-center rounded-lg transition-all"
         :style="{
-          background: activeMenu === menu.id ? 'var(--color-bg-active)' : 'transparent',
-          color: activeMenu === menu.id ? 'var(--color-primary)' : 'var(--color-text-muted)',
-          boxShadow: activeMenu === menu.id ? '0 0 15px var(--color-shadow)' : 'none',
+          background:
+            activeMenu === menu.id ? 'var(--color-bg-active)' : 'transparent',
+          color:
+            activeMenu === menu.id
+              ? 'var(--color-primary)'
+              : 'var(--color-text-muted)',
+          boxShadow:
+            activeMenu === menu.id ? '0 0 15px var(--color-shadow)' : 'none',
           transitionDuration: 'var(--transition-base, 0.2s)',
         }"
         :aria-label="menu.label"
         @click="emit('menuChange', menu.id)"
-        @mouseenter="$event.currentTarget.style.background = activeMenu === menu.id ? 'var(--color-bg-active)' : 'var(--color-bg-hover)'"
-        @mouseleave="$event.currentTarget.style.background = activeMenu === menu.id ? 'var(--color-bg-active)' : 'transparent'"
+        @mouseenter="
+          $event.currentTarget.style.background =
+            activeMenu === menu.id
+              ? 'var(--color-bg-active)'
+              : 'var(--color-bg-hover)'
+        "
+        @mouseleave="
+          $event.currentTarget.style.background =
+            activeMenu === menu.id ? 'var(--color-bg-active)' : 'transparent'
+        "
       >
         <component :is="menu.icon" :size="18" :stroke-width="2" />
 

@@ -142,7 +142,8 @@ defineExpose({
   border-radius: var(--radius-md, 8px);
   color: var(--color-text-muted);
   cursor: pointer;
-  transition: all var(--transition-base, 0.2s) var(--transition-ease, ease-in-out);
+  transition: all var(--transition-base, 0.2s)
+    var(--transition-ease, ease-in-out);
 }
 
 .close-btn:hover {
@@ -177,7 +178,8 @@ defineExpose({
   background: var(--color-bg-base);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md, 8px);
-  transition: all var(--transition-base, 0.2s) var(--transition-ease, ease-in-out);
+  transition: all var(--transition-base, 0.2s)
+    var(--transition-ease, ease-in-out);
 }
 
 .file-item:hover {
@@ -233,7 +235,8 @@ defineExpose({
   font-weight: var(--font-weight-medium, 500);
   border: none;
   cursor: pointer;
-  transition: all var(--transition-base, 0.2s) var(--transition-ease, ease-in-out);
+  transition: all var(--transition-base, 0.2s)
+    var(--transition-ease, ease-in-out);
   height: var(--size-button-md, 40px);
 }
 
@@ -262,12 +265,14 @@ defineExpose({
 /* 对话框动画 */
 .dialog-enter-active,
 .dialog-leave-active {
-  transition: opacity var(--transition-slow, 0.3s) var(--transition-ease, ease-in-out);
+  transition: opacity var(--transition-slow, 0.3s)
+    var(--transition-ease, ease-in-out);
 }
 
 .dialog-enter-active .dialog-container,
 .dialog-leave-active .dialog-container {
-  transition: all var(--transition-slow, 0.3s) var(--transition-ease, ease-in-out);
+  transition: all var(--transition-slow, 0.3s)
+    var(--transition-ease, ease-in-out);
 }
 
 .dialog-enter-from,

@@ -20,15 +20,15 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
-import Input from '@/components/Input/index.vue';
-import Button from '@/components/Button/index.vue';
-import { Shield as ShieldIcon } from 'lucide-vue-next';
+import { computed, ref } from "vue";
+import Input from "@/components/Input/index.vue";
+import Button from "@/components/Button/index.vue";
+import { Shield as ShieldIcon } from "lucide-vue-next";
 
 interface Props {
   modelValue: string;
   placeholder?: string;
-  size?: 'small' | 'medium' | 'large';
+  size?: "small" | "medium" | "large";
   duration?: number; // 倒计时秒数
   canSend?: boolean; // 是否允许发送（例如：邮箱已填写）
   requestCode?: () => Promise<void>; // 发送请求回调（由父组件提供）
@@ -38,22 +38,22 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  modelValue: '',
-  placeholder: '验证码',
-  size: 'medium',
+  modelValue: "",
+  placeholder: "验证码",
+  size: "medium",
   duration: 60,
   canSend: true,
   requestCode: undefined,
   prefixIcon: ShieldIcon,
-  buttonText: '获取验证码',
+  buttonText: "获取验证码",
   buttonWidth: 104,
 });
 
-const emit = defineEmits(['update:modelValue', 'sent', 'send-error']);
+const emit = defineEmits(["update:modelValue", "sent", "send-error"]);
 
 const innerValue = computed<string>({
   get: () => props.modelValue,
-  set: (v: string) => emit('update:modelValue', v),
+  set: (v: string) => emit("update:modelValue", v),
 });
 
 const countdown = ref(0);
@@ -71,9 +71,9 @@ async function handleSend() {
       await props.requestCode();
     }
     startCountdown();
-    emit('sent');
+    emit("sent");
   } catch (err) {
-    emit('send-error', err);
+    emit("send-error", err);
   } finally {
     sending.value = false;
   }

@@ -22,7 +22,8 @@ export async function getFileList(params?: {
   access_level?: "public" | "private" | "protected" | "";
   sort?: "newest" | "oldest" | "name" | "size";
   page?: number;
-  limit?: number;
+  size?: number; // 每页数量
+  limit?: number; // 兼容旧参数名
 }): Promise<ApiResult<FileListResponse>> {
   return get<FileListResponse>("/files/list", params);
 }

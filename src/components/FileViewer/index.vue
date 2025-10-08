@@ -32,18 +32,75 @@ const visible = computed({
 // 当前索引
 const currentIndex = ref(props.initialIndex);
 
+// 监听 initialIndex 变化，同步更新 currentIndex
+watch(
+  () => props.initialIndex,
+  (newIndex) => {
+    console.log("🔄 [FileViewer] initialIndex 变化:", {
+      旧索引: currentIndex.value,
+      新索引: newIndex,
+    });
+    currentIndex.value = newIndex;
+  },
+);
+
 // 当前文件
 const currentFile = computed(() => {
+  let file;
   if (props.files && props.files.length > 0) {
-    return props.files[currentIndex.value] || props.file;
+    file = props.files[currentIndex.value] || props.file;
+  } else {
+    file = props.file;
   }
-  return props.file;
+
+  // 🔍 调试日志：打印当前文件的详细信息
+  console.log("📌 [FileViewer] currentFile computed 触发:", {
+    "props.file": props.file
+      ? {
+          id: props.file.id,
+          name:
+            props.file.display_name ||
+            props.file.name ||
+            props.file.original_name,
+          full_url: props.file.full_url,
+          url: props.file.url,
+        }
+      : null,
+    "props.files.length": props.files?.length || 0,
+    currentIndex: currentIndex.value,
+    返回的file: file
+      ? {
+          id: file.id,
+          name: file.display_name || file.name || file.original_name,
+          full_url: file.full_url,
+          url: file.url,
+        }
+      : null,
+  });
+
+  return file;
 });
 
 // 文件URL
 const fileUrl = computed(() => {
   const file = currentFile.value;
-  return file?.full_url || file?.url || "";
+  const url = file?.full_url || file?.url || "";
+
+  // 🔍 调试日志：打印FileViewer接收到的文件数据
+  if (file) {
+    console.log("🖼️ [FileViewer] 当前预览文件:", {
+      id: file.id,
+      name: file.display_name || file.name || file.original_name,
+      url: file.url,
+      full_url: file.full_url,
+      thumb_url: file.thumb_url,
+      full_thumb_url: file.full_thumb_url,
+      thumbnail_url: file.thumbnail_url,
+      最终使用的URL: url,
+    });
+  }
+
+  return url;
 });
 
 // 导航控制
@@ -262,6 +319,18 @@ const handleDownload = async () => {
 };
 
 const handleImageLoad = () => {
+  console.log("✅ [FileViewer] 图片加载成功:", {
+    file: currentFile.value
+      ? {
+          id: currentFile.value.id,
+          name:
+            currentFile.value.display_name ||
+            currentFile.value.name ||
+            currentFile.value.original_name,
+        }
+      : null,
+    url: fileUrl.value,
+  });
   isLoading.value = false;
   hasError.value = false;
   if (currentFile.value) {
@@ -269,7 +338,20 @@ const handleImageLoad = () => {
   }
 };
 
-const handleImageError = () => {
+const handleImageError = (event: Event) => {
+  console.error("❌ [FileViewer] 图片加载失败:", {
+    file: currentFile.value
+      ? {
+          id: currentFile.value.id,
+          name:
+            currentFile.value.display_name ||
+            currentFile.value.name ||
+            currentFile.value.original_name,
+        }
+      : null,
+    url: fileUrl.value,
+    event: event,
+  });
   isLoading.value = false;
   hasError.value = true;
   if (currentFile.value) {
@@ -385,7 +467,17 @@ watch(currentIndex, (newIndex) => {
 
 watch(
   () => props.file,
-  () => {
+  (newFile) => {
+    console.log("🔄 [FileViewer] props.file 变化:", {
+      新文件: newFile
+        ? {
+            id: newFile.id,
+            name: newFile.display_name || newFile.name || newFile.original_name,
+            full_url: newFile.full_url,
+            url: newFile.url,
+          }
+        : null,
+    });
     isLoading.value = true;
     hasError.value = false;
     resetTransform();

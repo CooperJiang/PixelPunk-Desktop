@@ -173,13 +173,14 @@ const confirmDialog = () => {
   flex-direction: column;
   min-width: 320px;
   overflow: hidden;
-  background: var(--color-bg-secondary);
+  background: var(--color-bg-elevated, #ffffff);
   color: var(--color-text);
-  border: 1px solid var(--color-primary);
+  border: 1px solid var(--color-border);
   border-radius: 6px;
-  box-shadow: 0 4px 20px rgba(var(--color-primary-rgb, 5, 217, 232), 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
 }
 
+/* 移除顶部装饰线以简化UI
 .dialog-container::before {
   content: "";
   position: absolute;
@@ -190,21 +191,22 @@ const confirmDialog = () => {
   background: var(--color-primary);
   border-radius: 6px 6px 0 0;
 }
+*/
 
 .dialog-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid rgba(var(--color-primary-rgb, 5, 217, 232), 0.2);
+  border-bottom: 1px solid var(--color-border);
   padding: 12px 16px;
-  background: rgba(var(--color-primary-rgb, 5, 217, 232), 0.03);
+  background: transparent;
 }
 
 .dialog-title {
   margin: 0;
   font-size: 1.125rem;
   font-weight: 600;
-  color: var(--color-primary);
+  color: var(--color-text-primary);
 }
 
 .dialog-close-btn {
@@ -226,17 +228,18 @@ const confirmDialog = () => {
 
 .dialog-close-btn:hover {
   color: var(--color-text);
-  background: rgba(var(--color-primary-rgb, 5, 217, 232), 0.1);
+  background: var(--color-bg-hover);
 }
 
 .dialog-content {
   flex-grow: 1;
   overflow-y: auto;
   padding: 20px 16px;
-  background: rgba(var(--color-primary-rgb, 5, 217, 232), 0.02);
+  background: transparent;
   position: relative;
 }
 
+/* 移除装饰线以简化UI
 .dialog-content::before {
   content: "";
   position: absolute;
@@ -252,19 +255,24 @@ const confirmDialog = () => {
   );
   opacity: 0.6;
 }
+*/
 
 .dialog-content::-webkit-scrollbar {
   width: 4px;
 }
 
 .dialog-content::-webkit-scrollbar-track {
-  background: rgba(var(--color-primary-rgb, 5, 217, 232), 0.1);
+  background: var(--color-bg-base);
   border-radius: 2px;
 }
 
 .dialog-content::-webkit-scrollbar-thumb {
-  background: var(--color-primary);
+  background: var(--color-border-hover);
   border-radius: 2px;
+}
+
+.dialog-content::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary);
 }
 
 .dialog-content.no-padding {
@@ -279,9 +287,9 @@ const confirmDialog = () => {
   display: flex;
   justify-content: flex-end;
   gap: 12px;
-  border-top: 1px solid rgba(var(--color-primary-rgb, 5, 217, 232), 0.2);
+  border-top: 1px solid var(--color-border);
   padding: 12px 16px;
-  background: rgba(var(--color-primary-rgb, 5, 217, 232), 0.01);
+  background: transparent;
 }
 
 .dialog-enter-active,

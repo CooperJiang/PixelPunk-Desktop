@@ -108,18 +108,18 @@ export const menuConfig: MenuItem[] = [
     description: "管理你的文件",
     children: [
       {
-        id: "files-all",
-        label: "全部文件",
-        icon: Files,
-        route: "/files/all",
-        description: "查看所有上传的文件",
-      },
-      {
         id: "files-folders",
         label: "文件夹",
         icon: FolderTree,
         route: "/files/folders",
         description: "管理文件夹",
+      },
+      {
+        id: "files-all",
+        label: "全部文件",
+        icon: Files,
+        route: "/files/all",
+        description: "查看所有上传的文件",
       },
       {
         id: "files-tags",

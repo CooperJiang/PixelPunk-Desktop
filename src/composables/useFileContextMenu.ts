@@ -113,12 +113,54 @@ export function useFileContextMenu(options: FileContextMenuOptions = {}) {
       icon: "Link",
       children: [
         {
+          key: "copy-short-link",
+          label: "复制短链",
+          icon: "Sparkles",
+          onClick: async () => {
+            if (!selectedFile.value) return;
+            const url = selectedFile.value.short_url || "";
+            if (!url) {
+              message.error("没有可复制的短链");
+              return;
+            }
+            try {
+              await navigator.clipboard.writeText(url);
+              message.success("已复制短链");
+            } catch {
+              message.error("复制失败");
+            }
+          },
+        },
+        {
+          key: "copy-full-url",
+          label: "复制完整链接",
+          icon: "ExternalLink",
+          onClick: async () => {
+            if (!selectedFile.value) return;
+            const url =
+              selectedFile.value.full_url || selectedFile.value.url || "";
+            if (!url) {
+              message.error("没有可复制的完整链接");
+              return;
+            }
+            try {
+              await navigator.clipboard.writeText(url);
+              message.success("已复制完整链接");
+            } catch {
+              message.error("复制失败");
+            }
+          },
+        },
+        {
           key: "copy-thumb",
           label: "复制缩略图",
           icon: "Image",
           onClick: async () => {
             if (!selectedFile.value) return;
-            const url = selectedFile.value.thumb_url || "";
+            const url =
+              selectedFile.value.full_thumb_url ||
+              selectedFile.value.thumb_url ||
+              "";
             if (!url) {
               message.error("没有可复制的缩略图链接");
               return;
@@ -126,25 +168,6 @@ export function useFileContextMenu(options: FileContextMenuOptions = {}) {
             try {
               await navigator.clipboard.writeText(url);
               message.success("已复制缩略图链接");
-            } catch {
-              message.error("复制失败");
-            }
-          },
-        },
-        {
-          key: "copy-original",
-          label: "复制原图",
-          icon: "Film",
-          onClick: async () => {
-            if (!selectedFile.value) return;
-            const url = selectedFile.value.url || "";
-            if (!url) {
-              message.error("没有可复制的原图链接");
-              return;
-            }
-            try {
-              await navigator.clipboard.writeText(url);
-              message.success("已复制原图链接");
             } catch {
               message.error("复制失败");
             }

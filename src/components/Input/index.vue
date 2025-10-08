@@ -299,7 +299,7 @@ onMounted(() => {
   overflow: hidden;
   border-radius: var(--radius-md, 6px);
   border: 1px solid var(--color-border);
-  background: rgba(0, 255, 255, 0.05);
+  background: var(--color-bg-elevated, rgba(0, 255, 255, 0.05));
   transition:
     border-color var(--transition-fast, 0.15s) ease,
     box-shadow var(--transition-fast, 0.15s) ease;
@@ -447,7 +447,7 @@ textarea.input::placeholder {
 .input-wrapper--focused,
 .input-wrapper:focus-within {
   border-color: var(--color-primary);
-  box-shadow: 0 0 12px rgba(0, 255, 255, 0.4);
+  box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb, 59, 130, 246), 0.15);
 }
 
 .input-wrapper--error {
@@ -456,9 +456,9 @@ textarea.input::placeholder {
 }
 
 .input-wrapper--disabled {
-  background: rgba(13, 17, 23, 0.2);
-  border-color: rgba(0, 255, 255, 0.1);
-  opacity: 0.6;
+  background: var(--color-bg-base, rgba(13, 17, 23, 0.2));
+  border-color: var(--color-border);
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
@@ -468,8 +468,8 @@ textarea.input::placeholder {
 }
 
 .input-wrapper--readonly {
-  background: rgba(0, 255, 255, 0.02);
-  border-color: rgba(0, 255, 255, 0.3);
+  background: var(--color-bg-base, rgba(0, 255, 255, 0.02));
+  border-color: var(--color-border);
 }
 
 .input-wrapper--readonly .input {

@@ -43,10 +43,7 @@ const mutableFiles = ref<FileInfo[]>([]);
 watch(
   () => folders.value,
   (newFolders) => {
-    console.log(
-      "🔥 Folders changed, updating mutableFolders:",
-      newFolders.length,
-    );
+    // 同步源数据到可拖拽数组
     mutableFolders.value = [...newFolders];
   },
 );
@@ -54,35 +51,12 @@ watch(
 watch(
   () => files.value,
   (newFiles) => {
-    console.log("🔥 Files changed, updating mutableFiles:", newFiles.length);
+    // 同步源数据到可拖拽数组
     mutableFiles.value = [...newFiles];
   },
 );
 
-// 监听 mutableFolders 变化（VueDraggable 会改变这个）
-watch(
-  () => mutableFolders.value,
-  (newVal) => {
-    console.log(
-      "🔥 mutableFolders v-model changed:",
-      newVal.map((f) => f?.name || "undefined"),
-    );
-  },
-  { deep: true },
-);
-
-watch(
-  () => mutableFiles.value,
-  (newVal) => {
-    console.log(
-      "🔥 mutableFiles v-model changed:",
-      newVal.map(
-        (f) => f?.name || f?.display_name || f?.original_name || "undefined",
-      ),
-    );
-  },
-  { deep: true },
-);
+// 去除对拖拽中数据的深度日志监听，避免频繁重绘导致卡顿
 
 // 对话框状态
 const createDialogVisible = ref(false);
@@ -157,61 +131,20 @@ const {
 // 拖拽排序
 const dragSort = useDragSort();
 
-// 拖拽结束处理函数（避免在模板里直接解构 .value 导致取值异常）
+// 拖拽结束处理
 const handleFolderDragEnd = (event: any) => {
-  console.log("🔥 Folder drag end event:", event);
-  console.log("🔥 Event keys:", Object.keys(event));
-  console.log("🔥 Event oldIndex:", event.oldIndex);
-  console.log("🔥 Event newIndex:", event.newIndex);
-  console.log("🔥 Event oldDraggableIndex:", event.oldDraggableIndex);
-  console.log("🔥 Event newDraggableIndex:", event.newDraggableIndex);
-  console.log(
-    "🔥 mutableFolders BEFORE:",
-    mutableFolders.value.map((f) => f.name),
+  dragSort.onFolderDragEnd(
+    event,
+    mutableFolders.value,
+    currentFolderId.value,
+    () => loadFolders(currentFolderId.value),
   );
-
-  // 等待下一帧，确保 v-model 已更新
-  setTimeout(() => {
-    console.log(
-      "🔥 mutableFolders AFTER (next tick):",
-      mutableFolders.value.map((f) => f.name),
-    );
-    dragSort.onFolderDragEnd(
-      event,
-      mutableFolders.value,
-      currentFolderId.value,
-      () => loadFolders(currentFolderId.value),
-    );
-  }, 0);
 };
 
 const handleFileDragEnd = (event: any) => {
-  console.log("🔥 File drag end event:", event);
-  console.log("🔥 Event keys:", Object.keys(event));
-  console.log("🔥 Event oldIndex:", event.oldIndex);
-  console.log("🔥 Event newIndex:", event.newIndex);
-  console.log(
-    "🔥 mutableFiles BEFORE:",
-    mutableFiles.value.map(
-      (f) => f?.name || f?.display_name || f?.original_name,
-    ),
+  dragSort.onFileDragEnd(event, mutableFiles.value, currentFolderId.value, () =>
+    loadFolders(currentFolderId.value),
   );
-
-  // 等待下一帧，确保 v-model 已更新
-  setTimeout(() => {
-    console.log(
-      "🔥 mutableFiles AFTER (next tick):",
-      mutableFiles.value.map(
-        (f) => f?.name || f?.display_name || f?.original_name,
-      ),
-    );
-    dragSort.onFileDragEnd(
-      event,
-      mutableFiles.value,
-      currentFolderId.value,
-      () => loadFolders(currentFolderId.value),
-    );
-  }, 0);
 };
 
 // 加载文件夹列表和文件列表
@@ -230,6 +163,21 @@ const loadFolders = async (folderId?: string) => {
       // 设置文件列表 - 支持多种字段名
       const filesList = data.files || data.images || data.items || [];
       files.value = filesList;
+
+      // 🔍 调试日志：打印文件夹页面的文件数据格式
+      if (files.value.length > 0) {
+        console.log(
+          "📂 [文件夹] 第一个文件的完整数据:",
+          JSON.stringify(files.value[0], null, 2),
+        );
+        console.log("📂 [文件夹] URL字段:", {
+          url: files.value[0].url,
+          full_url: files.value[0].full_url,
+          thumb_url: files.value[0].thumb_url,
+          full_thumb_url: files.value[0].full_thumb_url,
+          thumbnail_url: files.value[0].thumbnail_url,
+        });
+      }
     } else {
       folders.value = [];
       files.value = [];
@@ -415,6 +363,14 @@ const uploadButtonText = computed(() => {
 const handlePreviewFile = (file: FileInfo) => {
   // 正在拖拽文件时忽略点击，避免误触预览
   if (dragSort.isFileDragging.value) return;
+
+  console.log("👁️ [文件夹] 点击预览文件:", {
+    id: file.id,
+    name: file.display_name || file.name || file.original_name,
+    url: file.url,
+    full_url: file.full_url,
+  });
+
   const index = files.value.findIndex((f) => f.id === file.id);
   if (index !== -1) {
     previewFileIndex.value = index;
@@ -567,7 +523,6 @@ onUnmounted(() => {
     <!-- 页面头部 -->
     <div class="page-header">
       <div class="header-left">
-        <h1 class="page-title">我的文件夹</h1>
         <Breadcrumb
           :items="breadcrumbItems"
           class="breadcrumb"
@@ -575,13 +530,13 @@ onUnmounted(() => {
         />
       </div>
       <div class="header-actions">
-        <Button type="primary" @click="navigateToUpload">
+        <Button type="primary" size="small" @click="navigateToUpload">
           <template #icon>
             <i class="fas fa-upload" />
           </template>
           {{ uploadButtonText }}
         </Button>
-        <Button type="outlined" @click="showCreateDialog">
+        <Button type="outlined" size="small" @click="showCreateDialog">
           <template #icon>
             <i class="fas fa-folder-plus" />
           </template>
@@ -610,19 +565,9 @@ onUnmounted(() => {
           chosen-class="sortable-chosen"
           drag-class="sortable-drag"
           :force-fallback="true"
-          :fallback-on-body="false"
-          :group="{ name: 'folders', pull: false, put: false }"
           class="folder-grid"
-          @start="
-            (evt) => {
-              console.log('🔥 Folder drag START with event:', evt);
-              dragSort.onFolderDragStart(evt);
-            }
-          "
+          @start="dragSort.onFolderDragStart"
           @end="handleFolderDragEnd"
-          @change="(evt) => console.log('🔥 VueDraggable change event:', evt)"
-          @move="(evt) => console.log('🔥 VueDraggable move event:', evt)"
-          @update="(evt) => console.log('🔥 VueDraggable update event:', evt)"
         >
           <div
             v-for="folder in mutableFolders"
@@ -724,24 +669,10 @@ onUnmounted(() => {
           chosen-class="sortable-chosen"
           drag-class="sortable-drag"
           :force-fallback="true"
-          :fallback-on-body="false"
-          :group="{ name: 'files', pull: false, put: false }"
           :disabled="batchMode"
           class="file-grid"
-          @start="
-            (evt) => {
-              console.log('🔥 File drag START with event:', evt);
-              dragSort.onFileDragStart(evt);
-            }
-          "
+          @start="dragSort.onFileDragStart"
           @end="handleFileDragEnd"
-          @change="
-            (evt) => console.log('🔥 File VueDraggable change event:', evt)
-          "
-          @move="(evt) => console.log('🔥 File VueDraggable move event:', evt)"
-          @update="
-            (evt) => console.log('🔥 File VueDraggable update event:', evt)
-          "
         >
           <div v-for="file in mutableFiles" :key="file.id" class="file-item">
             <FileCard
@@ -880,8 +811,7 @@ onUnmounted(() => {
 
 .header-left {
   display: flex;
-  flex-direction: column;
-  gap: 6px;
+  align-items: center;
   flex: 1;
   min-width: 0;
   overflow: hidden;
@@ -894,28 +824,7 @@ onUnmounted(() => {
   flex-shrink: 0;
 }
 
-.page-title {
-  margin: 0;
-  color: var(--color-white);
-  font-size: 1.75rem;
-  font-weight: 700;
-  background: linear-gradient(
-    120deg,
-    var(--color-primary) 0%,
-    rgb(255, 110, 199) 100%
-  );
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  filter: drop-shadow(
-    0 0 15px rgba(var(--color-primary-rgb, 5, 217, 232), 0.4)
-  );
-  letter-spacing: 0.5px;
-  position: relative;
-}
-
 .breadcrumb {
-  margin-top: 4px;
   width: 100%;
   min-width: 0;
 }
@@ -1062,11 +971,6 @@ onUnmounted(() => {
 
 .folder-item {
   min-width: 0;
-  cursor: grab;
-}
-
-.folder-item:active {
-  cursor: grabbing;
 }
 
 .file-grid {
@@ -1077,11 +981,6 @@ onUnmounted(() => {
 
 .file-item {
   min-width: 0;
-  cursor: grab;
-}
-
-.file-item:active {
-  cursor: grabbing;
 }
 
 /* VueDraggable 会自动处理拖动动画，不需要手动设置 transition */
@@ -1143,38 +1042,21 @@ onUnmounted(() => {
   box-shadow: 0 0 20px rgba(var(--color-primary-rgb, 5, 217, 232), 0.3) !important;
 }
 
-/* 原位置元素隐藏，但不影响拖动克隆 */
-.folder-grid .sortable-chosen:not(.sortable-drag),
-.file-grid .sortable-chosen:not(.sortable-drag) {
-  opacity: 0 !important;
-}
-</style>
-
-<!-- 全局拖拽克隆样式 -->
-<style>
-.sortable-drag,
-body > .sortable-drag {
+.sortable-chosen {
   opacity: 1 !important;
-  z-index: 9999 !important;
-  cursor: grabbing !important;
 }
 
-.sortable-drag :deep(.folder-card),
-.sortable-drag :deep(.file-card),
-body > .sortable-drag :deep(.folder-card),
-body > .sortable-drag :deep(.file-card) {
-  opacity: 1 !important;
+.sortable-chosen :deep(.folder-card),
+.sortable-chosen :deep(.file-card) {
   background: rgba(var(--color-primary-rgb, 5, 217, 232), 0.1) !important;
-  border: 2px solid rgba(var(--color-primary-rgb, 5, 217, 232), 0.8) !important;
-  box-shadow:
-    0 8px 20px rgba(0, 0, 0, 0.3),
-    0 0 20px rgba(var(--color-primary-rgb, 5, 217, 232), 0.4) !important;
-  filter: brightness(1.1) !important;
+  border-color: rgba(var(--color-primary-rgb, 5, 217, 232), 0.5) !important;
+  transform: scale(1.02) !important;
+  box-shadow: 0 5px 15px rgba(var(--color-primary-rgb, 5, 217, 232), 0.2) !important;
+  z-index: 10 !important;
 }
 
-/* 隐藏拖动克隆中的 hover 层 */
-.sortable-drag :deep(.file-hover-overlay),
-.sortable-drag :deep(.hover-actions) {
+/* 隐藏 fallback 克隆元素 */
+.sortable-drag {
   display: none !important;
 }
 </style>

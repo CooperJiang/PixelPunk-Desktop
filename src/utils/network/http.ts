@@ -19,16 +19,54 @@ import {
 } from "./http-types";
 import { TOKEN_KEY, USER_INFO_KEY } from "@/constants/api";
 
-/* 处理未授权访问 - 跳转到登录窗口 */
+/* 防抖：避免多个请求同时触发登出 */
+let isLoggingOut = false;
+
+/* 处理未授权访问 - 清理状态并跳转到登录窗口 */
 async function handleUnauthorized() {
+  // 防止重复执行
+  if (isLoggingOut) {
+    return;
+  }
+  isLoggingOut = true;
+
   try {
-    await logger.warn("[HTTP] Unauthorized, redirecting to login");
+    await logger.warn("[HTTP] Token expired or invalid, logging out");
+
+    // 清理存储
+    storage.remove(TOKEN_KEY);
+    storage.remove(USER_INFO_KEY);
+    await storage.save();
+
+    // 清理authStore状态（动态导入避免循环依赖）
+    try {
+      const { useAuthStore } = await import("@/store/auth");
+      const authStore = useAuthStore();
+      await authStore.logout();
+    } catch (e) {
+      await logger.warn("[HTTP] Failed to clear auth store", {
+        error: String(e),
+      });
+    }
+
+    // 广播登出事件
+    await broadcastLoggedOut();
+
+    // 显示提示
+    message.warning("登录已过期，请重新登录");
+
+    // 跳转到登录窗口
     await invoke("show_login_window");
-    await logger.info("[HTTP] Switched to login");
+    await logger.info("[HTTP] Switched to login window");
   } catch (error) {
     await logger.error("[HTTP] Failed to handle unauthorized", {
       error: String(error),
     });
+  } finally {
+    // 2秒后重置标志，允许下次登出
+    setTimeout(() => {
+      isLoggingOut = false;
+    }, 2000);
   }
 }
 
@@ -240,11 +278,9 @@ async function responseInterceptor<T>(
       await logger.warn(
         "[HTTP] Auth token invalid or expired, clearing and redirecting",
       );
-      storage.remove(TOKEN_KEY);
-      storage.remove(USER_INFO_KEY);
-      await storage.save();
-      await broadcastLoggedOut();
-      handleUnauthorized();
+      // 调用统一的未授权处理函数，不显示额外错误提示
+      await handleUnauthorized();
+      return Promise.reject(errorResult);
     }
 
     // 判断是否显示错误提示
@@ -288,15 +324,10 @@ async function handleError(
     errorCode = error.response.status;
     switch (errorCode) {
       case 401:
-        message = "未授权访问，请重新登录";
-        // 清除token
-        storage.remove(TOKEN_KEY);
-        storage.remove(USER_INFO_KEY);
-        await storage.save();
-        // 广播并跳转到登录窗口
-        await broadcastLoggedOut();
-        handleUnauthorized();
-        break;
+        // 401错误：调用统一的未授权处理，不显示额外提示
+        await handleUnauthorized();
+        // 直接返回错误，不显示toast
+        return Promise.reject(createErrorResult(401, "登录已过期", ""));
       case 403:
         message = "权限不足";
         break;

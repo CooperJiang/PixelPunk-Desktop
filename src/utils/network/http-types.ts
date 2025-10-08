@@ -117,8 +117,8 @@ export const AUTO_SHOW_ERROR_CODES = [
   ErrorCodes.INVALID_CREDENTIALS,
   ErrorCodes.USER_DISABLED,
   ErrorCodes.USER_ALREADY_EXISTS,
-  ErrorCodes.INVALID_AUTH_TOKEN,
-  ErrorCodes.EXPIRED_AUTH_TOKEN,
+  // ErrorCodes.INVALID_AUTH_TOKEN, // token相关错误由handleUnauthorized统一处理
+  // ErrorCodes.EXPIRED_AUTH_TOKEN, // token相关错误由handleUnauthorized统一处理
   ErrorCodes.INVALID_VERIFY_CODE,
 
   /* 文件相关错误 */

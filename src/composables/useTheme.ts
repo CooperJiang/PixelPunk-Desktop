@@ -79,6 +79,48 @@ export function useTheme() {
   };
 
   /**
+   * 从颜色字符串提取 RGB 值
+   */
+  const extractRGB = (color: string): string => {
+    // 处理 rgba() 格式
+    if (color.startsWith("rgba(")) {
+      const match = color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+      if (match) {
+        return `${match[1]}, ${match[2]}, ${match[3]}`;
+      }
+    }
+
+    // 处理 rgb() 格式
+    if (color.startsWith("rgb(")) {
+      const match = color.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
+      if (match) {
+        return `${match[1]}, ${match[2]}, ${match[3]}`;
+      }
+    }
+
+    // 处理 hex 格式 (#RRGGBB)
+    if (color.startsWith("#")) {
+      const hex = color.replace("#", "");
+      if (hex.length === 6) {
+        const r = parseInt(hex.substring(0, 2), 16);
+        const g = parseInt(hex.substring(2, 4), 16);
+        const b = parseInt(hex.substring(4, 6), 16);
+        return `${r}, ${g}, ${b}`;
+      }
+      // 处理短格式 #RGB
+      if (hex.length === 3) {
+        const r = parseInt(hex[0] + hex[0], 16);
+        const g = parseInt(hex[1] + hex[1], 16);
+        const b = parseInt(hex[2] + hex[2], 16);
+        return `${r}, ${g}, ${b}`;
+      }
+    }
+
+    // Fallback 白色
+    return "255, 255, 255";
+  };
+
+  /**
    * 应用主题到 DOM（应用 CSS 变量）
    */
   const applyTheme = (theme: Theme) => {
@@ -95,8 +137,9 @@ export function useTheme() {
       html.classList.remove("dark");
     }
 
-    // 应用颜色变量
+    // 应用颜色变量（包括 RGB 版本）
     html.style.setProperty("--color-primary", colors.primary);
+    html.style.setProperty("--color-primary-rgb", extractRGB(colors.primary));
     html.style.setProperty("--color-primary-hover", colors.primaryHover);
     html.style.setProperty("--color-primary-active", colors.primaryActive);
 
@@ -107,16 +150,27 @@ export function useTheme() {
     html.style.setProperty("--color-accent-glow", colors.accentGlow);
 
     html.style.setProperty("--color-bg-base", colors.bgBase);
+    html.style.setProperty("--color-bg-base-rgb", extractRGB(colors.bgBase));
     html.style.setProperty("--color-bg-elevated", colors.bgElevated);
+    html.style.setProperty(
+      "--color-bg-elevated-rgb",
+      extractRGB(colors.bgElevated),
+    );
     html.style.setProperty("--color-bg-hover", colors.bgHover);
     html.style.setProperty("--color-bg-active", colors.bgActive);
 
+    html.style.setProperty("--color-text", colors.textPrimary); // 添加简写版本
     html.style.setProperty("--color-text-primary", colors.textPrimary);
     html.style.setProperty("--color-text-secondary", colors.textSecondary);
     html.style.setProperty("--color-text-muted", colors.textMuted);
     html.style.setProperty("--color-text-inverse", colors.textInverse);
+    html.style.setProperty(
+      "--color-white",
+      theme.isDark ? "#f3f4f6" : "#ffffff",
+    ); // 添加 --color-white
 
     html.style.setProperty("--color-border", colors.border);
+    html.style.setProperty("--color-border-rgb", extractRGB(colors.border));
     html.style.setProperty("--color-border-hover", colors.borderHover);
 
     html.style.setProperty("--color-success", colors.success);

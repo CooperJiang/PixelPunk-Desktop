@@ -105,13 +105,24 @@ const isImage = (format: string) => {
     <div
       v-if="!batchMode"
       class="file-visibility"
-      :class="file.access_level === 'private' ? 'private' : 'public'"
-      :title="file.access_level === 'private' ? '私密' : '公开'"
-      @click="handleToggleVisibility"
+      :class="file.access_level"
+      :title="
+        file.access_level === 'private'
+          ? '私密'
+          : file.access_level === 'protected'
+            ? '受保护'
+            : '公开'
+      "
+      @click.stop.prevent="handleToggleVisibility"
+      @mousedown.stop.prevent
     >
       <i
         :class="
-          file.access_level === 'private' ? 'fas fa-lock' : 'fas fa-globe'
+          file.access_level === 'private'
+            ? 'fas fa-lock'
+            : file.access_level === 'protected'
+              ? 'fas fa-shield-alt'
+              : 'fas fa-globe'
         "
       />
     </div>
@@ -193,13 +204,11 @@ const isImage = (format: string) => {
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-radius: 12px;
-  cursor: inherit;
-  touch-action: inherit;
+  cursor: pointer;
   user-select: none;
   -webkit-user-select: none;
   -ms-user-select: none;
   -webkit-touch-callout: none;
-  pointer-events: auto;
   box-shadow:
     0 2px 8px rgba(0, 0, 0, 0.04),
     0 1px 2px rgba(0, 0, 0, 0.06),
@@ -233,26 +242,16 @@ const isImage = (format: string) => {
   z-index: 0;
 }
 
-.file-card:active:not(.batch-mode) {
-  cursor: grabbing;
-}
-
-/* 确保拖动时不影响事件 */
-.file-card * {
-  pointer-events: none;
-}
-
-.file-card .file-action-btn,
-.file-card .file-visibility,
-.file-card .batch-checkbox,
-.file-card .file-hover-overlay,
-.file-card .hover-actions,
-.file-card .action-btn {
-  pointer-events: auto;
-}
-
 .file-card.batch-mode {
   cursor: pointer;
+}
+
+/* 可交互元素启用事件 */
+.action-btn,
+.file-visibility,
+.batch-checkbox,
+.file-hover-overlay {
+  pointer-events: auto;
 }
 
 .file-card:hover {
@@ -294,6 +293,12 @@ const isImage = (format: string) => {
   border: 1px solid rgba(255, 110, 199, 0.25);
 }
 
+.file-visibility.protected {
+  background: rgba(255, 159, 10, 0.12);
+  color: rgba(255, 159, 10, 0.9);
+  border: 1px solid rgba(255, 159, 10, 0.25);
+}
+
 .file-visibility.public {
   background: rgba(var(--color-primary-rgb, 5, 217, 232), 0.12);
   color: rgba(var(--color-primary-rgb, 5, 217, 232), 0.9);
@@ -304,6 +309,13 @@ const isImage = (format: string) => {
   background: rgba(255, 110, 199, 0.25);
   color: rgb(255, 110, 199);
   border-color: rgba(255, 110, 199, 0.5);
+  transform: scale(1.1);
+}
+
+.file-visibility.protected:hover {
+  background: rgba(255, 159, 10, 0.25);
+  color: rgb(255, 159, 10);
+  border-color: rgba(255, 159, 10, 0.5);
   transform: scale(1.1);
 }
 
@@ -429,6 +441,12 @@ const isImage = (format: string) => {
   opacity: 1;
 }
 
+/* 权限按钮 hover 时隐藏遮罩 */
+.file-visibility:hover ~ .file-thumbnail .file-hover-overlay {
+  opacity: 0 !important;
+  pointer-events: none;
+}
+
 /* 拖动时隐藏hover遮罩 */
 .sortable-chosen .file-hover-overlay,
 .sortable-ghost .file-hover-overlay {
@@ -514,8 +532,10 @@ const isImage = (format: string) => {
 
 .file-meta {
   display: flex;
-  flex-direction: column;
-  gap: 3px;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
 .file-meta-item {
@@ -524,10 +544,11 @@ const isImage = (format: string) => {
   font-size: 0.75rem;
   color: var(--color-text-secondary);
   line-height: 1.3;
+  flex-shrink: 0;
 }
 
 .file-meta-item i {
-  margin-right: 6px;
+  margin-right: 4px;
   color: rgba(var(--color-primary-rgb, 5, 217, 232), 0.8);
   font-size: 0.7rem;
   width: 10px;
@@ -540,6 +561,7 @@ const isImage = (format: string) => {
   overflow: hidden;
   text-overflow: ellipsis;
   min-width: 0;
+  max-width: 100px;
 }
 
 /* 批量选择模式 */

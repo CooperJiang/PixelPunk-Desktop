@@ -78,13 +78,13 @@ const subMenuConfig: Record<
     },
   ],
   files: [
-    { id: "files-all", icon: Files, label: "全部文件", route: "/files/all" },
     {
       id: "files-folders",
       icon: FolderTree,
       label: "文件夹",
       route: "/files/folders",
     },
+    { id: "files-all", icon: Files, label: "全部文件", route: "/files/all" },
     { id: "files-tags", icon: Tag, label: "标签", route: "/files/tags" },
     {
       id: "files-categories",

@@ -500,6 +500,7 @@ const onMouseleave = (event: MouseEvent) => {
 .button-content {
   display: inline-flex;
   align-items: center;
+  white-space: nowrap;
 }
 
 .icon-wrap {

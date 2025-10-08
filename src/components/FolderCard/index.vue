@@ -109,13 +109,11 @@ const handleContextMenu = (e: MouseEvent) => {
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-radius: 12px;
-  cursor: inherit;
-  touch-action: inherit;
+  cursor: grab;
   user-select: none;
   -webkit-user-select: none;
   -ms-user-select: none;
   -webkit-touch-callout: none;
-  pointer-events: auto;
   box-shadow:
     0 2px 8px rgba(0, 0, 0, 0.04),
     0 1px 2px rgba(0, 0, 0, 0.06),
@@ -151,13 +149,14 @@ const handleContextMenu = (e: MouseEvent) => {
   cursor: grabbing;
 }
 
-/* 确保拖动时不影响事件 */
-.folder-card * {
+/* 卡片内容区域禁用事件，避免阻止拖拽 */
+.folder-card-content {
   pointer-events: none;
 }
 
-.folder-card .folder-action-btn,
-.folder-card .folder-visibility {
+/* 按钮和可交互元素启用事件 */
+.folder-action-btn,
+.folder-visibility {
   pointer-events: auto;
 }
 
@@ -343,8 +342,8 @@ const handleContextMenu = (e: MouseEvent) => {
 }
 
 .folder-action-btn {
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: var(--color-bg-hover);
+  border: 1px solid var(--color-border);
   color: var(--color-text-secondary);
   width: 26px;
   height: 26px;

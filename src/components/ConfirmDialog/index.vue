@@ -4,6 +4,7 @@ import { computed } from "vue";
 interface Props {
   modelValue: boolean;
   title?: string;
+  message?: string;
   confirmText?: string;
   cancelText?: string;
   type?: "warning" | "danger" | "info";
@@ -12,6 +13,7 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   title: "确认",
+  message: "",
   confirmText: "确定",
   cancelText: "取消",
   type: "warning",
@@ -54,6 +56,7 @@ const handleCancel = () => {
 
           <!-- 内容区 -->
           <div class="dialog-body">
+            <p v-if="message" class="dialog-message">{{ message }}</p>
             <slot />
           </div>
 
@@ -147,12 +150,10 @@ const handleCancel = () => {
 .confirm-dialog {
   min-width: 360px;
   max-width: 480px;
-  background: var(--color-bg-secondary);
-  border: 1px solid var(--color-primary);
+  background: var(--color-bg-elevated, #ffffff);
+  border: 1px solid var(--color-border);
   border-radius: 8px;
-  box-shadow:
-    0 8px 24px rgba(0, 0, 0, 0.3),
-    0 0 20px rgba(var(--color-primary-rgb, 5, 217, 232), 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
   overflow: hidden;
 }
 
@@ -163,6 +164,7 @@ const handleCancel = () => {
   justify-content: space-between;
   padding: 16px 20px;
   border-bottom: 1px solid var(--color-border);
+  background: transparent;
 }
 
 .dialog-title {
@@ -194,6 +196,7 @@ const handleCancel = () => {
 /* 内容区 */
 .dialog-body {
   padding: 24px 20px;
+  background: transparent;
 }
 
 .dialog-message {
@@ -211,6 +214,7 @@ const handleCancel = () => {
   gap: 12px;
   padding: 16px 20px;
   border-top: 1px solid var(--color-border);
+  background: transparent;
 }
 
 .btn {

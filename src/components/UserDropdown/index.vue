@@ -199,20 +199,16 @@ onBeforeUnmount(() => {
     </Teleport>
 
     <!-- 退出确认对话框 -->
-    <Teleport to="body">
-      <Transition name="fade">
-        <ConfirmDialog
-          v-if="showLogoutConfirm"
-          title="退出登录"
-          message="确定要退出登录吗？退出后需要重新登录才能使用。"
-          confirm-text="退出"
-          cancel-text="取消"
-          type="warning"
-          @confirm="confirmLogout"
-          @cancel="cancelLogout"
-        />
-      </Transition>
-    </Teleport>
+    <ConfirmDialog
+      v-model="showLogoutConfirm"
+      title="退出登录"
+      message="确定要退出登录吗？退出后需要重新登录才能使用。"
+      confirm-text="退出"
+      cancel-text="取消"
+      type="warning"
+      @confirm="confirmLogout"
+      @cancel="cancelLogout"
+    />
   </div>
 </template>
 
@@ -382,16 +378,5 @@ onBeforeUnmount(() => {
     rgba(0, 255, 255, 0.15) 100%
   );
   text-shadow: 0 0 8px rgba(0, 255, 255, 0.8);
-}
-
-/* 对话框渐入渐出动画 */
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.2s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
 }
 </style>

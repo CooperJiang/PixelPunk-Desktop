@@ -259,7 +259,7 @@ export const cyberpunkDarkTheme: Theme = {
 
     // 背景色 - 深沉蓝紫黑
     bgBase: "#0f0f23",
-    bgElevated: "rgba(15, 15, 35, 0.5)", // 更透明，能看到背景动画
+    bgElevated: "#1a1a2e", // 深色卡片背景
     bgHover: "rgba(167, 139, 250, 0.1)",
     bgActive: "rgba(167, 139, 250, 0.2)",
 

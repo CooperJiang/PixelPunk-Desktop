@@ -28,6 +28,7 @@ export interface FileInfo {
   extension?: string;
   url: string;
   full_url: string;
+  short_url?: string;
   thumb_url?: string;
   full_thumb_url?: string;
   thumbnail_url?: string;
